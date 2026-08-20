@@ -16,8 +16,8 @@
     <div class="py-8">
         <div class="max-w-7xl mx-auto space-y-6">
 
-            <!-- INFOBOX JIKA SKS & IPK BELUM DIISI ATAU BELUM MEMENUHI SYARAT -->
-            @if($user->role === 'mahasiswa' && (empty($user->total_sks) || empty($user->ipk) || $user->total_sks < 100 || $user->ipk < 2.50))
+            <!-- INFOBOX JIKA NIM, SKS & IPK BELUM DIISI ATAU BELUM MEMENUHI SYARAT -->
+            @if($user->role === 'mahasiswa' && (empty($user->nim) || empty($user->total_sks) || empty($user->ipk) || $user->total_sks < 100 || $user->ipk < 2.50))
                 <div class="bg-gradient-to-r from-amber-500/10 via-orange-500/10 to-amber-500/10 border-2 border-amber-400/80 rounded-2xl p-5 shadow-sm flex items-start space-x-4">
                     <div class="p-2.5 bg-amber-500 text-white rounded-xl shadow-sm flex-shrink-0">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -25,10 +25,10 @@
                         </svg>
                     </div>
                     <div>
-                        <h4 class="text-sm font-bold text-gray-900">Perhatian: Lengkapi Data SKS & IPK Anda</h4>
+                        <h4 class="text-sm font-bold text-gray-900">Perhatian: Lengkapi NIM & Data Akademik Anda</h4>
                         <p class="text-xs text-gray-600 mt-1 leading-relaxed">
-                            @if(empty($user->total_sks) || empty($user->ipk))
-                                Anda belum melengkapi data <strong>Total SKS Ditempuh</strong> atau <strong>IPK Terakhir</strong>. Silakan isi form di bawah ini agar memenuhi syarat validasi pendaftaran magang (Minimal: 100 SKS & IPK 2.50).
+                            @if(empty($user->nim) || empty($user->total_sks) || empty($user->ipk))
+                                Anda belum melengkapi data <strong>NIM/NPM</strong>, <strong>Total SKS Ditempuh</strong>, atau <strong>IPK Terakhir</strong>. Silakan lengkapi formulir di bawah ini agar memenuhi syarat validasi pendaftaran magang (Minimal: 100 SKS & IPK 2.50).
                             @else
                                 Data SKS Anda saat ini (<strong>{{ $user->total_sks }} SKS</strong>) atau IPK (<strong>{{ number_format($user->ipk, 2) }}</strong>) belum memenuhi syarat minimum pendaftaran magang (Min. 100 SKS & IPK 2.50).
                             @endif
@@ -51,7 +51,7 @@
                         <div class="flex flex-wrap items-center gap-2 justify-center md:justify-start">
                             <h3 class="text-2xl font-bold text-gray-900">{{ $user->name }}</h3>
                             <span class="px-2.5 py-0.5 text-xs font-bold rounded-full uppercase tracking-wider {{ $user->role === 'mahasiswa' ? 'bg-uin-light text-uin' : ($user->role === 'dpl' ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800') }}">
-                                {{ $user->role === 'admin_fakultas' ? 'Admin Fakultas' : ($user->role === 'admin' ? 'Admin Prodi' : ($user->role === 'dpl' ? 'Dosen Pembimbing' : 'Mahasiswa')) }}
+                                {{ $user->role === 'admin' ? 'Admin Prodi SI' : ($user->role === 'dpl' ? 'Dosen Pembimbing' : 'Mahasiswa') }}
                             </span>
                         </div>
                         <p class="text-xs text-gray-500 font-mono flex items-center gap-2 justify-center md:justify-start">
@@ -66,7 +66,7 @@
                             @endif
                         </p>
                         <p class="text-xs text-gray-600 font-medium">
-                            🏫 Program Studi: <span class="text-gray-900 font-bold">{{ $user->prodi->nama_prodi ?? 'Fakultas Sains & Teknologi' }}</span>
+                            🏫 Program Studi: <span class="text-gray-900 font-bold">{{ $user->prodi->nama_prodi ?? 'Sistem Informasi' }}</span>
                         </p>
                     </div>
                 </div>

@@ -40,12 +40,22 @@ class ProfileController extends Controller
             $user->avatar = $avatarPath;
         }
 
-        $user->fill([
+        $fillData = [
             'name' => $validatedData['name'],
             'email' => $validatedData['email'],
             'total_sks' => $validatedData['total_sks'],
             'ipk' => $validatedData['ipk'],
-        ]);
+        ];
+
+        if (array_key_exists('nim', $validatedData)) {
+            $fillData['nim'] = $validatedData['nim'];
+        }
+
+        if (array_key_exists('nip', $validatedData)) {
+            $fillData['nip'] = $validatedData['nip'];
+        }
+
+        $user->fill($fillData);
 
         if ($user->isDirty('email')) {
             $user->email_verified_at = null;
@@ -53,7 +63,7 @@ class ProfileController extends Controller
 
         $user->save();
 
-        return Redirect::route('profile.edit')->with('status', 'profile-updated')->with('success', 'Profil dan foto berhasil diperbarui.');
+        return Redirect::route('profile.edit')->with('status', 'profile-updated')->with('success', 'Profil dan identitas berhasil diperbarui.');
     }
 
     /**

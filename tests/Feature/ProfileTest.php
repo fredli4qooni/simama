@@ -32,6 +32,7 @@ class ProfileTest extends TestCase
             ->patch('/profile', [
                 'name' => 'Test User',
                 'email' => 'test@example.com',
+                'nim' => '2111050099',
                 'total_sks' => 110,
                 'ipk' => 3.50,
             ]);
@@ -44,6 +45,7 @@ class ProfileTest extends TestCase
 
         $this->assertSame('Test User', $user->name);
         $this->assertSame('test@example.com', $user->email);
+        $this->assertSame('2111050099', $user->nim);
         $this->assertEquals(110, $user->total_sks);
         $this->assertEquals(3.50, $user->ipk);
         $this->assertNull($user->email_verified_at);
@@ -61,6 +63,7 @@ class ProfileTest extends TestCase
             ->patch('/profile', [
                 'name' => 'Test User with Avatar',
                 'email' => $user->email,
+                'nim' => '2111050088',
                 'total_sks' => 110,
                 'ipk' => 3.50,
                 'avatar' => $file,
@@ -73,6 +76,7 @@ class ProfileTest extends TestCase
         $user->refresh();
 
         $this->assertNotNull($user->avatar);
+        $this->assertSame('2111050088', $user->nim);
         Storage::disk('public')->assertExists($user->avatar);
     }
 
@@ -85,6 +89,7 @@ class ProfileTest extends TestCase
             ->patch('/profile', [
                 'name' => 'Test User',
                 'email' => $user->email,
+                'nim' => $user->nim,
                 'total_sks' => 110,
                 'ipk' => 3.50,
             ]);

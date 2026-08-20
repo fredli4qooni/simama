@@ -56,7 +56,7 @@
                 </a>
                 @endif
 
-                @if(Auth::user()->role === 'admin' || Auth::user()->role === 'admin_fakultas')
+                @if(Auth::user()->role === 'admin')
                 <p class="px-4 pt-4 pb-2 text-xs font-semibold text-blue-300 uppercase tracking-wider">Sistem</p>
                 <a href="{{ route('admin.users.index') }}" class="flex items-center px-4 py-3 space-x-3 text-sm font-medium rounded-md {{ request()->routeIs('admin.users.*') ? 'bg-uin-hover text-white' : 'text-blue-100 hover:bg-uin-hover hover:text-white' }}">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -135,20 +135,23 @@
 
             <!-- HEADER BAR -->
             <header class="flex items-center justify-between px-6 py-3.5 bg-white border-b border-gray-200/80 shadow-xs z-10">
-
-                <div class="flex items-center">
-                    @isset($header)
-                    <h2 class="text-xl font-semibold leading-tight text-gray-800">
-                        {{ $header }}
-                    </h2>
-                    @endisset
+                <div class="flex items-center space-x-4">
+                    <button @click="sidebarOpen = !sidebarOpen" class="text-gray-500 hover:text-gray-700 focus:outline-none md:hidden">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                    <div>
+                        {{ $header ?? '' }}
+                    </div>
                 </div>
 
-                <!-- USER PROFILE DROPDOWN (MODERN PILL DESIGN) -->
-                <div class="flex items-center">
+                <!-- RIGHT HEADER CONTROLS -->
+                <div class="flex items-center space-x-4">
+                    <!-- USER PILL DROPDOWN -->
                     <x-dropdown align="right" width="56">
                         <x-slot name="trigger">
-                            <button class="group flex items-center gap-3 p-1.5 pr-3.5 bg-gray-50 hover:bg-gray-100/80 border border-gray-200/80 rounded-full shadow-xs hover:shadow-sm hover:border-uin/30 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-uin/20 cursor-pointer">
+                            <button class="inline-flex items-center space-x-3 px-2 py-1.5 rounded-full border border-gray-200 bg-gray-50/70 hover:bg-blue-50/50 hover:border-blue-300 text-sm font-medium text-gray-700 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-uin/30 group">
                                 @if(Auth::user()->avatar_url)
                                     <img src="{{ Auth::user()->avatar_url }}" alt="{{ Auth::user()->name }}" class="w-9 h-9 rounded-full object-cover shadow-sm ring-2 ring-white flex-shrink-0">
                                 @else
@@ -163,10 +166,9 @@
                                     </div>
                                     <div class="text-[10px] font-semibold text-uin leading-tight flex items-center gap-1 mt-0.5 capitalize">
                                         <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
-                                        @if(Auth::user()->role === 'admin_fakultas') Admin Fakultas
-                                        @elseif(Auth::user()->role === 'admin') Admin Prodi
-                                        @elseif(Auth::user()->role === 'dpl') DPL
-                                        @else Mahasiswa
+                                        @if(Auth::user()->role === 'admin') Admin Prodi SI
+                                        @elseif(Auth::user()->role === 'dpl') Dosen Pembimbing
+                                        @else Mahasiswa SI
                                         @endif
                                     </div>
                                 </div>
@@ -183,7 +185,7 @@
                             <!-- Dropdown User Info Header -->
                             <div class="px-4 py-3 border-b border-gray-100 bg-gray-50/50 rounded-t-xl">
                                 <p class="text-xs font-bold text-gray-900 truncate">{{ Auth::user()->name }}</p>
-                                <p class="text-[11px] text-gray-500 font-mono truncate mt-0.5">{{ Auth::user()->email }}</p>
+                                <p class="text-[11px] text-gray-500 truncate">{{ Auth::user()->email }} ({{ Auth::user()->role === 'admin' ? 'Admin Prodi SI' : (Auth::user()->role === 'dpl' ? 'DPL' : 'Mahasiswa') }})</p>
                             </div>
 
                             <div class="py-1">

@@ -17,21 +17,12 @@ class UserSeeder extends Seeder
         $prodiSI = Prodi::where('kode_prodi', 'SI')->first();
         $prodiId = $prodiSI ? $prodiSI->id : null;
 
-        User::updateOrCreate(
-            ['email' => 'adminfakultas@radenintan.ac.id'],
-            [
-                'name' => 'Admin Fakultas Saintek',
-                'password' => Hash::make('password'),
-                'role' => 'admin_fakultas',
-                'prodi_id' => null,
-                'is_active' => true,
-            ]
-        );
-
+        // 1. Admin / Koordinator Magang Prodi SI
         User::updateOrCreate(
             ['email' => 'adminprodi@radenintan.ac.id'],
             [
-                'name' => 'Admin Prodi SI',
+                'name' => 'Koordinator Magang SI',
+                'nip' => '198501012010121001',
                 'password' => Hash::make('password'),
                 'role' => 'admin', 
                 'prodi_id' => $prodiId,
@@ -39,10 +30,12 @@ class UserSeeder extends Seeder
             ]
         );
 
+        // 2. Dosen Pembimbing Lapangan (DPL)
         User::updateOrCreate(
             ['email' => 'dpl@radenintan.ac.id'],
             [
-                'name' => 'Bapak/Ibu DPL',
+                'name' => 'Dosen Pembimbing Lapangan, M.Kom.',
+                'nip' => '198802022015041002',
                 'password' => Hash::make('password'),
                 'role' => 'dpl',
                 'prodi_id' => $prodiId,
@@ -50,6 +43,7 @@ class UserSeeder extends Seeder
             ]
         );
 
+        // 3. Mahasiswa Sistem Informasi
         User::updateOrCreate(
             ['email' => 'mahasiswa@radenintan.ac.id'],
             [

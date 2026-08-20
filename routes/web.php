@@ -23,7 +23,7 @@ Route::get('/dashboard', function (\Illuminate\Http\Request $request) {
     $role = $request->user()->role;
     
     return match ($role) {
-        'admin', 'admin_fakultas' => redirect()->route('admin.dashboard'),
+        'admin' => redirect()->route('admin.dashboard'),
         'dpl' => redirect()->route('dpl.dashboard'),
         'mahasiswa' => redirect()->route('mahasiswa.dashboard'),
         default => redirect('/'),
@@ -31,34 +31,33 @@ Route::get('/dashboard', function (\Illuminate\Http\Request $request) {
 })->middleware('auth')->name('dashboard');
 
 /* ==========================================
-   MODUL BERSAMA (ADMIN PRODI & FAKULTAS)
+   MODUL ADMIN PROGRAM STUDI SISTEM INFORMASI
 ========================================== */
-Route::middleware(['auth', 'role:admin,admin_fakultas'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', function () {
         return view('dashboard'); 
     })->name('dashboard');
     
+    // Verifikasi Berkas Magang
+    Route::get('/verifikasi', [VerifikasiMagangController::class, 'index'])->name('verifikasi.index');
+    Route::patch('/verifikasi/{id}', [VerifikasiMagangController::class, 'update'])->name('verifikasi.update');
+    Route::get('/verifikasi/{id}/surat', [VerifikasiMagangController::class, 'cetakSuratPermohonan'])->name('verifikasi.surat');
+    
+    // Penetapan DPL & Surat Tugas
+    Route::get('/penetapan-dpl', [PenetapanDplController::class, 'index'])->name('penetapan_dpl.index');
+    Route::post('/penetapan-dpl', [PenetapanDplController::class, 'store'])->name('penetapan_dpl.store');
+    Route::get('/penetapan-dpl/{id}/surat', [PenetapanDplController::class, 'cetakSuratTugas'])->name('penetapan_dpl.surat');
+
+    // Rekapitulasi Nilai Akhir Magang
+    Route::get('/rekap-nilai', [RekapNilaiController::class, 'index'])->name('rekap.index');
+    Route::get('/rekap-nilai/cetak', [RekapNilaiController::class, 'cetakPdf'])->name('rekap.cetak');
+
+    // Manajemen Pengguna (DPL & Mahasiswa SI)
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::post('/users', [UserController::class, 'store'])->name('users.store');
     Route::get('/users/{id}/edit', [UserController::class, 'edit'])->name('users.edit');
     Route::patch('/users/{id}', [UserController::class, 'update'])->name('users.update');
     Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
-});
-
-/* ==========================================
-   MODUL KHUSUS ADMIN PRODI
-========================================== */
-Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/verifikasi', [VerifikasiMagangController::class, 'index'])->name('verifikasi.index');
-    Route::patch('/verifikasi/{id}', [VerifikasiMagangController::class, 'update'])->name('verifikasi.update');
-    Route::get('/verifikasi/{id}/surat', [VerifikasiMagangController::class, 'cetakSuratPermohonan'])->name('verifikasi.surat');
-    
-    Route::get('/penetapan-dpl', [PenetapanDplController::class, 'index'])->name('penetapan_dpl.index');
-    Route::post('/penetapan-dpl', [PenetapanDplController::class, 'store'])->name('penetapan_dpl.store');
-    Route::get('/penetapan-dpl/{id}/surat', [PenetapanDplController::class, 'cetakSuratTugas'])->name('penetapan_dpl.surat');
-
-    Route::get('/rekap-nilai', [RekapNilaiController::class, 'index'])->name('rekap.index');
-    Route::get('/rekap-nilai/cetak', [RekapNilaiController::class, 'cetakPdf'])->name('rekap.cetak');
 });
 
 /* ==========================================
@@ -79,7 +78,7 @@ Route::middleware(['auth', 'role:dpl'])->prefix('dpl')->name('dpl.')->group(func
 });
 
 /* ==========================================
-   MODUL MAHASISWA
+   MODUL MAHASISWA SISTEM INFORMASI
 ========================================== */
 Route::middleware(['auth', 'role:mahasiswa'])->prefix('mahasiswa')->name('mahasiswa.')->group(function () {
     Route::get('/dashboard', function () {

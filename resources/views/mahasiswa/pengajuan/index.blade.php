@@ -54,7 +54,7 @@
                     elseif ($pengajuan->status == 'active') $step = 4;
                     elseif ($pengajuan->status == 'selesai') $step = 5;
                 }
-                $isAcademicEligible = (auth()->user()->total_sks >= 100 && auth()->user()->ipk >= 2.50);
+                $isAcademicEligible = (!empty(auth()->user()->nim) && auth()->user()->total_sks >= 100 && auth()->user()->ipk >= 2.50);
             @endphp
 
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
@@ -393,12 +393,12 @@
                             </div>
                             <div>
                                 <div class="flex items-center gap-2">
-                                    <h4 class="text-sm font-bold text-gray-900">Perhatian: Data SKS & IPK Belum Memenuhi Syarat</h4>
+                                    <h4 class="text-sm font-bold text-gray-900">Perhatian: Lengkapi NIM/NPM & Syarat Akademik</h4>
                                     <span class="px-2 py-0.5 bg-amber-200 text-amber-900 font-bold text-[10px] rounded-full uppercase tracking-wider">Perlu Diisi</span>
                                 </div>
                                 <p class="text-xs text-gray-600 mt-1">
-                                    @if(empty(auth()->user()->total_sks) || empty(auth()->user()->ipk))
-                                        Anda belum melengkapi data <strong>Total SKS</strong> dan <strong>IPK</strong> di profil Anda (Syarat: Min. 100 SKS & IPK 2.50).
+                                    @if(empty(auth()->user()->nim) || empty(auth()->user()->total_sks) || empty(auth()->user()->ipk))
+                                        Anda belum melengkapi data <strong>NIM/NPM</strong>, <strong>Total SKS</strong>, atau <strong>IPK</strong> di profil Anda (Syarat: Min. 100 SKS & IPK 2.50).
                                     @else
                                         SKS/IPK Anda saat ini belum memenuhi batas minimum magang (Min. 100 SKS & IPK 2.50).
                                     @endif

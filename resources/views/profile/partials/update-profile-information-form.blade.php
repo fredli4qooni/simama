@@ -23,7 +23,7 @@
                     Informasi Data Akun & Foto Profil
                 </h3>
                 <p class="text-xs text-gray-500 mt-0.5">
-                    Unggah foto formal mahasiswa, perbarui nama, email, serta capaian akademik.
+                    Unggah foto formal mahasiswa, perbarui nama, NIM/NPM, email, serta capaian akademik.
                 </p>
             </div>
         </div>
@@ -72,6 +72,21 @@
             <x-input-error class="mt-1 text-xs" :messages="$errors->get('name')" />
         </div>
 
+        @if($user->role === 'mahasiswa')
+        <div>
+            <label for="nim" class="block text-xs font-bold text-gray-700 mb-1">Nomor Induk Mahasiswa (NIM / NPM) *</label>
+            <input id="nim" name="nim" type="text" class="w-full text-xs rounded-xl border-gray-300 shadow-xs focus:border-uin focus:ring-uin p-2.5 font-mono" value="{{ old('nim', $user->nim) }}" placeholder="Contoh: 2111050001" required />
+            <p class="text-[11px] text-gray-400 mt-0.5">NIM/NPM wajib diisi sebagai identitas resmi pendaftaran magang.</p>
+            <x-input-error class="mt-1 text-xs" :messages="$errors->get('nim')" />
+        </div>
+        @elseif($user->role === 'dpl' || $user->role === 'admin')
+        <div>
+            <label for="nip" class="block text-xs font-bold text-gray-700 mb-1">Nomor Induk Pegawai (NIP / NIDN)</label>
+            <input id="nip" name="nip" type="text" class="w-full text-xs rounded-xl border-gray-300 shadow-xs focus:border-uin focus:ring-uin p-2.5 font-mono" value="{{ old('nip', $user->nip) }}" placeholder="Contoh: 198501012010121001" />
+            <x-input-error class="mt-1 text-xs" :messages="$errors->get('nip')" />
+        </div>
+        @endif
+
         <div>
             <label for="email" class="block text-xs font-bold text-gray-700 mb-1">Alamat Email *</label>
             <input id="email" name="email" type="email" class="w-full text-xs rounded-xl border-gray-300 shadow-xs focus:border-uin focus:ring-uin p-2.5" value="{{ old('email', $user->email) }}" required autocomplete="username" />
@@ -87,7 +102,7 @@
                 </p>
 
                 @if (session('status') === 'verification-link-sent')
-                <p class="mt-2 font-bold text-xs text-emerald-600">
+                <p class="mt-2 font-bold text-xs text-blue-600">
                     Link verifikasi baru telah dikirimkan ke alamat email Anda.
                 </p>
                 @endif
@@ -118,7 +133,7 @@
                 x-show="show"
                 x-transition
                 x-init="setTimeout(() => show = false, 3000)"
-                class="text-xs font-bold text-emerald-600 flex items-center">
+                class="text-xs font-bold text-blue-600 flex items-center">
                 <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                 Perubahan profil berhasil disimpan!
             </span>

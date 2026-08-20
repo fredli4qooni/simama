@@ -12,7 +12,7 @@ class MagangApplicationPolicy
      */
     public function view(User $user, MagangApplication $magangApplication): bool
     {
-        if (in_array($user->role, ['admin', 'admin_fakultas'])) {
+        if ($user->role === 'admin') {
             return true;
         }
 

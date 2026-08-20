@@ -10,90 +10,73 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    public function index(\Illuminate\Http\Request $request)
+    public function index(Request $request)
     {
         $user = $request->user();
 
         $users = User::with('prodi')
-            ->when($user->role === 'admin', function ($q) use ($user) {
-                return $q->where('prodi_id', $user->prodi_id);
-            })
+            ->whereIn('role', ['dpl', 'mahasiswa'])
             ->latest()
             ->paginate(10);
 
-        $prodis = Prodi::all();
+        $prodiSI = Prodi::where('kode_prodi', 'SI')->first() ?? Prodi::first();
 
-        return view('admin.users.index', compact('users', 'prodis'));
+        return view('admin.users.index', compact('users', 'prodiSI'));
     }
 
     public function store(Request $request)
     {
-        $currentUser = $request->user();
-
-        $allowedRoles = ($currentUser->role === 'admin_fakultas')
-            ? ['admin']
-            : ['dpl', 'mahasiswa'];
-
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8',
-            'role' => 'required|in:' . implode(',', $allowedRoles),
-            'prodi_id' => 'required|exists:prodis,id',
+            'role' => 'required|in:dpl,mahasiswa',
+            'nim' => 'nullable|string|max:50|unique:users,nim',
+            'nip' => 'nullable|string|max:50|unique:users,nip',
         ]);
 
-        if ($currentUser->role === 'admin' && $currentUser->prodi_id != $request->prodi_id) {
-            return redirect()->back()->with('error', 'Otoritas ditolak. Anda hanya bisa mengelola prodi Anda sendiri.');
-        }
+        $prodiSI = Prodi::where('kode_prodi', 'SI')->first() ?? Prodi::first();
 
         User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role' => $request->role,
-            'prodi_id' => $request->prodi_id,
+            'nim' => $request->role === 'mahasiswa' ? $request->nim : null,
+            'nip' => $request->role === 'dpl' ? $request->nip : null,
+            'prodi_id' => $prodiSI ? $prodiSI->id : null,
             'is_active' => true,
         ]);
 
-        return redirect()->back()->with('success', 'Akun berhasil didaftarkan ke sistem.');
+        return redirect()->back()->with('success', 'Akun ' . ($request->role === 'dpl' ? 'Dosen Pembimbing' : 'Mahasiswa') . ' berhasil didaftarkan.');
     }
 
-    public function edit(\Illuminate\Http\Request $request, string $id)
+    public function edit(Request $request, string $id)
     {
         $userToEdit = User::findOrFail($id);
-        $currentUser = $request->user();
+        $prodiSI = Prodi::where('kode_prodi', 'SI')->first() ?? Prodi::first();
 
-        if ($currentUser->role === 'admin' && $currentUser->prodi_id !== $userToEdit->prodi_id) {
-            return redirect()->back()->with('error', 'Akses ditolak. Pengguna ini berada di luar prodi Anda.');
-        }
-
-        $prodis = Prodi::all();
-        return view('admin.users.edit', compact('userToEdit', 'prodis'));
+        return view('admin.users.edit', compact('userToEdit', 'prodiSI'));
     }
 
-    public function update(\Illuminate\Http\Request $request, string $id)
+    public function update(Request $request, string $id)
     {
         $userToEdit = User::findOrFail($id);
-        $currentUser = $request->user();
-
-        if ($currentUser->role === 'admin' && $currentUser->prodi_id !== $userToEdit->prodi_id) {
-            return redirect()->back()->with('error', 'Akses ditolak.');
-        }
-
-        $allowedRoles = ($currentUser->role === 'admin_fakultas') ? ['admin'] : ['dpl', 'mahasiswa'];
 
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $id,
-            'role' => 'required|in:' . implode(',', $allowedRoles),
-            'prodi_id' => 'required|exists:prodis,id',
+            'role' => 'required|in:dpl,mahasiswa',
+            'nim' => 'nullable|string|max:50|unique:users,nim,' . $id,
+            'nip' => 'nullable|string|max:50|unique:users,nip,' . $id,
             'password' => 'nullable|string|min:8',
         ]);
 
         $userToEdit->name = $request->name;
         $userToEdit->email = $request->email;
         $userToEdit->role = $request->role;
-        $userToEdit->prodi_id = $request->prodi_id;
+        $userToEdit->nim = $request->role === 'mahasiswa' ? $request->nim : null;
+        $userToEdit->nip = $request->role === 'dpl' ? $request->nip : null;
 
         if ($request->filled('password')) {
             $userToEdit->password = Hash::make($request->password);
@@ -104,17 +87,13 @@ class UserController extends Controller
         return redirect()->route('admin.users.index')->with('success', 'Data pengguna berhasil diperbarui.');
     }
 
-    public function destroy(\Illuminate\Http\Request $request, string $id)
+    public function destroy(Request $request, string $id)
     {
         $userToDelete = User::findOrFail($id);
         $currentUser = $request->user();
 
         if ($currentUser->id == $id) {
             return redirect()->back()->with('error', 'Anda tidak dapat menghapus akun Anda sendiri.');
-        }
-
-        if ($currentUser->role === 'admin' && $currentUser->prodi_id !== $userToDelete->prodi_id) {
-            return redirect()->back()->with('error', 'Akses ditolak.');
         }
 
         $userToDelete->delete();

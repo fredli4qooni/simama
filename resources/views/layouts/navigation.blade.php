@@ -13,7 +13,7 @@
                         {{ __('Dashboard') }}
                     </x-nav-link>
 
-                    @if(auth()->user()->role === 'admin' || auth()->user()->role === 'admin_fakultas')
+                    @if(auth()->user()->role === 'admin')
                         <x-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.*')">
                             {{ __('Manajemen Pengguna') }}
                         </x-nav-link>
@@ -98,7 +98,7 @@
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
 
-            @if(auth()->user()->role === 'admin' || auth()->user()->role === 'admin_fakultas')
+            @if(auth()->user()->role === 'admin')
                 <x-responsive-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.*')">
                     {{ __('Manajemen Pengguna') }}
                 </x-responsive-nav-link>
