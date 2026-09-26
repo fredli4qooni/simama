@@ -53,6 +53,9 @@
                                             <span class="px-2 py-0.5 text-[10px] font-bold rounded {{ $item->is_group ? 'bg-indigo-100 text-indigo-800' : 'bg-gray-100 text-gray-700' }}">
                                                 {{ $item->is_group ? 'Kelompok' : 'Individu' }}
                                             </span>
+                                            <span class="px-2 py-0.5 text-[10px] font-black rounded uppercase {{ $item->jenis_magang === 'mandiri' ? 'bg-emerald-100 text-emerald-800 border border-emerald-300' : 'bg-blue-100 text-blue-800 border border-blue-300' }}">
+                                                {{ $item->jenis_magang === 'mandiri' ? 'Magang Mandiri' : 'Magang Prodi' }}
+                                            </span>
                                         </div>
                                         <div class="text-sm text-gray-500 mt-0.5 flex flex-wrap items-center gap-2">
                                             <span class="font-medium">NIM: {{ $item->user->nim }}</span>
@@ -117,22 +120,40 @@
                                         </div>
 
                                         @php
+                                            $buktiMandiri = $item->documents->where('type', 'BUKTI_MAGANG_MANDIRI')->first() ?? $item->documents->where('type', 'SURAT_PENERIMAAN')->first();
                                             $laporanAkhir = $item->documents->where('type', 'LAPORAN_AKHIR')->first();
                                         @endphp
 
-                                        <div class="p-3.5 bg-purple-50 rounded-lg border border-purple-200 flex items-center justify-between">
-                                            <div class="flex items-center text-xs text-purple-900 font-semibold">
-                                                <svg class="w-4 h-4 mr-2 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                                                </svg>
-                                                Laporan Akhir: {{ $laporanAkhir ? 'Sudah Diunggah Mahasiswa' : 'Belum Diunggah' }}
+                                        @if($item->jenis_magang === 'mandiri')
+                                            <div class="p-3.5 bg-emerald-50 rounded-xl border border-emerald-200 flex items-center justify-between">
+                                                <div class="flex items-center text-xs text-emerald-900 font-semibold">
+                                                    <svg class="w-4 h-4 mr-2 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                                    </svg>
+                                                    Bukti Magang Mandiri: {{ $buktiMandiri ? 'Sudah Diunggah Mahasiswa' : 'Belum Diunggah' }}
+                                                </div>
+                                                @if($buktiMandiri)
+                                                    <a href="{{ asset('storage/' . $buktiMandiri->file_path) }}" target="_blank" class="px-3 py-1.5 bg-emerald-600 text-white rounded-lg text-xs font-bold hover:bg-emerald-700 transition shadow-xs flex items-center">
+                                                        <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                                                        Lihat Bukti Berkas ↗
+                                                    </a>
+                                                @endif
                                             </div>
-                                            @if($laporanAkhir)
-                                                <a href="{{ asset('storage/' . $laporanAkhir->file_path) }}" target="_blank" class="px-2.5 py-1 bg-purple-600 text-white rounded text-xs font-bold hover:bg-purple-700 transition-colors">
-                                                    Unduh Laporan
-                                                </a>
-                                            @endif
-                                        </div>
+                                        @else
+                                            <div class="p-3.5 bg-purple-50 rounded-xl border border-purple-200 flex items-center justify-between">
+                                                <div class="flex items-center text-xs text-purple-900 font-semibold">
+                                                    <svg class="w-4 h-4 mr-2 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                                    </svg>
+                                                    Laporan Akhir: {{ $laporanAkhir ? 'Sudah Diunggah Mahasiswa' : 'Belum Diunggah' }}
+                                                </div>
+                                                @if($laporanAkhir)
+                                                    <a href="{{ asset('storage/' . $laporanAkhir->file_path) }}" target="_blank" class="px-2.5 py-1 bg-purple-600 text-white rounded-lg text-xs font-bold hover:bg-purple-700 transition-colors">
+                                                        Unduh Laporan ↗
+                                                    </a>
+                                                @endif
+                                            </div>
+                                        @endif
                                     </div>
 
                                 </div>

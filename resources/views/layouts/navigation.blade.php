@@ -45,7 +45,7 @@
 
                     @if(auth()->user()->role === 'dpl')
                         <x-nav-link :href="route('dpl.pemantauan.index')" :active="request()->routeIs('dpl.pemantauan.*')">
-                            {{ __('Pemantauan & Konsultasi') }}
+                            {{ __('Pemantauan Magang') }}
                         </x-nav-link>
                         <x-nav-link :href="route('dpl.evaluasi.index')" :active="request()->routeIs('dpl.evaluasi.*')">
                             {{ __('Penilaian Magang') }}
@@ -130,7 +130,7 @@
 
             @if(auth()->user()->role === 'dpl')
                 <x-responsive-nav-link :href="route('dpl.pemantauan.index')" :active="request()->routeIs('dpl.pemantauan.*')">
-                    {{ __('Pemantauan & Konsultasi') }}
+                    {{ __('Pemantauan Magang') }}
                 </x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('dpl.evaluasi.index')" :active="request()->routeIs('dpl.evaluasi.*')">
                     {{ __('Penilaian Magang') }}

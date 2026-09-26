@@ -10,7 +10,6 @@ use App\Http\Controllers\Dpl\PemantauanMagangController;
 use App\Http\Controllers\Dpl\EvaluasiMagangController;
 use App\Http\Controllers\Admin\RekapNilaiController;
 use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\ConsultationController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -89,6 +88,8 @@ Route::middleware(['auth', 'role:mahasiswa'])->prefix('mahasiswa')->name('mahasi
     Route::post('/pengajuan', [PengajuanMagangController::class, 'store'])->name('pengajuan.store');
     Route::get('/pengajuan/{id}/surat-pengantar', [PengajuanMagangController::class, 'cetakSuratPengantar'])->name('pengajuan.surat_pengantar');
     Route::post('/pengajuan/{id}/surat-balasan', [PengajuanMagangController::class, 'uploadSuratBalasan'])->name('pengajuan.surat_balasan');
+    Route::post('/pengajuan/{id}/bukti-mandiri', [PengajuanMagangController::class, 'uploadBuktiMandiri'])->name('pengajuan.bukti_mandiri');
+    Route::get('/pengajuan/{id}/lembar-penilaian', [PengajuanMagangController::class, 'cetakLembarNilai'])->name('pengajuan.lembar_nilai');
     Route::get('/template-laporan', [PengajuanMagangController::class, 'downloadTemplateLaporan'])->name('laporan.template');
     Route::post('/pengajuan/{id}/laporan-akhir', [PengajuanMagangController::class, 'uploadLaporanAkhir'])->name('pengajuan.laporan_akhir');
 
@@ -100,14 +101,12 @@ Route::middleware(['auth', 'role:mahasiswa'])->prefix('mahasiswa')->name('mahasi
 });
 
 /* ==========================================
-   MODUL UMUM (PROFIL & KONSULTASI)
+   MODUL UMUM (PROFIL PENGGUNA)
 ========================================== */
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
-    Route::post('/konsultasi/{applicationId}', [ConsultationController::class, 'store'])->name('konsultasi.store');
 });
 
 require __DIR__.'/auth.php';

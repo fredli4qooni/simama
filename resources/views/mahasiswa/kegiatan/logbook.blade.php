@@ -1,169 +1,137 @@
 <x-app-layout>
     <x-slot name="header">
         <div class="flex flex-col">
-            <h2 class="font-bold text-2xl text-gray-900 leading-tight">
-                Jurnal Logbook & Konsultasi
+            <h2 class="font-bold text-2xl text-gray-900 leading-tight flex items-center gap-2">
+                <span class="p-2 bg-uin-light text-uin rounded-lg shadow-sm">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                    </svg>
+                </span>
+                Jurnal Logbook Kegiatan
             </h2>
-            <p class="text-sm text-gray-500 mt-1">Catat aktivitas harian dan diskusikan perkembangan magang bersama DPL Anda.</p>
+            <p class="text-sm text-gray-500 mt-1">Catat aktivitas harian dan tinjau catatan feedback serta review dari Dosen Pembimbing Lapangan Anda.</p>
         </div>
     </x-slot>
 
     <div class="py-8">
-        <div class="max-w-[95rem] mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             
             @if (session('success'))
-                <div class="mb-6 px-4 py-3 text-sm text-uin bg-uin-light border border-uin/20 rounded-lg shadow-sm font-medium flex items-center">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <div class="px-4 py-3 text-sm text-emerald-800 bg-emerald-50 border border-emerald-200 rounded-xl shadow-sm font-medium flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-emerald-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                     {{ session('success') }}
                 </div>
             @endif
 
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                
-                <div class="lg:col-span-8 space-y-6">
-                    <div class="bg-white shadow-sm sm:rounded-xl border border-gray-100 overflow-hidden">
-                        <div class="p-4 border-b border-gray-100 bg-uin text-white flex items-center">
-                            <h3 class="text-sm font-bold flex items-center">
-                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
-                                Tulis Jurnal Kegiatan Baru
-                            </h3>
-                        </div>
-                        <div class="p-5">
-                            <form action="{{ route('mahasiswa.logbook.store') }}" method="POST" class="space-y-4">
-                                @csrf
-                                <div>
-                                    <label class="block text-xs font-semibold text-gray-700">Tanggal Kegiatan</label>
-                                    <input class="mt-1 block w-full md:w-1/3 border-gray-300 focus:border-uin focus:ring-uin rounded-md shadow-sm text-sm" type="date" name="date" value="{{ old('date', \Carbon\Carbon::today()->format('Y-m-d')) }}" required max="{{ \Carbon\Carbon::today()->format('Y-m-d') }}" />
-                                </div>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div>
-                                        <label class="block text-xs font-semibold text-gray-700">Uraian Kegiatan</label>
-                                        <textarea name="kegiatan" rows="2" class="mt-1 block w-full border-gray-300 focus:border-uin focus:ring-uin rounded-md shadow-sm text-sm" required placeholder="Ceritakan detail tugas..."></textarea>
-                                    </div>
-                                    <div>
-                                        <label class="block text-xs font-semibold text-gray-700">Hasil / Output</label>
-                                        <textarea name="output" rows="2" class="mt-1 block w-full border-gray-300 focus:border-uin focus:ring-uin rounded-md shadow-sm text-sm" required placeholder="Misal: Laporan selesai..."></textarea>
-                                    </div>
-                                </div>
-                                <div class="flex justify-end pt-2">
-                                    <button type="submit" class="bg-uin text-white px-5 py-2 rounded-md text-xs font-bold hover:bg-uin-hover shadow-sm">Simpan Logbook</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-
-                    <div class="bg-white shadow-sm sm:rounded-xl border border-gray-100 overflow-hidden">
-                        <div class="p-4 border-b border-gray-100 bg-gray-50/80">
-                            <h3 class="text-sm font-bold text-gray-900">Riwayat Jurnal & Catatan DPL</h3>
-                        </div>
-                        <div class="p-5 space-y-4 h-[400px] overflow-y-auto custom-scrollbar">
-                            @forelse($logbooks as $log)
-                                <div class="border border-gray-200 rounded-lg shadow-sm">
-                                    <div class="bg-gray-50 px-4 py-2 border-b border-gray-100 text-xs font-bold text-gray-700 flex justify-between">
-                                        <span>{{ \Carbon\Carbon::parse($log->date)->translatedFormat('l, d F Y') }}</span>
-                                    </div>
-                                    <div class="p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <div>
-                                            <h4 class="text-[10px] font-bold text-gray-400 uppercase">Kegiatan:</h4>
-                                            <p class="text-sm text-gray-800">{{ $log->kegiatan }}</p>
-                                        </div>
-                                        <div>
-                                            <h4 class="text-[10px] font-bold text-gray-400 uppercase">Output:</h4>
-                                            <p class="text-sm text-gray-800">{{ $log->output }}</p>
-                                        </div>
-                                    </div>
-                                    @if($log->feedback_dpl)
-                                        <div class="bg-blue-50/50 border-t border-gray-100 p-3 flex items-start">
-                                            <svg class="w-4 h-4 text-blue-500 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                            <div>
-                                                <h4 class="text-[10px] font-bold text-blue-800 uppercase">Komentar DPL:</h4>
-                                                <p class="text-sm text-blue-900 italic">"{{ $log->feedback_dpl }}"</p>
-                                            </div>
-                                        </div>
-                                    @endif
-                                </div>
-                            @empty
-                                <div class="text-center py-10 text-gray-400 text-sm">Belum ada jurnal yang ditulis.</div>
-                            @endforelse
-                        </div>
-                    </div>
+            @if (session('error'))
+                <div class="px-4 py-3 text-sm text-rose-800 bg-rose-50 border border-rose-200 rounded-xl shadow-sm font-medium flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-rose-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    {{ session('error') }}
                 </div>
+            @endif
 
-                @php 
-                    // Mengambil data aplikasi magang mahasiswa yang sedang aktif untuk mengaitkan chat
-                    $currentPengajuan = auth()->user()->magangApplications()->whereIn('status', ['approved', 'active'])->latest()->first();
-                @endphp
-
-                <div class="lg:col-span-4 bg-white shadow-sm sm:rounded-xl border border-gray-100 flex flex-col h-[700px] relative">
-                    <div class="p-4 border-b border-uin bg-uin text-white rounded-t-xl flex justify-between items-center shadow-sm z-10">
-                        <div class="flex items-center">
-                            <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center mr-3">
-                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+            <!-- 1. FORM INPUT LOGBOOK BARU -->
+            <div class="bg-white shadow-sm sm:rounded-2xl border border-gray-100 overflow-hidden">
+                <div class="p-5 border-b border-gray-100 bg-gradient-to-r from-uin to-uin-hover text-white flex items-center justify-between">
+                    <h3 class="text-base font-bold flex items-center">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                        Tulis Jurnal Kegiatan Harian Baru
+                    </h3>
+                    <span class="text-xs bg-white/20 px-3 py-1 rounded-full font-medium">Wajib diisi berkala</span>
+                </div>
+                <div class="p-6 md:p-8">
+                    <form action="{{ route('mahasiswa.logbook.store') }}" method="POST" class="space-y-5">
+                        @csrf
+                        <div class="max-w-xs">
+                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Tanggal Kegiatan *</label>
+                            <input class="block w-full border-gray-300 focus:border-uin focus:ring-uin rounded-xl shadow-xs text-xs p-2.5" type="date" name="date" value="{{ old('date', \Carbon\Carbon::today()->format('Y-m-d')) }}" required max="{{ \Carbon\Carbon::today()->format('Y-m-d') }}" />
+                            <x-input-error :messages="$errors->get('date')" class="text-xs mt-1" />
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <div>
+                                <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Uraian Aktivitas & Kegiatan *</label>
+                                <textarea name="kegiatan" rows="4" class="block w-full border-gray-300 focus:border-uin focus:ring-uin rounded-xl shadow-xs text-xs p-3 leading-relaxed" required placeholder="Deskripsikan pekerjaan, proyek, atau penugasan yang Anda kerjakan pada hari tersebut...">{{ old('kegiatan') }}</textarea>
+                                <x-input-error :messages="$errors->get('kegiatan')" class="text-xs mt-1" />
                             </div>
                             <div>
-                                <h3 class="text-sm font-bold">Konsultasi DPL</h3>
-                                <p class="text-[10px] text-green-100 opacity-90">Tanya jawab terkait magang</p>
+                                <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Hasil / Luaran (Output) *</label>
+                                <textarea name="output" rows="4" class="block w-full border-gray-300 focus:border-uin focus:ring-uin rounded-xl shadow-xs text-xs p-3 leading-relaxed" required placeholder="Contoh: Modul autentikasi selesai, dokumentasi ERD diserahkan, 20 data terinput...">{{ old('output') }}</textarea>
+                                <x-input-error :messages="$errors->get('output')" class="text-xs mt-1" />
                             </div>
                         </div>
-                        <span class="relative flex h-2.5 w-2.5">
-                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-300 opacity-75"></span>
-                            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-400"></span>
-                        </span>
-                    </div>
-                    
-                    <div class="flex-1 p-4 overflow-y-auto bg-slate-50 space-y-4 custom-scrollbar flex flex-col-reverse">
-                        <div class="flex flex-col space-y-4">
-                            @if($currentPengajuan)
-                                @forelse($currentPengajuan->consultations as $chat)
-                                    @if($chat->sender_id == auth()->id())
-                                        <div class="flex justify-end">
-                                            <div class="bg-uin text-white rounded-l-xl rounded-tr-xl p-3 max-w-[85%] shadow-sm">
-                                                <p class="text-sm leading-relaxed">{{ $chat->message }}</p>
-                                                <span class="text-[9px] text-uin-light block mt-1 text-right">{{ $chat->created_at->format('H:i') }}</span>
-                                            </div>
-                                        </div>
-                                    @else
-                                        <div class="flex justify-start">
-                                            <div class="bg-white border border-gray-200 text-gray-800 rounded-r-xl rounded-tl-xl p-3 max-w-[85%] shadow-sm">
-                                                <p class="text-[10px] font-bold text-gray-400 mb-0.5">{{ $chat->sender->name }} (DPL)</p>
-                                                <p class="text-sm leading-relaxed">{{ $chat->message }}</p>
-                                                <span class="text-[9px] text-gray-400 block mt-1">{{ $chat->created_at->format('H:i') }}</span>
-                                            </div>
-                                        </div>
-                                    @endif
-                                @empty
-                                    <div class="text-center text-gray-400 opacity-70 mt-10">
-                                        <svg class="w-10 h-10 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
-                                        <p class="text-xs">Sapa Dosen Pembimbing Anda!</p>
-                                    </div>
-                                @endforelse
-                            @else
-                                <div class="text-center text-gray-400 mt-10 text-xs">Anda harus memiliki pengajuan magang yang aktif untuk menggunakan fitur ini.</div>
-                            @endif
-                        </div>
-                    </div>
-                    
-                    <div class="p-3 border-t border-gray-200 bg-white rounded-b-xl z-10">
-                        @if($currentPengajuan)
-                        <form action="{{ route('konsultasi.store', $currentPengajuan->id) }}" method="POST" class="flex items-center space-x-2">
-                            @csrf
-                            <input type="text" name="message" class="flex-1 bg-gray-100 border-transparent focus:bg-white focus:border-uin focus:ring-uin rounded-full text-sm px-4 py-2.5 transition-colors" placeholder="Ketik pesan konsultasi..." required autocomplete="off">
-                            <button type="submit" class="bg-uin text-white rounded-full p-2.5 hover:bg-uin-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-uin transition shadow-sm">
-                                <svg class="w-5 h-5 transform rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+
+                        <div class="flex justify-end pt-2 border-t border-gray-100">
+                            <button type="submit" class="inline-flex items-center px-6 py-2.5 bg-uin hover:bg-uin-hover text-white rounded-xl text-xs font-bold shadow-sm transition">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                Simpan Jurnal Logbook
                             </button>
-                        </form>
-                        @endif
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- 2. RIWAYAT LOGBOOK MAHASISWA -->
+            <div class="bg-white shadow-sm sm:rounded-2xl border border-gray-100 overflow-hidden">
+                <div class="p-5 border-b border-gray-100 bg-gray-50/80 flex items-center justify-between">
+                    <div>
+                        <h3 class="text-sm font-bold text-gray-900 flex items-center">
+                            <svg class="w-4 h-4 mr-2 text-uin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                            Riwayat Jurnal Logbook & Catatan Feedback DPL
+                        </h3>
+                        <p class="text-xs text-gray-500 mt-0.5">Daftar rekaman kegiatan yang telah Anda simpan beserta ulasan dari Dosen Pembimbing.</p>
                     </div>
+                    <span class="text-xs font-bold px-3 py-1 bg-gray-200/80 text-gray-700 rounded-full">
+                        Total: {{ $logbooks->count() }} Catatan
+                    </span>
                 </div>
 
+                <div class="p-6 divide-y divide-gray-100 space-y-4">
+                    @forelse($logbooks as $log)
+                        <div class="pt-4 first:pt-0">
+                            <div class="border border-gray-200 rounded-2xl bg-white shadow-xs overflow-hidden transition-all hover:border-uin/40 hover:shadow-sm">
+                                <div class="bg-gray-50/80 px-5 py-3 border-b border-gray-100 flex flex-wrap justify-between items-center gap-2">
+                                    <span class="text-xs font-bold text-gray-900 flex items-center">
+                                        <svg class="w-3.5 h-3.5 mr-1.5 text-uin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                        {{ \Carbon\Carbon::parse($log->date)->translatedFormat('l, d F Y') }}
+                                    </span>
+                                    <span class="text-[11px] text-gray-400 font-mono">Dicatat: {{ $log->created_at->format('H:i') }} WIB</span>
+                                </div>
+                                
+                                <div class="p-5 grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <h4 class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Aktivitas Kegiatan:</h4>
+                                        <p class="text-xs text-gray-800 leading-relaxed">{{ $log->kegiatan }}</p>
+                                    </div>
+                                    <div class="bg-gray-50/80 p-3.5 rounded-xl border border-gray-100">
+                                        <h4 class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Hasil / Luaran:</h4>
+                                        <p class="text-xs text-gray-700 leading-relaxed">{{ $log->output }}</p>
+                                    </div>
+                                </div>
+
+                                @if($log->feedback_dpl)
+                                    <div class="bg-uin-light/40 border-t border-uin/20 p-4 flex items-start space-x-3">
+                                        <div class="p-1.5 bg-uin text-white rounded-lg flex-shrink-0 mt-0.5">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"></path></svg>
+                                        </div>
+                                        <div>
+                                            <h4 class="text-[10px] font-bold text-uin uppercase tracking-wider">Ulasan & Feedback DPL:</h4>
+                                            <p class="text-xs text-gray-800 italic mt-0.5 leading-relaxed">"{{ $log->feedback_dpl }}"</p>
+                                        </div>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    @empty
+                        <div class="text-center py-12 text-gray-400 flex flex-col items-center">
+                            <svg class="w-12 h-12 text-gray-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                            <p class="text-xs font-semibold text-gray-500">Belum ada jurnal logbook yang ditulis.</p>
+                            <p class="text-[11px] text-gray-400 mt-1">Gunakan formulir di atas untuk mencatat kegiatan harian magang Anda.</p>
+                        </div>
+                    @endforelse
+                </div>
             </div>
+
         </div>
     </div>
-
-    <style>
-        .custom-scrollbar::-webkit-scrollbar { width: 5px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-    </style>
 </x-app-layout>

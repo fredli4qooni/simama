@@ -74,6 +74,39 @@
                 </div>
             @endif
 
+            <!-- INFOBOX JIKA NILAI AKHIR MAGANG SUDAH TERBIT -->
+            @php
+                $mhsPengajuan = auth()->user()->role === 'mahasiswa' ? auth()->user()->latestMagangApplication() : null;
+            @endphp
+            @if($mhsPengajuan && $mhsPengajuan->evaluation)
+                <div class="bg-gradient-to-r from-emerald-50 via-teal-50 to-emerald-50 border-2 border-emerald-300 rounded-2xl p-6 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-5">
+                    <div class="flex items-center space-x-4">
+                        <div class="p-3 bg-emerald-600 text-white rounded-2xl shadow-md flex-shrink-0">
+                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <h4 class="text-base font-bold text-gray-900">Nilai Akhir Magang Anda Telah Terbit!</h4>
+                                <span class="px-2.5 py-0.5 bg-emerald-200 text-emerald-900 font-bold text-[10px] rounded-full uppercase tracking-wider">Selesai</span>
+                            </div>
+                            <p class="text-xs text-emerald-800 mt-1">
+                                Instansi: <strong>{{ $mhsPengajuan->instansi }}</strong> | 
+                                Nilai Akhir: <strong class="text-base font-black text-emerald-700">{{ number_format($mhsPengajuan->evaluation->nilai_akhir, 2) }}</strong>
+                                (Nilai Instansi: {{ number_format($mhsPengajuan->evaluation->nilai_instansi, 2) }}, Nilai DPL: {{ number_format($mhsPengajuan->evaluation->nilai_dpl, 2) }})
+                            </p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3 w-full md:w-auto">
+                        <a href="{{ route('mahasiswa.pengajuan.lembar_nilai', $mhsPengajuan->id) }}" target="_blank" class="w-full md:w-auto inline-flex items-center justify-center px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-md transition whitespace-nowrap">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                            Unduh Lembar Nilai (PDF)
+                        </a>
+                    </div>
+                </div>
+            @endif
+
             <!-- Dashboard Mahasiswa -->
             @if(auth()->user()->role === 'mahasiswa')
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -97,8 +130,8 @@
                         <div class="text-uin mb-4 bg-uin-light w-12 h-12 flex items-center justify-center rounded-xl group-hover:bg-uin group-hover:text-white transition-colors">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                         </div>
-                        <h4 class="text-base font-bold text-gray-900 mb-1">Logbook & Konsultasi</h4>
-                        <p class="text-xs text-gray-500">Catat aktivitas harian magang dan ruang diskusi bimbingan DPL.</p>
+                        <h4 class="text-base font-bold text-gray-900 mb-1">Logbook Kegiatan</h4>
+                        <p class="text-xs text-gray-500">Catat aktivitas harian magang dan tinjau catatan feedback DPL.</p>
                     </a>
                 </div>
             @endif

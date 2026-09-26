@@ -41,10 +41,10 @@ class PenetapanDplController extends Controller
 
         $pengajuan = MagangApplication::with(['user', 'members.user'])->findOrFail($request->application_id);
 
-        $hasSuratPenerimaan = $pengajuan->documents()->where('type', 'SURAT_PENERIMAAN')->exists();
+        $hasSuratPenerimaan = $pengajuan->documents()->whereIn('type', ['SURAT_PENERIMAAN', 'BUKTI_MAGANG_MANDIRI'])->exists();
 
         if (!$hasSuratPenerimaan) {
-            return redirect()->back()->with('error', 'DPL belum bisa ditetapkan karena mahasiswa/kelompok belum mengunggah Surat Penerimaan Instansi.');
+            return redirect()->back()->with('error', 'DPL belum bisa ditetapkan karena mahasiswa/kelompok belum mengunggah Surat Penerimaan / Bukti Magang Mandiri.');
         }
 
         DplAssignment::updateOrCreate(

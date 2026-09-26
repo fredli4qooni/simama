@@ -21,7 +21,7 @@ class PengajuanMagangController extends Controller
         $pengajuan = $user->latestMagangApplication();
 
         if ($pengajuan) {
-            $pengajuan->load(['members.user', 'documents', 'dplAssignment.dpl']);
+            $pengajuan->load(['members.user', 'documents', 'dplAssignment.dpl', 'evaluation.dpl']);
         }
 
         // Daftar mahasiswa di prodi yang sama untuk opsi pemilihan anggota kelompok
@@ -55,6 +55,7 @@ class PengajuanMagangController extends Controller
             'end_date' => 'required|date|after:start_date',
             'leader_ktm' => 'required|mimes:pdf,jpg,png|max:2048',
             'leader_transkrip' => 'required|mimes:pdf,jpg,png|max:2048',
+            'bukti_magang_mandiri' => 'nullable|mimes:pdf,jpg,png|max:10240',
             'member_user_ids' => 'nullable|array|max:3',
             'member_user_ids.*' => 'exists:users,id',
             'member_ktm.*' => 'nullable|mimes:pdf,jpg,png|max:2048',
@@ -65,7 +66,7 @@ class PengajuanMagangController extends Controller
             'member_user_ids.max' => 'Jumlah anggota kelompok maksimal 3 orang (total 4 orang termasuk ketua).',
         ]);
 
-        $isGroup = (bool) $request->is_group;
+        $isGroup = $request->jenis_magang === 'mandiri' ? false : (bool) $request->is_group;
 
         $pengajuan = MagangApplication::create([
             'user_id' => $user->id,
@@ -80,7 +81,7 @@ class PengajuanMagangController extends Controller
             'status' => 'pending',
         ]);
 
-        // Rekord Anggota: Ketua
+        // Rekord Anggota: Pemohon Tunggal / Ketua
         MagangMember::create([
             'application_id' => $pengajuan->id,
             'user_id' => $user->id,
@@ -108,7 +109,18 @@ class PengajuanMagangController extends Controller
             ]);
         }
 
-        // Jika Kelompok: Simpan Anggota dan Dokumennya
+        // Jika Magang Mandiri dan ada berkas bukti yang disertakan langsung
+        if ($request->jenis_magang === 'mandiri' && $request->hasFile('bukti_magang_mandiri')) {
+            $pathBukti = $request->file('bukti_magang_mandiri')->store('bukti_mandiri', 'public');
+            ApplicationDocument::create([
+                'application_id' => $pengajuan->id,
+                'user_id' => $user->id,
+                'type' => 'BUKTI_MAGANG_MANDIRI',
+                'file_path' => $pathBukti,
+            ]);
+        }
+
+        // Jika Kelompok (Khusus Jalur Prodi): Simpan Anggota dan Dokumennya
         if ($isGroup && $request->has('member_user_ids')) {
             foreach ($request->member_user_ids as $index => $memberId) {
                 if ($memberId && $memberId != $user->id) {
@@ -143,7 +155,11 @@ class PengajuanMagangController extends Controller
             }
         }
 
-        return redirect()->back()->with('success', 'Pengajuan magang berhasil dikirim. Silakan unduh Surat Pengantar dari Program Studi untuk dimintakan tanda tangan manual.');
+        $pesanSukses = $request->jenis_magang === 'mandiri'
+            ? 'Pendaftaran magang mandiri berhasil dikirim. Anda dapat mengunggah atau memperbarui bukti berkas magang mandiri untuk dinilai DPL.'
+            : 'Pengajuan magang berhasil dikirim. Silakan unduh Surat Pengantar dari Program Studi untuk dimintakan tanda tangan manual.';
+
+        return redirect()->back()->with('success', $pesanSukses);
     }
 
     public function cetakSuratPengantar(string $id)
@@ -191,9 +207,65 @@ class PengajuanMagangController extends Controller
         return redirect()->back()->with('error', 'Gagal mengunggah file.');
     }
 
+    public function uploadBuktiMandiri(Request $request, string $id)
+    {
+        $request->validate([
+            'bukti_magang' => 'required|mimes:pdf,jpg,png|max:10240',
+        ], [
+            'bukti_magang.required' => 'File bukti magang mandiri wajib diunggah.',
+            'bukti_magang.max' => 'Ukuran file maksimal 10MB.',
+        ]);
+
+        $pengajuan = MagangApplication::findOrFail($id);
+
+        $userId = $request->user()->id;
+        $isAuthorized = $pengajuan->user_id == $userId || $pengajuan->members()->where('user_id', $userId)->exists();
+        if (!$isAuthorized) {
+            return redirect()->back()->with('error', 'Anda tidak memiliki akses ke pengajuan ini.');
+        }
+
+        if ($request->hasFile('bukti_magang')) {
+            $path = $request->file('bukti_magang')->store('bukti_mandiri', 'public');
+
+            ApplicationDocument::create([
+                'application_id' => $pengajuan->id,
+                'user_id' => $userId,
+                'type' => 'BUKTI_MAGANG_MANDIRI',
+                'file_path' => $path,
+            ]);
+
+            return redirect()->back()->with('success', 'Berkas bukti magang mandiri berhasil diunggah. DPL dapat meninjau berkas ini untuk memberikan penilaian.');
+        }
+
+        return redirect()->back()->with('error', 'Gagal mengunggah file bukti magang mandiri.');
+    }
+
+    public function cetakLembarNilai(string $id)
+    {
+        $application = MagangApplication::with(['user.prodi', 'members.user.prodi', 'dplAssignment.dpl', 'evaluation'])->findOrFail($id);
+
+        $userId = auth()->id();
+        $isAuthorized = $application->user_id == $userId || $application->members()->where('user_id', $userId)->exists();
+        if (!$isAuthorized) {
+            abort(403, 'Akses ditolak.');
+        }
+
+        if (!$application->evaluation) {
+            return redirect()->back()->with('error', 'Penilaian belum diterbitkan oleh DPL untuk pengajuan ini.');
+        }
+
+        $pdf = Pdf::loadView('dpl.evaluasi.lembar_penilaian', compact('application'));
+        $pdf->setPaper('A4', 'portrait');
+
+        $namaMahasiswa = $application->user->name ?? 'Mahasiswa';
+        $safeName = str_replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|'], '-', $namaMahasiswa);
+
+        return $pdf->stream('Lembar_Penilaian_Magang_' . $safeName . '.pdf');
+    }
+
     public function downloadTemplateLaporan()
     {
-        $content = "PEDOMAN DAN TEMPLATE LAPORAN AKHIR MAGANG\nPROGRAM STUDI TEKNOLOGI INFORMASI\n\n1. HALAMAN JUDUL\n2. LEMBAR PENGESAHAN DPL & INSTANSI\n3. KATA PENGANTAR\n4. DAFTAR ISI\n5. BAB I: PENDAHULUAN (Latar Belakang, Tujuan, Manfaat)\n6. BAB II: GAMBARAN UMUM INSTANSI\n7. BAB III: PELAKSANAAN MAGANG & PEMBAHASAN\n8. BAB IV: PENUTUP (Kesimpulan & Saran)\n9. LAMPIRAN (Logbook, Rekap Presensi, Dokumentasi)";
+        $content = "PEDOMAN DAN TEMPLATE LAPORAN AKHIR MAGANG\nPROGRAM STUDI SISTEM INFORMASI\n\n1. HALAMAN JUDUL\n2. LEMBAR PENGESAHAN DPL & INSTANSI\n3. KATA PENGANTAR\n4. DAFTAR ISI\n5. BAB I: PENDAHULUAN (Latar Belakang, Tujuan, Manfaat)\n6. BAB II: GAMBARAN UMUM INSTANSI\n7. BAB III: PELAKSANAAN MAGANG & PEMBAHASAN\n8. BAB IV: PENUTUP (Kesimpulan & Saran)\n9. LAMPIRAN (Logbook, Rekap Presensi, Dokumentasi)";
 
         return response($content)
             ->header('Content-Type', 'text/plain')

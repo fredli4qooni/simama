@@ -10,7 +10,7 @@
                     </span>
                     Pengajuan & Dokumen Magang
                 </h2>
-                <p class="text-sm text-gray-500 mt-1">Pendaftaran kelompok magang, unduh surat pengantar prodi, unggah surat balasan, dan pelaporan akhir.</p>
+                <p class="text-sm text-gray-500 mt-1">Pendaftaran magang prodi & mandiri, administrasi berkas, serta transparansi nilai akhir mahasiswa.</p>
             </div>
         </div>
     </x-slot>
@@ -47,308 +47,515 @@
 
             <!-- 1. JOURNEY STEPPER (TAHAPAN STATUS MAGANG) -->
             @php
-                $step = 1;
-                if ($pengajuan) {
-                    if ($pengajuan->status == 'pending') $step = 2;
-                    elseif ($pengajuan->status == 'approved') $step = 3;
-                    elseif ($pengajuan->status == 'active') $step = 4;
-                    elseif ($pengajuan->status == 'selesai') $step = 5;
-                }
                 $isAcademicEligible = (!empty(auth()->user()->nim) && auth()->user()->total_sks >= 100 && auth()->user()->ipk >= 2.50);
+                $isMandiri = $pengajuan && $pengajuan->jenis_magang === 'mandiri';
             @endphp
 
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                <h4 class="text-xs font-black tracking-widest text-gray-400 uppercase mb-5 flex items-center">
-                    <svg class="w-4 h-4 mr-1.5 text-uin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
-                    </svg>
-                    Alur Proses Magang Anda
-                </h4>
-                
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
-                    <!-- Step 1 -->
-                    <div class="p-3.5 rounded-xl border {{ $step >= 1 ? ($step == 1 ? 'bg-uin-light/40 border-uin text-uin' : 'bg-gray-50 border-gray-200 text-gray-800') : 'bg-gray-50 border-gray-100 text-gray-400 opacity-60' }}">
-                        <div class="flex items-center gap-2 mb-1">
-                            <span class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-black {{ $step >= 1 ? 'bg-uin text-white' : 'bg-gray-200 text-gray-600' }}">1</span>
-                            <span class="text-xs font-bold">Pendaftaran</span>
-                        </div>
-                        <p class="text-[11px] text-gray-500 line-clamp-2">Input berkas kelompok, KTM & Transkrip.</p>
-                    </div>
-
-                    <!-- Step 2 -->
-                    <div class="p-3.5 rounded-xl border {{ $step >= 2 ? ($step == 2 ? 'bg-uin-light/40 border-uin text-uin' : 'bg-gray-50 border-gray-200 text-gray-800') : 'bg-gray-50 border-gray-100 text-gray-400 opacity-60' }}">
-                        <div class="flex items-center gap-2 mb-1">
-                            <span class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-black {{ $step >= 2 ? 'bg-uin text-white' : 'bg-gray-200 text-gray-600' }}">2</span>
-                            <span class="text-xs font-bold">Surat Pengantar</span>
-                        </div>
-                        <p class="text-[11px] text-gray-500 line-clamp-2">Cetak format tanpa TTD & cap manual Prodi.</p>
-                    </div>
-
-                    <!-- Step 3 -->
-                    <div class="p-3.5 rounded-xl border {{ $step >= 3 ? ($step == 3 ? 'bg-uin-light/40 border-uin text-uin' : 'bg-gray-50 border-gray-200 text-gray-800') : 'bg-gray-50 border-gray-100 text-gray-400 opacity-60' }}">
-                        <div class="flex items-center gap-2 mb-1">
-                            <span class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-black {{ $step >= 3 ? 'bg-uin text-white' : 'bg-gray-200 text-gray-600' }}">3</span>
-                            <span class="text-xs font-bold">Surat Balasan</span>
-                        </div>
-                        <p class="text-[11px] text-gray-500 line-clamp-2">Unggah bukti penerimaan dari instansi.</p>
-                    </div>
-
-                    <!-- Step 4 -->
-                    <div class="p-3.5 rounded-xl border {{ $step >= 4 ? ($step == 4 ? 'bg-uin-light/40 border-uin text-uin' : 'bg-gray-50 border-gray-200 text-gray-800') : 'bg-gray-50 border-gray-100 text-gray-400 opacity-60' }}">
-                        <div class="flex items-center gap-2 mb-1">
-                            <span class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-black {{ $step >= 4 ? 'bg-uin text-white' : 'bg-gray-200 text-gray-600' }}">4</span>
-                            <span class="text-xs font-bold">Magang & DPL</span>
-                        </div>
-                        <p class="text-[11px] text-gray-500 line-clamp-2">DPL ditetapkan, presensi GPS & logbook aktif.</p>
-                    </div>
-
-                    <!-- Step 5 -->
-                    <div class="p-3.5 rounded-xl border {{ $step == 5 ? 'bg-uin-light/40 border-uin text-uin' : 'bg-gray-50 border-gray-100 text-gray-400 opacity-60' }}">
-                        <div class="flex items-center gap-2 mb-1">
-                            <span class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-black {{ $step == 5 ? 'bg-uin text-white' : 'bg-gray-200 text-gray-600' }}">5</span>
-                            <span class="text-xs font-bold">Laporan & Nilai</span>
-                        </div>
-                        <p class="text-[11px] text-gray-500 line-clamp-2">Unggah laporan akhir & penerimaan nilai.</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 2. JIKA PENGAJUAN SUDAH ADA (DASHBOARD KELOMPOK & DOKUMEN HUB) -->
-            @if($pengajuan && in_array($pengajuan->status, ['pending', 'approved', 'active', 'selesai']))
-            
-            <!-- HERO STATUS CARD -->
-            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                <div class="p-6 md:p-8 bg-gradient-to-br from-gray-900 via-slate-900 to-gray-800 text-white flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-                    <div class="space-y-2">
-                        <div class="flex items-center gap-2">
-                            <span class="px-2.5 py-1 text-xs font-black rounded-md tracking-wider uppercase {{ $pengajuan->is_group ? 'bg-indigo-500 text-white' : 'bg-gray-600 text-white' }}">
-                                {{ $pengajuan->is_group ? '👥 Magang Kelompok' : '👤 Magang Individu' }}
-                            </span>
-                            <span class="px-2.5 py-1 text-xs font-black rounded-md tracking-wider uppercase bg-white/10 text-gray-200">
-                                {{ strtoupper($pengajuan->jenis_magang) }}
-                            </span>
-                        </div>
-                        <h3 class="text-2xl md:text-3xl font-black">{{ $pengajuan->instansi }}</h3>
-                        <p class="text-xs text-gray-300 flex items-center">
-                            <svg class="w-4 h-4 mr-1 text-uin-light" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path></svg>
-                            {{ $pengajuan->alamat ?? $pengajuan->alamat_instansi }}
-                        </p>
-                    </div>
-
-                    <div class="flex flex-col items-start md:items-end gap-2 bg-white/10 p-4 rounded-xl backdrop-blur-sm border border-white/10">
-                        <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Status Saat Ini</span>
-                        @if($pengajuan->status == 'pending')
-                            <span class="inline-flex items-center px-3 py-1 bg-amber-400/20 text-amber-300 rounded-full text-xs font-bold border border-amber-400/30">
-                                <span class="w-2 h-2 rounded-full bg-amber-400 mr-2 animate-pulse"></span> Menunggu Verifikasi & TTD Prodi
-                            </span>
-                        @elseif($pengajuan->status == 'approved')
-                            <span class="inline-flex items-center px-3 py-1 bg-blue-400/20 text-blue-300 rounded-full text-xs font-bold border border-blue-400/30">
-                                <span class="w-2 h-2 rounded-full bg-blue-400 mr-2 animate-pulse"></span> Disetujui Prodi (Unggah Surat Balasan)
-                            </span>
-                        @elseif($pengajuan->status == 'active')
-                            <span class="inline-flex items-center px-3 py-1 bg-emerald-400/20 text-emerald-300 rounded-full text-xs font-bold border border-emerald-400/30">
-                                <span class="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-ping"></span> Magang Sedang Aktif
-                            </span>
-                        @elseif($pengajuan->status == 'selesai')
-                            <span class="inline-flex items-center px-3 py-1 bg-purple-400/20 text-purple-300 rounded-full text-xs font-bold border border-purple-400/30">
-                                Selesai & Terverifikasi
-                            </span>
-                        @endif
-                        <span class="text-[11px] text-gray-300 font-mono mt-1">
-                            📅 {{ \Carbon\Carbon::parse($pengajuan->start_date)->format('d M Y') }} - {{ \Carbon\Carbon::parse($pengajuan->end_date)->format('d M Y') }}
-                        </span>
-                    </div>
-                </div>
-
-                <!-- DAFTAR ANGGOTA KELOMPOK (CARD GRID) -->
-                <div class="p-6 border-b border-gray-100 bg-gray-50/50">
-                    <h4 class="text-xs font-black uppercase tracking-wider text-gray-400 mb-4 flex items-center">
+            @if($pengajuan)
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                    <h4 class="text-xs font-black tracking-widest text-gray-400 uppercase mb-5 flex items-center">
                         <svg class="w-4 h-4 mr-1.5 text-uin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                         </svg>
-                        Susunan Anggota Kelompok
+                        Alur Proses {{ $isMandiri ? 'Magang Mandiri' : 'Magang Program Studi' }}
                     </h4>
                     
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                        @if($pengajuan->members && $pengajuan->members->count() > 0)
-                            @foreach($pengajuan->members as $member)
-                                <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex flex-col justify-between space-y-3">
-                                    <div class="flex items-center space-x-3">
-                                        @if($member->user->avatar_url)
-                                            <img src="{{ $member->user->avatar_url }}" alt="{{ $member->user->name }}" class="w-10 h-10 rounded-full object-cover shadow-sm ring-1 ring-uin/30 flex-shrink-0">
-                                        @else
-                                            <div class="w-10 h-10 rounded-full {{ $member->is_leader ? 'bg-uin text-white font-black' : 'bg-gray-100 text-gray-700 font-bold' }} flex items-center justify-center text-sm shadow-sm flex-shrink-0">
-                                                {{ substr($member->user->name ?? 'M', 0, 1) }}
+                    @if($isMandiri)
+                        <!-- STEPPER 3 LANGKAH MAGANG MANDIRI -->
+                        @php
+                            $mStep = 1;
+                            if ($pengajuan->status == 'pending') $mStep = 1;
+                            elseif (in_array($pengajuan->status, ['approved', 'active'])) $mStep = 2;
+                            elseif ($pengajuan->status == 'selesai' || $pengajuan->evaluation) $mStep = 3;
+                        @endphp
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <div class="p-4 rounded-xl border {{ $mStep >= 1 ? ($mStep == 1 ? 'bg-uin-light/40 border-uin text-uin' : 'bg-gray-50 border-gray-200 text-gray-800') : 'bg-gray-50 border-gray-100 text-gray-400 opacity-60' }}">
+                                <div class="flex items-center gap-2 mb-1.5">
+                                    <span class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-black {{ $mStep >= 1 ? 'bg-uin text-white' : 'bg-gray-200 text-gray-600' }}">1</span>
+                                    <span class="text-xs font-bold">1. Pendaftaran Mandiri</span>
+                                </div>
+                                <p class="text-[11px] text-gray-500">Data instansi & berkas akademik terkirim.</p>
+                            </div>
+
+                            <div class="p-4 rounded-xl border {{ $mStep >= 2 ? ($mStep == 2 ? 'bg-uin-light/40 border-uin text-uin' : 'bg-gray-50 border-gray-200 text-gray-800') : 'bg-gray-50 border-gray-100 text-gray-400 opacity-60' }}">
+                                <div class="flex items-center gap-2 mb-1.5">
+                                    <span class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-black {{ $mStep >= 2 ? 'bg-uin text-white' : 'bg-gray-200 text-gray-600' }}">2</span>
+                                    <span class="text-xs font-bold">2. Upload Bukti & DPL</span>
+                                </div>
+                                <p class="text-[11px] text-gray-500">Unggah berkas bukti magang & penetapan DPL.</p>
+                            </div>
+
+                            <div class="p-4 rounded-xl border {{ $mStep == 3 ? 'bg-uin-light/40 border-uin text-uin' : 'bg-gray-50 border-gray-100 text-gray-400 opacity-60' }}">
+                                <div class="flex items-center gap-2 mb-1.5">
+                                    <span class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-black {{ $mStep == 3 ? 'bg-uin text-white' : 'bg-gray-200 text-gray-600' }}">3</span>
+                                    <span class="text-xs font-bold">3. Penilaian DPL & Nilai Akhir</span>
+                                </div>
+                                <p class="text-[11px] text-gray-500">Rata-rata nilai instansi & DPL diterbitkan.</p>
+                            </div>
+                        </div>
+                    @else
+                        <!-- STEPPER 5 LANGKAH MAGANG PRODI REGULER -->
+                        @php
+                            $step = 1;
+                            if ($pengajuan->status == 'pending') $step = 2;
+                            elseif ($pengajuan->status == 'approved') $step = 3;
+                            elseif ($pengajuan->status == 'active') $step = 4;
+                            elseif ($pengajuan->status == 'selesai' || $pengajuan->evaluation) $step = 5;
+                        @endphp
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+                            <div class="p-3.5 rounded-xl border {{ $step >= 1 ? ($step == 1 ? 'bg-uin-light/40 border-uin text-uin' : 'bg-gray-50 border-gray-200 text-gray-800') : 'bg-gray-50 border-gray-100 text-gray-400 opacity-60' }}">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <span class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-black {{ $step >= 1 ? 'bg-uin text-white' : 'bg-gray-200 text-gray-600' }}">1</span>
+                                    <span class="text-xs font-bold">Pendaftaran</span>
+                                </div>
+                                <p class="text-[11px] text-gray-500 line-clamp-2">Input berkas kelompok, KTM & Transkrip.</p>
+                            </div>
+
+                            <div class="p-3.5 rounded-xl border {{ $step >= 2 ? ($step == 2 ? 'bg-uin-light/40 border-uin text-uin' : 'bg-gray-50 border-gray-200 text-gray-800') : 'bg-gray-50 border-gray-100 text-gray-400 opacity-60' }}">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <span class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-black {{ $step >= 2 ? 'bg-uin text-white' : 'bg-gray-200 text-gray-600' }}">2</span>
+                                    <span class="text-xs font-bold">Surat Pengantar</span>
+                                </div>
+                                <p class="text-[11px] text-gray-500 line-clamp-2">Cetak format tanpa TTD & cap manual Prodi.</p>
+                            </div>
+
+                            <div class="p-3.5 rounded-xl border {{ $step >= 3 ? ($step == 3 ? 'bg-uin-light/40 border-uin text-uin' : 'bg-gray-50 border-gray-200 text-gray-800') : 'bg-gray-50 border-gray-100 text-gray-400 opacity-60' }}">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <span class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-black {{ $step >= 3 ? 'bg-uin text-white' : 'bg-gray-200 text-gray-600' }}">3</span>
+                                    <span class="text-xs font-bold">Surat Balasan</span>
+                                </div>
+                                <p class="text-[11px] text-gray-500 line-clamp-2">Unggah bukti penerimaan dari instansi.</p>
+                            </div>
+
+                            <div class="p-3.5 rounded-xl border {{ $step >= 4 ? ($step == 4 ? 'bg-uin-light/40 border-uin text-uin' : 'bg-gray-50 border-gray-200 text-gray-800') : 'bg-gray-50 border-gray-100 text-gray-400 opacity-60' }}">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <span class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-black {{ $step >= 4 ? 'bg-uin text-white' : 'bg-gray-200 text-gray-600' }}">4</span>
+                                    <span class="text-xs font-bold">Magang & DPL</span>
+                                </div>
+                                <p class="text-[11px] text-gray-500 line-clamp-2">DPL ditetapkan, presensi GPS & logbook aktif.</p>
+                            </div>
+
+                            <div class="p-3.5 rounded-xl border {{ $step == 5 ? 'bg-uin-light/40 border-uin text-uin' : 'bg-gray-50 border-gray-100 text-gray-400 opacity-60' }}">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <span class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-black {{ $step == 5 ? 'bg-uin text-white' : 'bg-gray-200 text-gray-600' }}">5</span>
+                                    <span class="text-xs font-bold">Laporan & Nilai</span>
+                                </div>
+                                <p class="text-[11px] text-gray-500 line-clamp-2">Unggah laporan akhir & penerimaan nilai.</p>
+                            </div>
+                        </div>
+                    @endif
+                </div>
+            @endif
+
+            <!-- 2. JIKA PENGAJUAN SUDAH ADA (DASHBOARD KELOMPOK / MANDIRI & DOKUMEN HUB) -->
+            @if($pengajuan && in_array($pengajuan->status, ['pending', 'approved', 'active', 'selesai']))
+            
+                <!-- A. HERO STATUS CARD -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="p-6 md:p-8 bg-gradient-to-br from-gray-900 via-slate-900 to-gray-800 text-white flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                        <div class="space-y-2">
+                            <div class="flex items-center gap-2">
+                                <span class="px-2.5 py-1 text-xs font-black rounded-md tracking-wider uppercase {{ $pengajuan->is_group ? 'bg-indigo-500 text-white' : 'bg-gray-600 text-white' }}">
+                                    {{ $pengajuan->is_group ? '👥 Magang Kelompok' : '👤 Magang Individu' }}
+                                </span>
+                                <span class="px-2.5 py-1 text-xs font-black rounded-md tracking-wider uppercase {{ $pengajuan->jenis_magang === 'mandiri' ? 'bg-emerald-600 text-white' : 'bg-white/10 text-gray-200' }}">
+                                    {{ $pengajuan->jenis_magang === 'mandiri' ? 'MAGANG MANDIRI' : 'MAGANG PRODI' }}
+                                </span>
+                            </div>
+                            <h3 class="text-2xl md:text-3xl font-black">{{ $pengajuan->instansi }}</h3>
+                            <p class="text-xs text-gray-300 flex items-center">
+                                <svg class="w-4 h-4 mr-1 text-uin-light" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path></svg>
+                                {{ $pengajuan->alamat ?? $pengajuan->alamat_instansi }}
+                            </p>
+                        </div>
+
+                        <div class="flex flex-col items-start md:items-end gap-2 bg-white/10 p-4 rounded-xl backdrop-blur-sm border border-white/10">
+                            <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Status Saat Ini</span>
+                            @if($pengajuan->status == 'pending')
+                                <span class="inline-flex items-center px-3 py-1 bg-amber-400/20 text-amber-300 rounded-full text-xs font-bold border border-amber-400/30">
+                                    <span class="w-2 h-2 rounded-full bg-amber-400 mr-2 animate-pulse"></span> Menunggu Verifikasi Admin Prodi
+                                </span>
+                            @elseif($pengajuan->status == 'approved')
+                                <span class="inline-flex items-center px-3 py-1 bg-blue-400/20 text-blue-300 rounded-full text-xs font-bold border border-blue-400/30">
+                                    <span class="w-2 h-2 rounded-full bg-blue-400 mr-2 animate-pulse"></span> Disetujui (Menunggu Penetapan DPL)
+                                </span>
+                            @elseif($pengajuan->status == 'active')
+                                <span class="inline-flex items-center px-3 py-1 bg-emerald-400/20 text-emerald-300 rounded-full text-xs font-bold border border-emerald-400/30">
+                                    <span class="w-2 h-2 rounded-full bg-emerald-400 mr-2 animate-ping"></span> Magang Sedang Berjalan
+                                </span>
+                            @elseif($pengajuan->status == 'selesai')
+                                <span class="inline-flex items-center px-3 py-1 bg-purple-400/20 text-purple-300 rounded-full text-xs font-bold border border-purple-400/30">
+                                    ✓ Selesai & Terverifikasi
+                                </span>
+                            @endif
+                            <span class="text-[11px] text-gray-300 font-mono mt-1">
+                                📅 {{ \Carbon\Carbon::parse($pengajuan->start_date)->format('d M Y') }} - {{ \Carbon\Carbon::parse($pengajuan->end_date)->format('d M Y') }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- DAFTAR ANGGOTA (JIKA ADA) ATAU PEMOHON TUNGGAL -->
+                    @if($pengajuan->is_group && $pengajuan->members && $pengajuan->members->count() > 1)
+                        <div class="p-6 border-b border-gray-100 bg-gray-50/50">
+                            <h4 class="text-xs font-black uppercase tracking-wider text-gray-400 mb-4 flex items-center">
+                                <svg class="w-4 h-4 mr-1.5 text-uin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                                </svg>
+                                Susunan Anggota Kelompok
+                            </h4>
+                            
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                                @foreach($pengajuan->members as $member)
+                                    <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex flex-col justify-between space-y-3">
+                                        <div class="flex items-center space-x-3">
+                                            @if($member->user->avatar_url)
+                                                <img src="{{ $member->user->avatar_url }}" alt="{{ $member->user->name }}" class="w-10 h-10 rounded-full object-cover shadow-sm ring-1 ring-uin/30 flex-shrink-0">
+                                            @else
+                                                <div class="w-10 h-10 rounded-full {{ $member->is_leader ? 'bg-uin text-white font-black' : 'bg-gray-100 text-gray-700 font-bold' }} flex items-center justify-center text-sm shadow-sm flex-shrink-0">
+                                                    {{ substr($member->user->name ?? 'M', 0, 1) }}
+                                                </div>
+                                            @endif
+                                            <div class="overflow-hidden">
+                                                <p class="text-xs font-bold text-gray-900 truncate">{{ $member->user->name ?? '-' }}</p>
+                                                <p class="text-[11px] text-gray-500 font-mono">{{ $member->user->nim ?? '-' }}</p>
                                             </div>
-                                        @endif
-                                        <div class="overflow-hidden">
-                                            <p class="text-xs font-bold text-gray-900 truncate">{{ $member->user->name ?? '-' }}</p>
-                                            <p class="text-[11px] text-gray-500 font-mono">{{ $member->user->nim ?? '-' }}</p>
+                                        </div>
+                                        <div class="pt-2 border-t border-gray-100 flex items-center justify-between">
+                                            <span class="text-[10px] font-bold px-2 py-0.5 rounded {{ $member->is_leader ? 'bg-uin-light text-uin' : 'bg-gray-100 text-gray-600' }}">
+                                                {{ $member->is_leader ? 'Ketua Kelompok' : 'Anggota' }}
+                                            </span>
+                                            <span class="text-[10px] text-emerald-600 font-semibold flex items-center">
+                                                <svg class="w-3 h-3 mr-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                                Berkas OK
+                                            </span>
                                         </div>
                                     </div>
-                                    <div class="pt-2 border-t border-gray-100 flex items-center justify-between">
-                                        <span class="text-[10px] font-bold px-2 py-0.5 rounded {{ $member->is_leader ? 'bg-uin-light text-uin' : 'bg-gray-100 text-gray-600' }}">
-                                            {{ $member->is_leader ? 'Ketua Kelompok' : 'Anggota' }}
-                                        </span>
-                                        <span class="text-[10px] text-emerald-600 font-semibold flex items-center">
-                                            <svg class="w-3 h-3 mr-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                                            Berkas OK
-                                        </span>
-                                    </div>
-                                </div>
-                            @endforeach
-                        @else
-                            <div class="bg-white p-4 rounded-xl border border-gray-200 shadow-sm flex items-center space-x-3">
-                                <div class="w-10 h-10 rounded-full bg-uin text-white font-black flex items-center justify-center text-sm">
-                                    {{ substr($pengajuan->user->name, 0, 1) }}
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
+                </div>
+
+                <!-- B. KARTU HASIL EVALUASI & PENILAIAN AKHIR (JIKA NILAI TELAH TERBIT) -->
+                @if($pengajuan->evaluation)
+                    @php
+                        $nilaiAkhir = $pengajuan->evaluation->nilai_akhir;
+                        $grade = $nilaiAkhir >= 80 ? 'A' : ($nilaiAkhir >= 70 ? 'B' : ($nilaiAkhir >= 60 ? 'C' : 'D/E'));
+                        $predikat = $nilaiAkhir >= 80 ? 'Sangat Baik' : ($nilaiAkhir >= 70 ? 'Baik' : ($nilaiAkhir >= 60 ? 'Cukup' : 'Kurang'));
+                        $badgeStyle = $nilaiAkhir >= 80 ? 'bg-emerald-500 text-white' : ($nilaiAkhir >= 70 ? 'bg-blue-600 text-white' : 'bg-amber-500 text-white');
+                    @endphp
+
+                    <div class="bg-gradient-to-br from-white via-uin-light/10 to-emerald-50/20 rounded-2xl border-2 border-uin/30 shadow-md p-6 md:p-8 space-y-6">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-gray-100 pb-5">
+                            <div class="flex items-center space-x-3">
+                                <div class="p-3 bg-uin text-white rounded-2xl shadow-sm">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
                                 </div>
                                 <div>
-                                    <p class="text-xs font-bold text-gray-900">{{ $pengajuan->user->name }}</p>
-                                    <p class="text-[11px] text-gray-500 font-mono">{{ $pengajuan->user->nim }} (Pemohon Tunggal)</p>
+                                    <div class="flex items-center gap-2">
+                                        <h3 class="text-lg font-black text-gray-900">Hasil Evaluasi & Lembar Penilaian Akhir Magang</h3>
+                                        <span class="px-2.5 py-0.5 text-[10px] font-black uppercase rounded-full bg-emerald-100 text-emerald-800">Resmi Terbit</span>
+                                    </div>
+                                    <p class="text-xs text-gray-500 mt-0.5">Nilai dihitung otomatis dari rata-rata Nilai Instansi Lapangan dan Nilai Dosen Pembimbing.</p>
+                                </div>
+                            </div>
+                            
+                            <a href="{{ route('mahasiswa.pengajuan.lembar_nilai', $pengajuan->id) }}" target="_blank" class="inline-flex items-center px-4 py-2.5 bg-uin hover:bg-uin-hover text-white rounded-xl text-xs font-bold shadow-md transition whitespace-nowrap">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                Unduh Lembar Penilaian (PDF)
+                            </a>
+                        </div>
+
+                        <!-- 3 KARTU KOMPONEN NILAI -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                            <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-xs text-center flex flex-col justify-between">
+                                <div>
+                                    <span class="text-[10px] uppercase font-bold text-gray-400 tracking-wider block mb-1">1. Nilai Instansi / Mitra (50%)</span>
+                                    <span class="text-3xl font-black text-gray-800">{{ number_format($pengajuan->evaluation->nilai_instansi ?? 0, 2) }}</span>
+                                </div>
+                                <span class="text-[11px] text-gray-500 mt-2 block">Penilaian kinerja lapangan instansi</span>
+                            </div>
+
+                            <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-xs text-center flex flex-col justify-between">
+                                <div>
+                                    <span class="text-[10px] uppercase font-bold text-gray-400 tracking-wider block mb-1">2. Nilai Dosen Pembimbing (50%)</span>
+                                    <span class="text-3xl font-black text-gray-800">{{ number_format($pengajuan->evaluation->nilai_dpl ?? 0, 2) }}</span>
+                                </div>
+                                <span class="text-[11px] text-gray-500 mt-2 block">Penilaian akademis & bimbingan DPL</span>
+                            </div>
+
+                            <div class="bg-gradient-to-br from-uin-light/50 to-white p-5 rounded-2xl border-2 border-uin text-center flex flex-col justify-between shadow-xs">
+                                <div>
+                                    <span class="text-[10px] uppercase font-black text-uin tracking-wider block mb-1">Nilai Akhir Rata-rata</span>
+                                    <div class="flex items-center justify-center gap-2">
+                                        <span class="text-3xl font-black text-uin">{{ number_format($nilaiAkhir, 2) }}</span>
+                                        <span class="px-2 py-0.5 rounded-lg text-xs font-black {{ $badgeStyle }}">{{ $grade }}</span>
+                                    </div>
+                                </div>
+                                <span class="text-[11px] font-bold text-uin mt-2 block">Predikat: {{ $predikat }}</span>
+                            </div>
+                        </div>
+
+                        <!-- CATATAN DPL -->
+                        @if($pengajuan->evaluation->komentar)
+                            <div class="p-4 bg-white rounded-xl border border-gray-200 shadow-xs flex items-start space-x-3">
+                                <div class="p-2 bg-uin-light text-uin rounded-lg flex-shrink-0 mt-0.5">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"></path></svg>
+                                </div>
+                                <div>
+                                    <span class="text-[10px] font-bold uppercase text-gray-400 tracking-wider">Catatan Evaluasi DPL:</span>
+                                    <p class="text-xs text-gray-800 italic mt-0.5 leading-relaxed">"{{ $pengajuan->evaluation->komentar }}"</p>
                                 </div>
                             </div>
                         @endif
                     </div>
-                </div>
+                @endif
 
-                <!-- 3. PUSAT BERKAS & DOKUMEN AKSI (DOCUMENT HUB - 3 KARTU TERINTEGRASI) -->
-                <div class="p-6 md:p-8 space-y-6">
+                <!-- C. PUSAT BERKAS & DOKUMEN AKSI (DOCUMENT HUB) -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden p-6 md:p-8 space-y-6">
                     <h4 class="text-xs font-black uppercase tracking-wider text-gray-400 flex items-center">
                         <svg class="w-4 h-4 mr-1.5 text-uin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"></path>
                         </svg>
-                        Pusat Aksi & Pengelolaan Berkas
+                        Pusat Aksi & Pengelolaan Berkas {{ $isMandiri ? 'Magang Mandiri' : 'Magang Prodi' }}
                     </h4>
 
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-
-                        <!-- KARTU 1: SURAT PENGANTAR PRODI -->
-                        <div class="bg-gradient-to-br from-amber-50/60 to-orange-50/40 p-6 rounded-2xl border border-amber-200/80 flex flex-col justify-between space-y-4 hover:shadow-md transition-all">
-                            <div>
-                                <div class="flex items-center justify-between mb-3">
-                                    <span class="p-2.5 bg-amber-100 text-amber-700 rounded-xl">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                                        </svg>
-                                    </span>
-                                    <span class="px-2.5 py-0.5 text-[10px] font-bold uppercase rounded-full bg-amber-200 text-amber-900">Format Tanpa TTD</span>
-                                </div>
-                                <h5 class="font-bold text-gray-900 text-base">1. Surat Pengantar Prodi</h5>
-                                <p class="text-xs text-gray-600 mt-1.5 leading-relaxed">
-                                    Cetak surat pengantar ini lalu mintakan <strong>tanda tangan manual & stempel</strong> ke pihak Program Studi sebelum diserahkan ke instansi.
-                                </p>
-                            </div>
-                            <a href="{{ route('mahasiswa.pengajuan.surat_pengantar', $pengajuan->id) }}" target="_blank" class="w-full inline-flex items-center justify-center px-4 py-2.5 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-bold shadow-sm transition-colors">
-                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                                Unduh Surat Pengantar (PDF)
-                            </a>
-                        </div>
-
-                        <!-- KARTU 2: SURAT BALASAN INSTANSI -->
+                    @if($isMandiri)
+                        <!-- ALUR KHUSUS MAGANG MANDIRI: 2 KARTU UTAMA -->
                         @php
-                            $hasSuratBalasan = $pengajuan->documents->where('type', 'SURAT_PENERIMAAN')->first();
+                            $buktiMandiri = $pengajuan->documents->where('type', 'BUKTI_MAGANG_MANDIRI')->first() 
+                                         ?? $pengajuan->documents->where('type', 'SURAT_PENERIMAAN')->first();
+                            $dpl = $pengajuan->dplAssignment->dpl ?? null;
                         @endphp
-                        <div class="bg-gradient-to-br from-blue-50/60 to-indigo-50/40 p-6 rounded-2xl border border-blue-200/80 flex flex-col justify-between space-y-4 hover:shadow-md transition-all">
-                            <div>
-                                <div class="flex items-center justify-between mb-3">
-                                    <span class="p-2.5 bg-blue-100 text-blue-700 rounded-xl">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 4H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-2m-4-1v8m0 0l3-3m-3 3L9 8m-5 5h2.586a1 1 0 01.707.293l2.414 2.414a1 1 0 00.707.293h3.172a1 1 0 00.707-.293l2.414-2.414a1 1 0 01.707-.293H20"></path>
-                                        </svg>
-                                    </span>
-                                    @if($hasSuratBalasan)
-                                        <span class="px-2.5 py-0.5 text-[10px] font-bold uppercase rounded-full bg-emerald-100 text-emerald-800">Sudah Diunggah</span>
-                                    @else
-                                        <span class="px-2.5 py-0.5 text-[10px] font-bold uppercase rounded-full bg-blue-200 text-blue-900">Perlu Diunggah</span>
-                                    @endif
-                                </div>
-                                <h5 class="font-bold text-gray-900 text-base">2. Surat Balasan Instansi</h5>
-                                <p class="text-xs text-gray-600 mt-1.5 leading-relaxed">
-                                    Unggah bukti surat balasan persetujuan dari instansi agar Admin Prodi dapat <strong>menetapkan DPL</strong>.
-                                </p>
-                            </div>
 
-                            @if($hasSuratBalasan)
-                                <div class="flex items-center justify-between p-3 bg-white/90 rounded-xl border border-emerald-200 text-xs">
-                                    <span class="font-bold text-emerald-800 flex items-center">
-                                        <svg class="w-4 h-4 mr-1 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                                        Berkas Surat Balasan Aktif
-                                    </span>
-                                    <a href="{{ asset('storage/' . $hasSuratBalasan->file_path) }}" target="_blank" class="text-blue-600 hover:underline font-bold">Lihat File</a>
-                                </div>
-                            @else
-                                <form action="{{ route('mahasiswa.pengajuan.surat_balasan', $pengajuan->id) }}" method="POST" enctype="multipart/form-data" class="space-y-2">
-                                    @csrf
-                                    <div class="flex gap-2">
-                                        <input type="file" name="surat_balasan" required accept=".pdf,.jpg,.jpeg,.png" class="block w-full text-xs text-gray-900 border border-blue-300 rounded-xl cursor-pointer bg-white file:py-2 file:px-3 file:border-0 file:bg-blue-600 file:text-white file:text-xs file:font-bold hover:file:bg-blue-700">
-                                        <button type="submit" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition shadow-sm whitespace-nowrap">
-                                            Kirim
-                                        </button>
-                                    </div>
-                                    <x-input-error :messages="$errors->get('surat_balasan')" class="text-xs" />
-                                </form>
-                            @endif
-                        </div>
-
-                        <!-- KARTU 3: LAPORAN AKHIR MAGANG & TEMPLATE (TERINTEGRASI) -->
-                        @php
-                            $hasLaporan = $pengajuan->documents->where('type', 'LAPORAN_AKHIR')->first();
-                        @endphp
-                        <div class="bg-gradient-to-br from-purple-50/60 to-fuchsia-50/40 p-6 rounded-2xl border border-purple-200/80 flex flex-col justify-between space-y-4 hover:shadow-md transition-all">
-                            <div>
-                                <div class="flex items-center justify-between mb-3">
-                                    <span class="p-2.5 bg-purple-100 text-purple-700 rounded-xl">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                                        </svg>
-                                    </span>
-                                    <div class="flex items-center gap-1.5">
-                                        <a href="{{ route('mahasiswa.laporan.template') }}" class="px-2 py-0.5 text-[10px] font-bold bg-white text-purple-700 border border-purple-200 rounded-lg hover:bg-purple-50 transition shadow-xs flex items-center">
-                                            <svg class="w-3 h-3 mr-1 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                                            Unduh Template
-                                        </a>
-                                        @if($hasLaporan)
-                                            <span class="px-2.5 py-0.5 text-[10px] font-bold uppercase rounded-lg bg-purple-200 text-purple-900">Terunggah</span>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            
+                            <!-- KARTU 1: UNGGAH BUKTI MAGANG MANDIRI -->
+                            <div class="bg-gradient-to-br from-emerald-50/60 to-teal-50/40 p-6 rounded-2xl border border-emerald-200 flex flex-col justify-between space-y-4 hover:shadow-md transition-all">
+                                <div>
+                                    <div class="flex items-center justify-between mb-3">
+                                        <span class="p-2.5 bg-emerald-100 text-emerald-700 rounded-xl">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                            </svg>
+                                        </span>
+                                        @if($buktiMandiri)
+                                            <span class="px-2.5 py-0.5 text-[10px] font-bold uppercase rounded-full bg-emerald-100 text-emerald-800">Berkas Terunggah</span>
+                                        @else
+                                            <span class="px-2.5 py-0.5 text-[10px] font-bold uppercase rounded-full bg-amber-100 text-amber-900">Perlu Diunggah</span>
                                         @endif
                                     </div>
+                                    <h5 class="font-bold text-gray-900 text-base">Berkas Bukti Magang Mandiri</h5>
+                                    <p class="text-xs text-gray-600 mt-1.5 leading-relaxed">
+                                        Unggah bukti penerimaan, sertifikat magang, atau lembar nilai dari instansi mitra (PDF/JPG/PNG maks. 10MB) sebagai dasar penilaian DPL.
+                                    </p>
                                 </div>
-                                <h5 class="font-bold text-gray-900 text-base">3. Laporan Akhir Magang</h5>
-                                <p class="text-xs text-gray-600 mt-1.5 leading-relaxed">
-                                    Unduh template resmi di atas sebagai panduan format, lalu unggah naskah laporan akhir <strong>PDF (Maks. 10MB)</strong> setelah masa magang selesai.
-                                </p>
+
+                                <div class="space-y-3">
+                                    @if($buktiMandiri)
+                                        <div class="flex items-center justify-between p-3 bg-white rounded-xl border border-emerald-200 text-xs">
+                                            <span class="font-bold text-emerald-800 flex items-center">
+                                                <svg class="w-4 h-4 mr-1 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                                Berkas Bukti Aktif
+                                            </span>
+                                            <a href="{{ asset('storage/' . $buktiMandiri->file_path) }}" target="_blank" class="text-emerald-700 hover:underline font-bold">Lihat Dokumen ↗</a>
+                                        </div>
+                                    @endif
+
+                                    <form action="{{ route('mahasiswa.pengajuan.bukti_mandiri', $pengajuan->id) }}" method="POST" enctype="multipart/form-data" class="space-y-2">
+                                        @csrf
+                                        <div class="flex gap-2">
+                                            <input type="file" name="bukti_magang" required accept=".pdf,.jpg,.jpeg,.png" class="block w-full text-xs text-gray-900 border border-emerald-300 rounded-xl cursor-pointer bg-white file:py-2 file:px-3 file:border-0 file:bg-emerald-600 file:text-white file:text-xs file:font-bold hover:file:bg-emerald-700">
+                                            <button type="submit" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition shadow-sm whitespace-nowrap">
+                                                {{ $buktiMandiri ? 'Perbarui' : 'Unggah' }}
+                                            </button>
+                                        </div>
+                                        <x-input-error :messages="$errors->get('bukti_magang')" class="text-xs" />
+                                    </form>
+                                </div>
                             </div>
 
-                            @if($hasLaporan)
-                                <div class="flex items-center justify-between p-3 bg-white/90 rounded-xl border border-purple-200 text-xs">
-                                    <span class="font-bold text-purple-900 flex items-center">
-                                        <svg class="w-4 h-4 mr-1 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                                        Laporan Akhir Terverifikasi
-                                    </span>
-                                    <a href="{{ asset('storage/' . $hasLaporan->file_path) }}" target="_blank" class="text-purple-700 hover:underline font-bold">Lihat Laporan</a>
-                                </div>
-                            @else
-                                <form action="{{ route('mahasiswa.pengajuan.laporan_akhir', $pengajuan->id) }}" method="POST" enctype="multipart/form-data" class="space-y-2">
-                                    @csrf
-                                    <div class="flex gap-2">
-                                        <input type="file" name="laporan_akhir" required accept=".pdf" class="block w-full text-xs text-gray-900 border border-purple-300 rounded-xl cursor-pointer bg-white file:py-2 file:px-3 file:border-0 file:bg-purple-600 file:text-white file:text-xs file:font-bold hover:file:bg-purple-700">
-                                        <button type="submit" class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-xl text-xs font-bold transition shadow-sm whitespace-nowrap">
-                                            Upload
-                                        </button>
+                            <!-- KARTU 2: STATUS PEMBIMBING LAPANGAN (DPL) -->
+                            <div class="bg-gradient-to-br from-blue-50/60 to-indigo-50/40 p-6 rounded-2xl border border-blue-200 flex flex-col justify-between space-y-4 hover:shadow-md transition-all">
+                                <div>
+                                    <div class="flex items-center justify-between mb-3">
+                                        <span class="p-2.5 bg-blue-100 text-blue-700 rounded-xl">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                            </svg>
+                                        </span>
+                                        @if($dpl)
+                                            <span class="px-2.5 py-0.5 text-[10px] font-bold uppercase rounded-full bg-blue-100 text-blue-800">DPL Ditetapkan</span>
+                                        @else
+                                            <span class="px-2.5 py-0.5 text-[10px] font-bold uppercase rounded-full bg-gray-200 text-gray-700">Menunggu Penetapan</span>
+                                        @endif
                                     </div>
-                                    <x-input-error :messages="$errors->get('laporan_akhir')" class="text-xs" />
-                                </form>
-                            @endif
+                                    <h5 class="font-bold text-gray-900 text-base">Dosen Pembimbing Lapangan (DPL)</h5>
+                                    <p class="text-xs text-gray-600 mt-1.5 leading-relaxed">
+                                        DPL bertugas mereview bukti magang Anda dan memberikan nilai akademis yang digabungkan dengan nilai dari instansi.
+                                    </p>
+                                </div>
+
+                                <div class="p-4 bg-white rounded-xl border border-blue-100 text-xs space-y-2">
+                                    @if($dpl)
+                                        <div class="flex items-center space-x-3">
+                                            <div class="w-9 h-9 rounded-full bg-uin text-white font-bold flex items-center justify-center">
+                                                {{ substr($dpl->name, 0, 1) }}
+                                            </div>
+                                            <div>
+                                                <p class="font-bold text-gray-900">{{ $dpl->name }}</p>
+                                                <p class="text-gray-500 text-[11px]">{{ $dpl->email }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="pt-2 border-t border-gray-100 flex items-center justify-between text-[11px]">
+                                            <span class="text-gray-400">Status Penilaian:</span>
+                                            <span class="font-bold {{ $pengajuan->evaluation ? 'text-emerald-600' : 'text-amber-600' }}">
+                                                {{ $pengajuan->evaluation ? '✓ Nilai Sudah Terbit' : 'Menunggu Input Nilai' }}
+                                            </span>
+                                        </div>
+                                    @else
+                                        <div class="text-center py-2 text-gray-500">
+                                            <p class="font-semibold text-gray-700">DPL Belum Ditetapkan</p>
+                                            <p class="text-[11px] text-gray-400 mt-0.5">Admin Program Studi akan segera menetapkan Dosen Pembimbing setelah berkas diverifikasi.</p>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+
                         </div>
+                    @else
+                        <!-- ALUR LENGKAP MAGANG PROGRAM STUDI: 3 KARTU -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-                    </div>
+                            <!-- KARTU 1: SURAT PENGANTAR PRODI -->
+                            <div class="bg-gradient-to-br from-amber-50/60 to-orange-50/40 p-6 rounded-2xl border border-amber-200/80 flex flex-col justify-between space-y-4 hover:shadow-md transition-all">
+                                <div>
+                                    <div class="flex items-center justify-between mb-3">
+                                        <span class="p-2.5 bg-amber-100 text-amber-700 rounded-xl">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                            </svg>
+                                        </span>
+                                        <span class="px-2.5 py-0.5 text-[10px] font-bold uppercase rounded-full bg-amber-200 text-amber-900">Format Tanpa TTD</span>
+                                    </div>
+                                    <h5 class="font-bold text-gray-900 text-base">1. Surat Pengantar Prodi</h5>
+                                    <p class="text-xs text-gray-600 mt-1.5 leading-relaxed">
+                                        Cetak surat pengantar ini lalu mintakan <strong>tanda tangan manual & stempel</strong> ke pihak Program Studi sebelum diserahkan ke instansi.
+                                    </p>
+                                </div>
+                                <a href="{{ route('mahasiswa.pengajuan.surat_pengantar', $pengajuan->id) }}" target="_blank" class="w-full inline-flex items-center justify-center px-4 py-2.5 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-bold shadow-sm transition-colors">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                                    Unduh Surat Pengantar (PDF)
+                                </a>
+                            </div>
+
+                            <!-- KARTU 2: SURAT BALASAN INSTANSI -->
+                            @php
+                                $hasSuratBalasan = $pengajuan->documents->where('type', 'SURAT_PENERIMAAN')->first();
+                            @endphp
+                            <div class="bg-gradient-to-br from-blue-50/60 to-indigo-50/40 p-6 rounded-2xl border border-blue-200/80 flex flex-col justify-between space-y-4 hover:shadow-md transition-all">
+                                <div>
+                                    <div class="flex items-center justify-between mb-3">
+                                        <span class="p-2.5 bg-blue-100 text-blue-700 rounded-xl">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 4H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-2m-4-1v8m0 0l3-3m-3 3L9 8m-5 5h2.586a1 1 0 01.707.293l2.414 2.414a1 1 0 00.707.293h3.172a1 1 0 00.707-.293l2.414-2.414a1 1 0 01.707-.293H20"></path>
+                                            </svg>
+                                        </span>
+                                        @if($hasSuratBalasan)
+                                            <span class="px-2.5 py-0.5 text-[10px] font-bold uppercase rounded-full bg-emerald-100 text-emerald-800">Sudah Diunggah</span>
+                                        @else
+                                            <span class="px-2.5 py-0.5 text-[10px] font-bold uppercase rounded-full bg-blue-200 text-blue-900">Perlu Diunggah</span>
+                                        @endif
+                                    </div>
+                                    <h5 class="font-bold text-gray-900 text-base">2. Surat Balasan Instansi</h5>
+                                    <p class="text-xs text-gray-600 mt-1.5 leading-relaxed">
+                                        Unggah bukti surat balasan persetujuan dari instansi agar Admin Prodi dapat <strong>menetapkan DPL</strong>.
+                                    </p>
+                                </div>
+
+                                @if($hasSuratBalasan)
+                                    <div class="flex items-center justify-between p-3 bg-white/90 rounded-xl border border-emerald-200 text-xs">
+                                        <span class="font-bold text-emerald-800 flex items-center">
+                                            <svg class="w-4 h-4 mr-1 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                            Berkas Surat Balasan Aktif
+                                        </span>
+                                        <a href="{{ asset('storage/' . $hasSuratBalasan->file_path) }}" target="_blank" class="text-blue-600 hover:underline font-bold">Lihat File ↗</a>
+                                    </div>
+                                @else
+                                    <form action="{{ route('mahasiswa.pengajuan.surat_balasan', $pengajuan->id) }}" method="POST" enctype="multipart/form-data" class="space-y-2">
+                                        @csrf
+                                        <div class="flex gap-2">
+                                            <input type="file" name="surat_balasan" required accept=".pdf,.jpg,.jpeg,.png" class="block w-full text-xs text-gray-900 border border-blue-300 rounded-xl cursor-pointer bg-white file:py-2 file:px-3 file:border-0 file:bg-blue-600 file:text-white file:text-xs file:font-bold hover:file:bg-blue-700">
+                                            <button type="submit" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition shadow-sm whitespace-nowrap">
+                                                Kirim
+                                            </button>
+                                        </div>
+                                        <x-input-error :messages="$errors->get('surat_balasan')" class="text-xs" />
+                                    </form>
+                                @endif
+                            </div>
+
+                            <!-- KARTU 3: LAPORAN AKHIR MAGANG -->
+                            @php
+                                $hasLaporan = $pengajuan->documents->where('type', 'LAPORAN_AKHIR')->first();
+                            @endphp
+                            <div class="bg-gradient-to-br from-purple-50/60 to-fuchsia-50/40 p-6 rounded-2xl border border-purple-200/80 flex flex-col justify-between space-y-4 hover:shadow-md transition-all">
+                                <div>
+                                    <div class="flex items-center justify-between mb-3">
+                                        <span class="p-2.5 bg-purple-100 text-purple-700 rounded-xl">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                            </svg>
+                                        </span>
+                                        <div class="flex items-center gap-1.5">
+                                            <a href="{{ route('mahasiswa.laporan.template') }}" class="px-2 py-0.5 text-[10px] font-bold bg-white text-purple-700 border border-purple-200 rounded-lg hover:bg-purple-50 transition shadow-xs flex items-center">
+                                                <svg class="w-3 h-3 mr-1 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                                                Template
+                                            </a>
+                                            @if($hasLaporan)
+                                                <span class="px-2.5 py-0.5 text-[10px] font-bold uppercase rounded-lg bg-purple-200 text-purple-900">Terunggah</span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <h5 class="font-bold text-gray-900 text-base">3. Laporan Akhir Magang</h5>
+                                    <p class="text-xs text-gray-600 mt-1.5 leading-relaxed">
+                                        Unduh template resmi lalu unggah naskah laporan akhir <strong>PDF (Maks. 10MB)</strong> setelah masa magang selesai.
+                                    </p>
+                                </div>
+
+                                @if($hasLaporan)
+                                    <div class="flex items-center justify-between p-3 bg-white/90 rounded-xl border border-purple-200 text-xs">
+                                        <span class="font-bold text-purple-900 flex items-center">
+                                            <svg class="w-4 h-4 mr-1 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                            Laporan Akhir Terverifikasi
+                                        </span>
+                                        <a href="{{ asset('storage/' . $hasLaporan->file_path) }}" target="_blank" class="text-purple-700 hover:underline font-bold">Lihat File ↗</a>
+                                    </div>
+                                @else
+                                    <form action="{{ route('mahasiswa.pengajuan.laporan_akhir', $pengajuan->id) }}" method="POST" enctype="multipart/form-data" class="space-y-2">
+                                        @csrf
+                                        <div class="flex gap-2">
+                                            <input type="file" name="laporan_akhir" required accept=".pdf" class="block w-full text-xs text-gray-900 border border-purple-300 rounded-xl cursor-pointer bg-white file:py-2 file:px-3 file:border-0 file:bg-purple-600 file:text-white file:text-xs file:font-bold hover:file:bg-purple-700">
+                                            <button type="submit" class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-xl text-xs font-bold transition shadow-sm whitespace-nowrap">
+                                                Upload
+                                            </button>
+                                        </div>
+                                        <x-input-error :messages="$errors->get('laporan_akhir')" class="text-xs" />
+                                    </form>
+                                @endif
+                            </div>
+
+                        </div>
+                    @endif
                 </div>
-
-            </div>
 
             @else
 
-            <!-- 3. FORMULIR PENDAFTARAN BARU DENGAN SLOT-BUILDER INTERAKTIF -->
+            <!-- 3. FORMULIR PENDAFTARAN BARU DENGAN SMART BUILDER -->
             <form action="{{ route('mahasiswa.pengajuan.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6" x-data="{
+                jenisMagang: 'prodi',
                 isGroup: '1',
                 memberCount: 1,
                 addMember() {
@@ -423,7 +630,7 @@
                     </div>
                 @endif
 
-                <!-- SECTION 1: TIPE PENDAFTARAN & DATA INSTANSI -->
+                <!-- SECTION 1: JALUR PENEMPATAN & DATA INSTANSI -->
                 <div class="bg-white shadow-sm rounded-2xl border border-gray-100 overflow-hidden">
                     <div class="p-5 bg-gradient-to-r from-uin to-uin-hover text-white flex items-center justify-between">
                         <div class="flex items-center space-x-3">
@@ -434,9 +641,30 @@
 
                     <div class="p-6 md:p-8 space-y-6">
                         
-                        <!-- PILIHAN TIPE PENDAFTARAN: KELOMPOK VS INDIVIDU -->
+                        <!-- PILIHAN JENIS JALUR MAGANG -->
                         <div>
-                            <label class="block text-xs font-black uppercase tracking-wider text-gray-500 mb-3">Tipe Pendaftaran Magang *</label>
+                            <label class="block text-xs font-black uppercase tracking-wider text-gray-500 mb-2">Pilih Jalur Magang *</label>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <label class="flex items-center p-4 rounded-2xl border cursor-pointer transition-all" :class="jenisMagang === 'prodi' ? 'border-uin ring-2 ring-uin/20 bg-uin-light/20' : 'border-gray-200 hover:border-gray-300 bg-white'">
+                                    <input type="radio" name="jenis_magang" value="prodi" class="text-uin focus:ring-uin" x-model="jenisMagang" @change="isGroup = '1'">
+                                    <div class="ml-3">
+                                        <span class="block text-sm font-bold text-gray-900">Magang Program Studi (Reguler)</span>
+                                        <span class="text-xs text-gray-500 block mt-0.5">Diarahkan oleh program studi, mendukung pendaftaran kelompok/individu dan surat pengantar resmi.</span>
+                                    </div>
+                                </label>
+                                <label class="flex items-center p-4 rounded-2xl border cursor-pointer transition-all" :class="jenisMagang === 'mandiri' ? 'border-uin ring-2 ring-uin/20 bg-uin-light/20' : 'border-gray-200 hover:border-gray-300 bg-white'">
+                                    <input type="radio" name="jenis_magang" value="mandiri" class="text-uin focus:ring-uin" x-model="jenisMagang" @change="isGroup = '0'">
+                                    <div class="ml-3">
+                                        <span class="block text-sm font-bold text-gray-900">Magang Mandiri (Inisiatif / MSIB)</span>
+                                        <span class="text-xs text-gray-500 block mt-0.5">Inisiatif sendiri ke mitra atau program MSIB. Cukup unggah bukti magang mandiri dan dinilai DPL.</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- PILIHAN TIPE PENDAFTARAN: KELOMPOK VS INDIVIDU (KHUSUS PRODI) -->
+                        <div x-show="jenisMagang === 'prodi'" class="transition-all">
+                            <label class="block text-xs font-black uppercase tracking-wider text-gray-500 mb-3">Tipe Pendaftaran Magang Prodi *</label>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <label class="relative flex cursor-pointer rounded-2xl border p-4 shadow-xs transition-all" :class="isGroup === '1' ? 'border-uin ring-2 ring-uin/20 bg-uin-light/20' : 'border-gray-200 hover:border-gray-300 bg-white'">
                                     <input type="radio" name="is_group" value="1" class="sr-only" x-model="isGroup">
@@ -458,25 +686,10 @@
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
                                         </div>
                                         <div>
-                                            <span class="block text-sm font-bold text-gray-900">Magang Individu (Mandiri)</span>
+                                            <span class="block text-sm font-bold text-gray-900">Magang Individu (Mandiri Sendiri)</span>
                                             <span class="mt-0.5 text-xs text-gray-500 leading-relaxed block">Pendaftaran program magang dilakukan mandiri untuk diri sendiri.</span>
                                         </div>
                                     </div>
-                                </label>
-                            </div>
-                        </div>
-
-                        <!-- PILIHAN JENIS JALUR MAGANG -->
-                        <div>
-                            <label class="block text-xs font-black uppercase tracking-wider text-gray-500 mb-2">Jalur Penempatan Magang *</label>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <label class="flex items-center p-3.5 bg-gray-50 border border-gray-200 rounded-xl cursor-pointer hover:bg-gray-100 transition">
-                                    <input type="radio" name="jenis_magang" value="prodi" class="text-uin focus:ring-uin" checked>
-                                    <span class="ml-2.5 text-xs font-bold text-gray-800">Magang Melalui Program Studi (Diarahkan)</span>
-                                </label>
-                                <label class="flex items-center p-3.5 bg-gray-50 border border-gray-200 rounded-xl cursor-pointer hover:bg-gray-100 transition">
-                                    <input type="radio" name="jenis_magang" value="mandiri" class="text-uin focus:ring-uin">
-                                    <span class="ml-2.5 text-xs font-bold text-gray-800">Magang Mandiri (Inisiatif Mitra Sendiri)</span>
                                 </label>
                             </div>
                         </div>
@@ -512,14 +725,14 @@
                     </div>
                 </div>
 
-                <!-- SECTION 2: BUILDER KARTU ANGGOTA KELOMPOK (SLOT BUILDER) -->
+                <!-- SECTION 2: BERKAS PERSYARATAN & ANGGOTA (SLOT BUILDER) -->
                 <div class="bg-white shadow-sm rounded-2xl border border-gray-100 overflow-hidden">
                     <div class="p-5 bg-gradient-to-r from-uin to-uin-hover text-white flex items-center justify-between">
                         <div class="flex items-center space-x-3">
                             <span class="w-7 h-7 bg-white/20 rounded-full flex items-center justify-center text-xs font-black">2</span>
-                            <h3 class="text-base font-bold">Data Anggota Kelompok & Berkas Persyaratan</h3>
+                            <h3 class="text-base font-bold" x-text="jenisMagang === 'mandiri' ? 'Berkas Persyaratan Magang Mandiri' : 'Data Anggota & Berkas Persyaratan'"></h3>
                         </div>
-                        <div x-show="isGroup === '1'" class="flex items-center space-x-2">
+                        <div x-show="jenisMagang === 'prodi' && isGroup === '1'" class="flex items-center space-x-2">
                             <button type="button" @click="addMember()" :disabled="memberCount >= 3" class="px-3 py-1 bg-white text-uin rounded-lg text-xs font-bold hover:bg-white/90 disabled:opacity-50 transition shadow-xs">
                                 + Tambah Anggota
                             </button>
@@ -531,7 +744,7 @@
 
                     <div class="p-6 md:p-8 space-y-6">
 
-                        <!-- KARTU SLOT 1: KETUA KELOMPOK (LOGIN USER) -->
+                        <!-- KARTU SLOT 1: PEMOHON / KETUA KELOMPOK (LOGIN USER) -->
                         <div class="p-5 rounded-2xl border-2 border-uin/30 bg-uin-light/10 space-y-4">
                             <div class="flex items-center justify-between border-b border-uin/20 pb-3">
                                 <div class="flex items-center space-x-3">
@@ -545,9 +758,9 @@
                                     <div>
                                         <div class="flex items-center gap-2">
                                             <h4 class="text-sm font-bold text-gray-900">{{ auth()->user()->name }}</h4>
-                                            <span class="px-2 py-0.5 bg-uin text-white rounded text-[10px] font-bold">Ketua Kelompok</span>
+                                            <span class="px-2 py-0.5 bg-uin text-white rounded text-[10px] font-bold" x-text="jenisMagang === 'mandiri' ? 'Pemohon Mandiri' : (isGroup === '1' ? 'Ketua Kelompok' : 'Pemohon Tunggal')"></span>
                                         </div>
-                                        <p class="text-xs text-gray-500 font-mono">NIM: {{ auth()->user()->nim }} | Prodi: {{ auth()->user()->prodi->nama_prodi ?? 'Teknologi Informasi' }}</p>
+                                        <p class="text-xs text-gray-500 font-mono">NIM: {{ auth()->user()->nim }} | Prodi: {{ auth()->user()->prodi->nama_prodi ?? 'Sistem Informasi' }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -562,18 +775,29 @@
 
                                 <div class="p-4 bg-white rounded-xl border border-gray-200 shadow-xs space-y-1.5">
                                     <label class="block text-xs font-bold text-gray-700">📑 Unggah Transkrip Nilai Akademik *</label>
-                                    <p class="text-[11px] text-gray-400">Bukti telah menempuh minimal 100 SKS (Maks. 2MB)</p>
+                                    <p class="text-[11px] text-gray-400">Bukti minimal 100 SKS & IPK 2.50 (Maks. 2MB)</p>
                                     <input type="file" name="leader_transkrip" required accept=".pdf,.jpg,.jpeg,.png" class="block w-full text-xs text-gray-700 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 file:mr-2 file:py-1.5 file:px-3 file:border-0 file:text-xs file:font-bold file:bg-uin-light file:text-uin">
                                     <x-input-error :messages="$errors->get('leader_transkrip')" class="text-xs" />
                                 </div>
                             </div>
+
+                            <!-- KHUSUS MANDIRI: OPSI UPLOAD BUKTI LANGSUNG SAAT DAFTAR -->
+                            <div x-show="jenisMagang === 'mandiri'" class="p-4 bg-white rounded-xl border-2 border-dashed border-emerald-300 space-y-1.5 mt-2">
+                                <div class="flex items-center justify-between">
+                                    <label class="block text-xs font-bold text-emerald-800">📋 Berkas Bukti Magang Mandiri / Surat Penerimaan (Opsional Saat Ini)</label>
+                                    <span class="text-[10px] text-emerald-600 font-semibold bg-emerald-50 px-2 py-0.5 rounded">Maks. 10MB</span>
+                                </div>
+                                <p class="text-[11px] text-gray-500">Anda dapat melampirkannya sekarang, atau mengunggahnya nanti di halaman dashboard setelah pendaftaran.</p>
+                                <input type="file" name="bukti_magang_mandiri" accept=".pdf,.jpg,.jpeg,.png" class="block w-full text-xs text-gray-700 border border-emerald-200 rounded-lg cursor-pointer bg-emerald-50/50 file:mr-2 file:py-1.5 file:px-3 file:border-0 file:text-xs file:font-bold file:bg-emerald-600 file:text-white">
+                                <x-input-error :messages="$errors->get('bukti_magang_mandiri')" class="text-xs" />
+                            </div>
                         </div>
 
-                        <!-- KARTU SLOT 2, 3, 4: ANGGOTA TAMBAHAN (JIKA MODE KELOMPOK) -->
-                        <div x-show="isGroup === '1'" class="space-y-4">
+                        <!-- KARTU SLOT ANGGOTA TAMBAHAN (HANYA MUNCUL DI JALUR PRODI KELOMPOK) -->
+                        <div x-show="jenisMagang === 'prodi' && isGroup === '1'" class="space-y-4">
                             <div class="flex items-center justify-between">
                                 <h4 class="text-xs font-black uppercase tracking-wider text-gray-400">Anggota Kelompok Tambahan (Maks. 3 Orang)</h4>
-                                <span class="text-xs font-semibold text-uin" x-text="'Total Anggota Terpilih: ' + (memberCount + 1) + ' / 4 Orang'"></span>
+                                <span class="text-xs font-semibold text-uin" x-text="'Total Anggota: ' + (memberCount + 1) + ' / 4 Orang'"></span>
                             </div>
 
                             <template x-for="i in memberCount" :key="i">
@@ -588,7 +812,7 @@
                                     <div>
                                         <label class="block text-xs font-bold text-gray-700 mb-1">Pilih Mahasiswa Anggota *</label>
                                         <select :name="'member_user_ids[' + (i - 1) + ']'" class="w-full text-xs rounded-xl border-gray-300 shadow-xs focus:border-uin focus:ring-uin p-2.5 bg-white">
-                                            <option value="">-- Pilih Mahasiswa (Satu Program Studi) --</option>
+                                            <option value="">-- Pilih Mahasiswa (Sistem Informasi) --</option>
                                             @foreach($mahasiswaProdi as $mhs)
                                                 <option value="{{ $mhs->id }}">{{ $mhs->name }} (NIM: {{ $mhs->nim }})</option>
                                             @endforeach
@@ -614,10 +838,10 @@
 
                     <!-- SUBMIT BUTTON BAR -->
                     <div class="p-6 bg-gray-50 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-4">
-                        <span class="text-xs text-gray-500">Pastikan seluruh data dan berkas KTM & Transkrip telah diunggah dengan benar.</span>
+                        <span class="text-xs text-gray-500">Pastikan seluruh data dan berkas persyaratan telah diisi dengan benar.</span>
                         <button type="submit" class="w-full sm:w-auto inline-flex items-center justify-center px-8 py-3 bg-uin hover:bg-uin-hover text-white text-xs font-bold rounded-xl shadow-md transition-all">
                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
-                            Kirim Pengajuan Magang
+                            Kirim Pendaftaran Magang
                         </button>
                     </div>
                 </div>

@@ -62,7 +62,7 @@
                 <span class="text-transparent bg-clip-text bg-gradient-to-r from-uin to-blue-600">Magang Terpadu</span>
             </h1>
             <p class="mt-4 max-w-2xl text-lg text-gray-600 mx-auto mb-10">
-                Platform digital resmi Fakultas Sains dan Teknologi UIN Raden Intan Lampung. Kelola administrasi magang, logbook, hingga konsultasi DPL menjadi lebih cepat, efisien, dan paperless.
+                Platform digital resmi Program Studi Sistem Informasi UIN Raden Intan Lampung. Kelola administrasi magang, logbook kegiatan harian, hingga rekapitulasi penilaian akhir menjadi lebih cepat, efisien, dan terpadu.
             </p>
 
             @if(!Auth::check())
@@ -109,11 +109,11 @@
                 <div class="bg-gray-50 rounded-2xl p-8 border border-gray-100 hover:border-uin/30 hover:shadow-lg transition-all group">
                     <div class="w-14 h-14 bg-white rounded-xl shadow-sm flex items-center justify-center text-uin mb-6 group-hover:scale-110 transition-transform">
                         <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
                     </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-3">Ruang Konsultasi DPL</h3>
-                    <p class="text-gray-600 text-sm leading-relaxed">Fitur Live Chat yang terintegrasi di dalam jurnal logbook. Bimbingan magang kini bisa dilakukan langsung di dalam platform.</p>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Penilaian & Evaluasi Terpadu</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">Kalkulasi nilai otomatis dari instansi dan DPL dengan lembar penilaian resmi berstandar akademik yang dapat diakses langsung oleh mahasiswa.</p>
                 </div>
             </div>
         </div>

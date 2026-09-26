@@ -72,15 +72,15 @@
                 @endif
             </div>
 
-            <!-- TIGA KOLOM: PRESENSI GPS, JURNAL LOGBOOK, KONSULTASI -->
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <!-- DUA KOLOM: PRESENSI GPS & JURNAL LOGBOOK -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 
                 <!-- KOLOM 1: PRESENSI & GPS -->
-                <div class="lg:col-span-4 bg-white shadow-sm sm:rounded-xl border border-gray-100 flex flex-col h-[600px]">
+                <div class="bg-white shadow-sm sm:rounded-xl border border-gray-100 flex flex-col h-[650px]">
                     <div class="p-4 border-b border-gray-100 bg-gray-50/80 rounded-t-xl">
                         <h3 class="text-sm font-bold text-gray-900 flex items-center">
                             <svg class="w-4 h-4 mr-2 text-uin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path></svg>
-                            Monitoring Presensi & GPS
+                            Monitoring Presensi & GPS Harian
                         </h3>
                     </div>
                     <div class="overflow-y-auto flex-1 p-0 custom-scrollbar">
@@ -88,27 +88,27 @@
                             <tbody class="divide-y divide-gray-100">
                                 @forelse($presensi as $abs)
                                     <tr class="hover:bg-gray-50 transition-colors">
-                                        <td class="px-3 py-2.5">
+                                        <td class="px-4 py-3">
                                             <span class="font-bold text-gray-900 block">{{ $abs->user->name ?? '-' }}</span>
-                                            <span class="text-[10px] text-gray-400">{{ \Carbon\Carbon::parse($abs->date)->translatedFormat('d M') }} ({{ $abs->created_at->format('H:i') }})</span>
+                                            <span class="text-[10px] text-gray-400">{{ \Carbon\Carbon::parse($abs->date)->translatedFormat('d M Y') }} ({{ $abs->created_at->format('H:i') }})</span>
                                         </td>
-                                        <td class="px-2 py-2.5 text-center">
-                                            <span class="px-1.5 py-0.5 text-[9px] font-bold rounded uppercase {{ $abs->type == 'masuk' ? 'bg-blue-100 text-blue-800' : 'bg-orange-100 text-orange-800' }}">
+                                        <td class="px-3 py-3 text-center">
+                                            <span class="px-2 py-0.5 text-[10px] font-bold rounded uppercase {{ $abs->type == 'masuk' ? 'bg-blue-100 text-blue-800' : 'bg-orange-100 text-orange-800' }}">
                                                 {{ $abs->type ?? 'Masuk' }}
                                             </span>
                                         </td>
-                                        <td class="px-3 py-2.5 text-right">
+                                        <td class="px-4 py-3 text-right">
                                             @if($abs->latitude && $abs->longitude)
-                                                <a href="https://maps.google.com/?q={{ $abs->latitude }},{{ $abs->longitude }}" target="_blank" class="text-[10px] text-uin hover:underline block font-mono">
+                                                <a href="https://maps.google.com/?q={{ $abs->latitude }},{{ $abs->longitude }}" target="_blank" class="text-[11px] text-uin hover:underline block font-mono font-semibold">
                                                     📍 {{ number_format((float)$abs->latitude, 3) }}, {{ number_format((float)$abs->longitude, 3) }}
                                                 </a>
                                             @else
-                                                <span class="text-[10px] text-gray-400">-</span>
+                                                <span class="text-[11px] text-gray-400">-</span>
                                             @endif
                                         </td>
                                     </tr>
                                 @empty
-                                    <tr><td colspan="3" class="text-center py-8 text-gray-400 text-xs">Belum ada data presensi.</td></tr>
+                                    <tr><td colspan="3" class="text-center py-12 text-gray-400 text-xs">Belum ada data presensi.</td></tr>
                                 @endforelse
                             </tbody>
                         </table>
@@ -116,93 +116,41 @@
                 </div>
 
                 <!-- KOLOM 2: JURNAL LOGBOOK -->
-                <div class="lg:col-span-4 bg-white shadow-sm sm:rounded-xl border border-gray-100 flex flex-col h-[600px]">
+                <div class="bg-white shadow-sm sm:rounded-xl border border-gray-100 flex flex-col h-[650px]">
                     <div class="p-4 border-b border-gray-100 bg-gray-50/80 rounded-t-xl flex justify-between items-center">
                         <h3 class="text-sm font-bold text-gray-900 flex items-center">
                             <svg class="w-4 h-4 mr-2 text-uin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
-                            Logbook Kegiatan
+                            Logbook Kegiatan & Feedback DPL
                         </h3>
                     </div>
                     
                     <div class="overflow-y-auto flex-1 p-4 space-y-4 custom-scrollbar">
                         @forelse($logbooks as $log)
                             <div class="border border-gray-200 rounded-xl bg-white shadow-sm overflow-hidden">
-                                <div class="bg-gray-50/80 px-3 py-2 border-b border-gray-100 text-xs font-bold text-gray-900 flex justify-between">
+                                <div class="bg-gray-50/80 px-4 py-2.5 border-b border-gray-100 text-xs font-bold text-gray-900 flex justify-between items-center">
                                     <span>{{ $log->user->name ?? '-' }}</span>
                                     <span class="text-gray-400 font-normal">{{ \Carbon\Carbon::parse($log->date)->translatedFormat('d M Y') }}</span>
                                 </div>
-                                <div class="p-3">
-                                    <p class="text-xs text-gray-800 leading-relaxed mb-2">{{ $log->kegiatan }}</p>
-                                    <div class="bg-gray-50 p-2 rounded border border-gray-100 mb-2.5">
-                                        <p class="text-[10px] font-bold text-gray-400 uppercase">Output:</p>
-                                        <p class="text-xs text-gray-700">{{ $log->output }}</p>
+                                <div class="p-4">
+                                    <p class="text-xs text-gray-800 leading-relaxed mb-3">{{ $log->kegiatan }}</p>
+                                    <div class="bg-gray-50 p-2.5 rounded-lg border border-gray-100 mb-3">
+                                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Output / Hasil:</p>
+                                        <p class="text-xs text-gray-700 mt-0.5">{{ $log->output }}</p>
                                     </div>
                                     <form action="{{ route('dpl.pemantauan.feedback', $log->id) }}" method="POST">
                                         @csrf @method('PATCH')
                                         <div class="flex space-x-2">
-                                            <input type="text" name="feedback_dpl" value="{{ $log->feedback_dpl }}" class="flex-1 text-xs border-gray-300 focus:ring-uin focus:border-uin rounded-md" placeholder="Beri feedback...">
-                                            <button type="submit" class="bg-uin text-white px-2.5 py-1 rounded text-xs font-bold hover:bg-uin-hover">Kirim</button>
+                                            <input type="text" name="feedback_dpl" value="{{ $log->feedback_dpl }}" class="flex-1 text-xs border-gray-300 focus:ring-uin focus:border-uin rounded-lg" placeholder="Tuliskan catatan / review feedback...">
+                                            <button type="submit" class="bg-uin text-white px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-uin-hover transition shadow-xs">Simpan Review</button>
                                         </div>
                                     </form>
                                 </div>
                             </div>
                         @empty
-                            <div class="flex flex-col justify-center items-center h-full text-gray-400">
+                            <div class="flex flex-col justify-center items-center h-full text-gray-400 py-12">
                                 <p class="text-xs font-medium">Belum ada logbook yang diisi.</p>
                             </div>
                         @endforelse
-                    </div>
-                </div>
-
-                <!-- KOLOM 3: KONSULTASI / CHAT -->
-                <div class="lg:col-span-4 bg-white shadow-sm sm:rounded-xl border border-gray-100 flex flex-col h-[600px] relative">
-                    <div class="p-4 border-b border-uin bg-uin text-white rounded-t-xl flex justify-between items-center shadow-sm z-10">
-                        <div class="flex items-center">
-                            <div class="w-7 h-7 bg-white/20 rounded-full flex items-center justify-center mr-2.5">
-                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
-                            </div>
-                            <div>
-                                <h3 class="text-sm font-bold">Ruang Konsultasi</h3>
-                                <p class="text-[10px] text-green-100 opacity-90">Bimbingan Magang</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="flex-1 p-4 overflow-y-auto bg-slate-50 space-y-3 custom-scrollbar flex flex-col-reverse">
-                        <div class="flex flex-col space-y-3">
-                            @forelse($pengajuan->consultations as $chat)
-                                @if($chat->sender_id == auth()->id())
-                                    <div class="flex justify-end">
-                                        <div class="bg-uin text-white rounded-l-xl rounded-tr-xl p-2.5 max-w-[85%] shadow-sm">
-                                            <p class="text-xs leading-relaxed">{{ $chat->message }}</p>
-                                            <span class="text-[8px] text-uin-light block mt-1 text-right">{{ $chat->created_at->format('H:i') }}</span>
-                                        </div>
-                                    </div>
-                                @else
-                                    <div class="flex justify-start">
-                                        <div class="bg-white border border-gray-200 text-gray-800 rounded-r-xl rounded-tl-xl p-2.5 max-w-[85%] shadow-sm">
-                                            <p class="text-[9px] font-bold text-gray-400 mb-0.5">{{ $chat->sender->name }}</p>
-                                            <p class="text-xs leading-relaxed">{{ $chat->message }}</p>
-                                            <span class="text-[8px] text-gray-400 block mt-1">{{ $chat->created_at->format('H:i') }}</span>
-                                        </div>
-                                    </div>
-                                @endif
-                            @empty
-                                <div class="text-center text-gray-400 opacity-70 mt-10">
-                                    <p class="text-xs">Mulai percakapan dengan mahasiswa.</p>
-                                </div>
-                            @endforelse
-                        </div>
-                    </div>
-                    
-                    <div class="p-3 border-t border-gray-200 bg-white rounded-b-xl z-10">
-                        <form action="{{ route('konsultasi.store', $pengajuan->id) }}" method="POST" class="flex items-center space-x-2">
-                            @csrf
-                            <input type="text" name="message" class="flex-1 bg-gray-100 border-transparent focus:bg-white focus:border-uin focus:ring-uin rounded-full text-xs px-3.5 py-2" placeholder="Ketik pesan bimbingan..." required autocomplete="off">
-                            <button type="submit" class="bg-uin text-white rounded-full p-2 hover:bg-uin-hover transition shadow-sm">
-                                <svg class="w-4 h-4 transform rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
-                            </button>
-                        </form>
                     </div>
                 </div>
 
