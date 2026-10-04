@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Surat Pengantar Magang</title>
+    <title>Surat Pengantar Magang - {{ $pengajuan->user->name ?? 'Mahasiswa' }}</title>
     <style>
         body {
             font-family: 'Times New Roman', Times, serif;
@@ -13,19 +13,32 @@
         }
         .header {
             text-align: center;
-            border-bottom: 2px solid #000;
-            padding-bottom: 10px;
+            border-bottom: 2.5px solid #000;
+            padding-bottom: 8px;
             margin-bottom: 20px;
         }
-        .header h2 {
+        .header h1 {
             margin: 0;
+            font-size: 13pt;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .header h2 {
+            margin: 1px 0;
             font-size: 14pt;
+            font-weight: bold;
             text-transform: uppercase;
         }
         .header h3 {
-            margin: 2px 0;
+            margin: 1px 0;
             font-size: 12pt;
-            font-weight: normal;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .header p {
+            margin: 2px 0 0 0;
+            font-size: 9pt;
+            font-style: italic;
         }
         .meta-table {
             width: 100%;
@@ -50,10 +63,10 @@
         }
         .signature-box {
             width: 100%;
-            margin-top: 40px;
+            margin-top: 35px;
         }
         .signature-col {
-            width: 45%;
+            width: 48%;
             float: right;
             text-align: left;
         }
@@ -62,31 +75,33 @@
         }
         .notice {
             margin-top: 30px;
-            font-size: 10pt;
+            font-size: 9.5pt;
             font-style: italic;
             border: 1px dashed #777;
             padding: 8px;
+            background-color: #fafafa;
         }
     </style>
 </head>
 <body>
     <div class="header">
-        <h2>KEMENTERIAN PENDIDIKAN, KEBUDAYAAN, RISET, DAN TEKNOLOGI</h2>
-        <h3>PROGRAM STUDI {{ strtoupper($pengajuan->prodi->nama_prodi ?? 'TEKNOLOGI INFORMASI') }}</h3>
-        <p style="margin: 0; font-size: 10pt;">Jl. Kampus Terpadu No. 1, Telp: (021) 1234567, Email: prodi@kampus.ac.id</p>
+        <h1>KEMENTERIAN AGAMA REPUBLIK INDONESIA</h1>
+        <h2>UNIVERSITAS ISLAM NEGERI RADEN INTAN LAMPUNG</h2>
+        <h3>FAKULTAS SAINS DAN TEKNOLOGI</h3>
+        <p>Alamat: Jl. Letkol H. Endro Suratmin Sukarame Bandar Lampung (35131) Telp. 0721-70360 email: saintek@radenintan.ac.id</p>
     </div>
 
     <table class="meta-table">
         <tr>
             <td style="width: 15%;">Nomor</td>
             <td style="width: 3%;">:</td>
-            <td>___/UN.PRODI/MAGANG/{{ date('Y') }}</td>
-            <td style="text-align: right;">{{ \Carbon\Carbon::now()->isoFormat('D MMMM Y') }}</td>
+            <td>B-...../Un.16/FST/SI/PP.00.9/{{ date('m/Y') }}</td>
+            <td style="text-align: right;">Bandar Lampung, {{ \Carbon\Carbon::now()->isoFormat('D MMMM Y') }}</td>
         </tr>
         <tr>
             <td>Lampiran</td>
             <td>:</td>
-            <td>-</td>
+            <td>1 (Satu) Berkas Proposal</td>
             <td></td>
         </tr>
         <tr>
@@ -97,24 +112,24 @@
         </tr>
     </table>
 
-    <p>Kepada Yth.<br>
+    <p style="margin-bottom: 0;">Kepada Yth.<br>
     <strong>Pimpinan {{ $pengajuan->instansi }}</strong><br>
-    {{ $pengajuan->alamat ?? $pengajuan->alamat_instansi }}</p>
+    di {{ $pengajuan->alamat ?? $pengajuan->alamat_instansi }}</p>
 
-    <p>Dengan hormat,</p>
+    <p style="margin-top: 15px;"><i>Assalamu'alaikum Wr. Wb.</i></p>
     <p style="text-align: justify; text-indent: 30px;">
-        Sehubungan dengan pelaksanaan kurikulum Program Studi {{ $pengajuan->prodi->nama_prodi ?? 'Teknologi Informasi' }}, kami bermaksud mengajukan permohonan izin pelaksanaan kegiatan Magang / Kerja Praktik bagi mahasiswa kami pada instansi/perusahaan yang Bapak/Ibu pimpin untuk periode <strong>{{ \Carbon\Carbon::parse($pengajuan->start_date)->isoFormat('D MMMM Y') }}</strong> s/d <strong>{{ \Carbon\Carbon::parse($pengajuan->end_date)->isoFormat('D MMMM Y') }}</strong>.
+        Dalam rangka implementasi kurikulum merdeka dan pembekalan kompetensi profesional bagi mahasiswa Program Studi Sistem Informasi Fakultas Sains dan Teknologi UIN Raden Intan Lampung, kami mengajukan permohonan izin pelaksanaan kegiatan Magang / Praktik Kerja Lapangan (PKL) bagi mahasiswa kami pada instansi/perusahaan yang Bapak/Ibu pimpin untuk periode <strong>{{ \Carbon\Carbon::parse($pengajuan->start_date)->isoFormat('D MMMM Y') }}</strong> sampai dengan <strong>{{ \Carbon\Carbon::parse($pengajuan->end_date)->isoFormat('D MMMM Y') }}</strong>.
     </p>
 
-    <p>Adapun daftar mahasiswa yang kami ajukan adalah sebagai berikut:</p>
+    <p>Adapun data mahasiswa pemohon adalah sebagai berikut:</p>
 
     <table class="table-peserta">
         <thead>
             <tr>
                 <th style="width: 8%;">No</th>
-                <th style="width: 35%;">Nama Mahasiswa</th>
-                <th style="width: 25%;">NIM</th>
-                <th style="width: 32%;">Peran</th>
+                <th style="width: 37%;">Nama Mahasiswa</th>
+                <th style="width: 25%;">NPM / NIM</th>
+                <th style="width: 30%;">Status / Peran</th>
             </tr>
         </thead>
         <tbody>
@@ -124,7 +139,7 @@
                         <td style="text-align: center;">{{ $idx + 1 }}</td>
                         <td>{{ $member->user->name ?? '-' }}</td>
                         <td style="text-align: center;">{{ $member->user->nim ?? '-' }}</td>
-                        <td style="text-align: center;">{{ $member->is_leader ? 'Ketua Kelompok' : 'Anggota' }}</td>
+                        <td style="text-align: center;">{{ $member->is_leader ? 'Ketua Kelompok' : 'Anggota Kelompok' }}</td>
                     </tr>
                 @endforeach
             @else
@@ -132,31 +147,32 @@
                     <td style="text-align: center;">1</td>
                     <td>{{ $pengajuan->user->name ?? '-' }}</td>
                     <td style="text-align: center;">{{ $pengajuan->user->nim ?? '-' }}</td>
-                    <td style="text-align: center;">Pemohon</td>
+                    <td style="text-align: center;">Pemohon Tunggal</td>
                 </tr>
             @endif
         </tbody>
     </table>
 
     <p style="text-align: justify;">
-        Demikian surat pengantar ini kami sampaikan. Besar harapan kami agar mahasiswa tersebut dapat diberikan kesempatan melaksanakan magang di tempat Bapak/Ibu. Atas perhatian dan kerja samanya, kami ucapkan terima kasih.
+        Besar harapan kami agar Bapak/Ibu berkenan memberikan kesempatan bagi mahasiswa tersebut guna menggali pengalaman serta menerapkan ilmu keahlian di bidang Sistem Informasi. Atas perhatian, kesediaan, dan kerja sama yang baik, kami haturkan terima kasih.
     </p>
+    <p><i>Wassalamu'alaikum Wr. Wb.</i></p>
 
     <div class="signature-box">
         <div class="signature-col">
-            <p style="margin-bottom: 5px;">Mengetahui,<br>Ketua Program Studi</p>
+            <p style="margin-bottom: 5px;">Mengetahui,<br>Ketua Program Studi Sistem Informasi</p>
             <div class="signature-space">
                 <!-- Ruang Kosong untuk Tanda Tangan Manual & Stempel Basah -->
             </div>
-            <p style="margin: 0; font-weight: bold; text-decoration: underline;">( ____________________________ )</p>
-            <p style="margin: 0;">NIP. ...................................................</p>
+            <p style="margin: 0; font-weight: bold; text-decoration: underline;">Fiqih Satria, M.T.I.</p>
+            <p style="margin: 0;">NIP. 199211102019031016</p>
         </div>
     </div>
 
     <div style="clear: both;"></div>
 
     <div class="notice">
-        <strong>Catatan untuk Mahasiswa:</strong> Surat pengantar ini digenerate secara otomatis oleh SIMAMA dalam format <em>belum bertanda tangan</em>. Silakan cetak dokumen ini dan mintakan tanda tangan resmi serta stempel basah kepada Program Studi sebelum diserahkan ke instansi.
+        <strong>Petunjuk Mahasiswa:</strong> Surat pengantar ini digenerate secara otomatis oleh sistem SIMAMA. Silakan cetak format dokumen ini lalu mintakan tanda tangan resmi dan stempel basah kepada Program Studi Sistem Informasi sebelum diserahkan ke instansi mitra.
     </div>
 </body>
 </html>

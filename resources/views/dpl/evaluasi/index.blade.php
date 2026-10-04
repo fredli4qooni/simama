@@ -1,10 +1,22 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex flex-col">
-            <h2 class="font-bold text-2xl text-gray-900 leading-tight">
-                Evaluasi & Penilaian Magang
-            </h2>
-            <p class="text-sm text-gray-500 mt-1">Masukkan nilai dari DPL dan nilai dari Instansi mitra untuk menghitung nilai akhir rata-rata serta cetak PDF.</p>
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+                <h2 class="font-bold text-2xl text-gray-900 leading-tight">
+                    Evaluasi & Penilaian Magang
+                </h2>
+                <p class="text-sm text-gray-500 mt-1">Masukkan nilai dari DPL dan nilai dari Instansi mitra untuk menghitung nilai akhir rata-rata serta cetak PDF.</p>
+            </div>
+            <div class="flex items-center gap-2 flex-wrap">
+                <a href="{{ route('mahasiswa.penilaian_instansi.template') }}" class="inline-flex items-center px-3 py-1.5 text-xs font-bold text-slate-700 bg-white hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-300 border border-slate-300 rounded-xl transition shadow-xs">
+                    <svg class="w-3.5 h-3.5 mr-1.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    Blanko Nilai Mitra (DOCX)
+                </a>
+                <a href="{{ route('mahasiswa.laporan.template') }}" class="inline-flex items-center px-3 py-1.5 text-xs font-bold text-slate-700 bg-white hover:bg-purple-50 hover:text-purple-700 hover:border-purple-300 border border-slate-300 rounded-xl transition shadow-xs">
+                    <svg class="w-3.5 h-3.5 mr-1.5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    Panduan & Format (DOCX)
+                </a>
+            </div>
         </div>
     </x-slot>
 
@@ -99,9 +111,15 @@
                                         </div>
 
                                         <div>
-                                            <label class="block text-xs font-bold text-gray-700 mb-1">2. Nilai dari Instansi Mitra *</label>
+                                            <div class="flex items-center justify-between mb-1">
+                                                <label class="block text-xs font-bold text-gray-700">2. Nilai dari Instansi Mitra *</label>
+                                                <a href="{{ route('mahasiswa.penilaian_instansi.template') }}" class="text-[11px] text-uin font-semibold hover:underline flex items-center">
+                                                    <svg class="w-3 h-3 mr-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                                                    Blanko Form Mitra (DOCX)
+                                                </a>
+                                            </div>
                                             <input type="number" step="0.01" name="nilai_instansi" x-model="nilaiInstansi" min="0" max="100" class="w-full text-sm border-gray-300 focus:border-uin focus:ring-uin rounded-md shadow-sm" required placeholder="0 - 100">
-                                            <p class="text-[11px] text-gray-500 mt-0.5">Dari pembimbing lapangan di instansi.</p>
+                                            <p class="text-[11px] text-gray-500 mt-0.5">Dari pembimbing lapangan di instansi mitra.</p>
                                         </div>
 
                                         <div class="p-3 bg-gray-50 rounded-lg border border-gray-200 flex justify-between items-center">

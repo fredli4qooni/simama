@@ -6,39 +6,43 @@
     <style>
         body { 
             font-family: 'Times New Roman', Times, serif; 
-            font-size: 12pt; 
-            line-height: 1.5; 
-            margin: 2cm; 
+            font-size: 11.5pt; 
+            line-height: 1.45; 
+            margin: 25px 35px; 
+            color: #000;
         }
         .kop-surat { 
             text-align: center; 
-            border-bottom: 3px solid black; 
-            padding-bottom: 10px; 
-            margin-bottom: 20px; 
+            border-bottom: 2.5px solid black; 
+            padding-bottom: 8px; 
+            margin-bottom: 16px; 
         }
-        .kop-surat h1 { font-size: 16pt; margin: 0; font-weight: bold; }
-        .kop-surat h2 { font-size: 14pt; margin: 0; font-weight: bold; }
-        .kop-surat p { font-size: 10pt; margin: 0; }
+        .kop-surat h1 { font-size: 13pt; margin: 0; font-weight: bold; text-transform: uppercase; }
+        .kop-surat h2 { font-size: 14pt; margin: 1px 0; font-weight: bold; text-transform: uppercase; }
+        .kop-surat h3 { font-size: 12pt; margin: 1px 0; font-weight: bold; text-transform: uppercase; }
+        .kop-surat p { font-size: 9pt; margin: 2px 0 0 0; font-style: italic; }
         .judul-surat { 
             text-align: center; 
             text-decoration: underline; 
             font-weight: bold; 
-            font-size: 14pt; 
-            margin-top: 20px; 
+            font-size: 13pt; 
+            margin-top: 15px; 
+            text-transform: uppercase;
         }
         .nomor-surat { 
             text-align: center; 
-            margin-bottom: 30px; 
+            margin-bottom: 20px; 
+            font-size: 10.5pt;
         }
-        .content { margin-top: 20px; text-align: justify; }
+        .content { margin-top: 15px; text-align: justify; }
         .table-data { 
             width: 100%; 
             margin-left: 20px; 
-            margin-top: 10px; 
-            margin-bottom: 10px; 
+            margin-top: 8px; 
+            margin-bottom: 12px; 
         }
-        .table-data td { padding: 3px; vertical-align: top; }
-        .table-data td:first-child { width: 160px; }
+        .table-data td { padding: 2.5px; vertical-align: top; }
+        .table-data td:first-child { width: 180px; }
         .table-anggota {
             width: 100%;
             border-collapse: collapse;
@@ -47,32 +51,32 @@
         .table-anggota th, .table-anggota td {
             border: 1px solid #000;
             padding: 5px 8px;
-            font-size: 11pt;
+            font-size: 10.5pt;
         }
         .table-anggota th {
             background-color: #f2f2f2;
             text-align: center;
         }
-        .signature { 
-            margin-top: 40px; 
-            width: 300px; 
-            float: right; 
-            text-align: left; 
+        .signature-box { 
+            width: 100%;
+            margin-top: 30px; 
         }
-        .clear { clear: both; }
+        .signature-space {
+            height: 60px;
+        }
     </style>
 </head>
 <body>
 
     <div class="kop-surat">
-        <h2>KEMENTERIAN AGAMA REPUBLIK INDONESIA</h2>
-        <h1>UNIVERSITAS ISLAM NEGERI RADEN INTAN LAMPUNG</h1>
-        <h2>FAKULTAS SAINS DAN TEKNOLOGI</h2>
-        <p>Jl. Letkol H. Endro Suratmin, Sukarame, Bandar Lampung, 35131</p>
+        <h1>KEMENTERIAN AGAMA REPUBLIK INDONESIA</h1>
+        <h2>UNIVERSITAS ISLAM NEGERI RADEN INTAN LAMPUNG</h2>
+        <h3>FAKULTAS SAINS DAN TEKNOLOGI</h3>
+        <p>Alamat: Jl. Letkol H. Endro Suratmin Sukarame Bandar Lampung (35131) Telp. 0721-70360 email: saintek@radenintan.ac.id</p>
     </div>
 
     <div class="judul-surat">SURAT TUGAS</div>
-    <div class="nomor-surat">Nomor: B-..../Un.16/FST/PP.00.9/{{ date('m/Y') }}</div>
+    <div class="nomor-surat">Nomor: B-...../Un.16/FST/PP.00.9/{{ date('m/Y') }}</div>
 
     <div class="content">
         <p>Dekan Fakultas Sains dan Teknologi Universitas Islam Negeri Raden Intan Lampung, dengan ini menugaskan kepada:</p>
@@ -83,23 +87,27 @@
                 <td>: <b>{{ $assignment->dpl->name }}</b></td>
             </tr>
             <tr>
+                <td>NIP / NIDN</td>
+                <td>: {{ $assignment->dpl->nim ?? '-' }}</td>
+            </tr>
+            <tr>
                 <td>Email</td>
                 <td>: {{ $assignment->dpl->email }}</td>
             </tr>
             <tr>
-                <td>Jabatan</td>
-                <td>: Dosen Pembimbing Lapangan (DPL)</td>
+                <td>Tugas / Jabatan</td>
+                <td>: Dosen Pembimbing Lapangan (DPL) Magang Mahasiswa</td>
             </tr>
         </table>
 
-        <p>Untuk melaksanakan tugas pembimbingan mahasiswa program Praktik Kerja Lapangan (PKL) / Magang pada <b>{{ $assignment->application->instansi }}</b> bagi mahasiswa berikut:</p>
+        <p>Untuk melaksanakan tugas pembimbingan, pemantauan, serta evaluasi akhir mahasiswa kegiatan Praktik Kerja Lapangan (PKL) / KKN Tematik Magang pada instansi <b>{{ $assignment->application->instansi }}</b> bagi mahasiswa berikut:</p>
 
         <table class="table-anggota">
             <thead>
                 <tr>
                     <th style="width: 8%;">No</th>
                     <th style="width: 42%;">Nama Mahasiswa</th>
-                    <th style="width: 25%;">NIM</th>
+                    <th style="width: 25%;">NPM / NIM</th>
                     <th style="width: 25%;">Peran</th>
                 </tr>
             </thead>
@@ -118,23 +126,33 @@
                         <td style="text-align: center;">1</td>
                         <td>{{ $assignment->application->user->name ?? '-' }}</td>
                         <td style="text-align: center;">{{ $assignment->application->user->nim ?? '-' }}</td>
-                        <td style="text-align: center;">Pemohon</td>
+                        <td style="text-align: center;">Pemohon Tunggal</td>
                     </tr>
                 @endif
             </tbody>
         </table>
 
-        <p>Demikian surat tugas ini dibuat untuk dapat dilaksanakan dengan sebaik-baiknya dan penuh tanggung jawab.</p>
+        <p>Demikian surat tugas ini dibuat untuk dapat dilaksanakan dengan penuh dedikasi dan rasa tanggung jawab.</p>
     </div>
 
-    <div class="signature">
-        <p>Bandar Lampung, {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}</p>
-        <p>A.n. Dekan,<br>Ketua Program Studi</p>
-        <br><br><br><br>
-        <p><b>..........................................</b><br>NIP. ..........................................</p>
+    <div class="signature-box">
+        <table style="width: 100%; border: none;">
+            <tr>
+                <td style="width: 50%; vertical-align: top; font-size: 10.5pt;">
+                    <p style="margin: 0;">Mengetahui,<br>Ketua Program Studi Sistem Informasi</p>
+                    <div class="signature-space"></div>
+                    <p style="margin: 0; font-weight: bold; text-decoration: underline;">Fiqih Satria, M.T.I.</p>
+                    <p style="margin: 0;">NIP. 199211102019031016</p>
+                </td>
+                <td style="width: 50%; vertical-align: top; font-size: 10.5pt; text-align: left; padding-left: 20px;">
+                    <p style="margin: 0;">Bandar Lampung, {{ \Carbon\Carbon::now()->isoFormat('D MMMM Y') }}<br>Dekan Fakultas Sains dan Teknologi,</p>
+                    <div class="signature-space"></div>
+                    <p style="margin: 0; font-weight: bold; text-decoration: underline;">Dr. Sovia Mas Ayu, M.A.</p>
+                    <p style="margin: 0;">NIP. 197611302005012006</p>
+                </td>
+            </tr>
+        </table>
     </div>
-    
-    <div class="clear"></div>
 
 </body>
 </html>

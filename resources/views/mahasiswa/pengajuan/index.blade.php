@@ -315,12 +315,27 @@
 
                 <!-- C. PUSAT BERKAS & DOKUMEN AKSI (DOCUMENT HUB) -->
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden p-6 md:p-8 space-y-6">
-                    <h4 class="text-xs font-black uppercase tracking-wider text-gray-400 flex items-center">
-                        <svg class="w-4 h-4 mr-1.5 text-uin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"></path>
-                        </svg>
-                        Pusat Aksi & Pengelolaan Berkas {{ $isMandiri ? 'Magang Mandiri' : 'Magang Prodi' }}
-                    </h4>
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-100 pb-4">
+                        <div>
+                            <h4 class="text-xs font-black uppercase tracking-wider text-gray-400 flex items-center">
+                                <svg class="w-4 h-4 mr-1.5 text-uin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"></path>
+                                </svg>
+                                Pusat Aksi & Pengelolaan Berkas {{ $isMandiri ? 'Magang Mandiri' : 'Magang Prodi' }}
+                            </h4>
+                            <p class="text-xs text-gray-500 mt-1">Unduh blanko & panduan resmi atau upload berkas magang Anda di bawah ini.</p>
+                        </div>
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <a href="{{ route('mahasiswa.penilaian_instansi.template') }}" class="inline-flex items-center px-3 py-1.5 text-xs font-bold text-slate-700 bg-slate-50 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-300 border border-slate-200 rounded-xl transition shadow-xs">
+                                <svg class="w-3.5 h-3.5 mr-1.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                Blanko Nilai Mitra (DOCX)
+                            </a>
+                            <a href="{{ route('mahasiswa.laporan.template') }}" class="inline-flex items-center px-3 py-1.5 text-xs font-bold text-slate-700 bg-slate-50 hover:bg-purple-50 hover:text-purple-700 hover:border-purple-300 border border-slate-200 rounded-xl transition shadow-xs">
+                                <svg class="w-3.5 h-3.5 mr-1.5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                Panduan & Format Laporan (DOCX)
+                            </a>
+                        </div>
+                    </div>
 
                     @if($isMandiri)
                         <!-- ALUR KHUSUS MAGANG MANDIRI: 2 KARTU UTAMA -->
@@ -349,7 +364,8 @@
                                     </div>
                                     <h5 class="font-bold text-gray-900 text-base">Berkas Bukti Magang Mandiri</h5>
                                     <p class="text-xs text-gray-600 mt-1.5 leading-relaxed">
-                                        Unggah bukti penerimaan, sertifikat magang, atau lembar nilai dari instansi mitra (PDF/JPG/PNG maks. 10MB) sebagai dasar penilaian DPL.
+                                        Unggah bukti penerimaan, sertifikat, atau lembar nilai mitra (PDF/JPG/PNG maks. 10MB).
+                                        Gunakan <a href="{{ route('mahasiswa.penilaian_instansi.template') }}" class="text-emerald-700 font-bold underline hover:text-emerald-800">Blanko Nilai Mitra (DOCX)</a> resmi untuk diisi dan distempel oleh pembimbing instansi.
                                     </p>
                                 </div>
 

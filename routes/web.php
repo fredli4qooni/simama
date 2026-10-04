@@ -90,7 +90,6 @@ Route::middleware(['auth', 'role:mahasiswa'])->prefix('mahasiswa')->name('mahasi
     Route::post('/pengajuan/{id}/surat-balasan', [PengajuanMagangController::class, 'uploadSuratBalasan'])->name('pengajuan.surat_balasan');
     Route::post('/pengajuan/{id}/bukti-mandiri', [PengajuanMagangController::class, 'uploadBuktiMandiri'])->name('pengajuan.bukti_mandiri');
     Route::get('/pengajuan/{id}/lembar-penilaian', [PengajuanMagangController::class, 'cetakLembarNilai'])->name('pengajuan.lembar_nilai');
-    Route::get('/template-laporan', [PengajuanMagangController::class, 'downloadTemplateLaporan'])->name('laporan.template');
     Route::post('/pengajuan/{id}/laporan-akhir', [PengajuanMagangController::class, 'uploadLaporanAkhir'])->name('pengajuan.laporan_akhir');
 
     Route::get('/presensi', [KegiatanMagangController::class, 'presensiIndex'])->name('presensi.index');
@@ -98,6 +97,14 @@ Route::middleware(['auth', 'role:mahasiswa'])->prefix('mahasiswa')->name('mahasi
     
     Route::get('/logbook', [KegiatanMagangController::class, 'logbookIndex'])->name('logbook.index');
     Route::post('/logbook', [KegiatanMagangController::class, 'logbookStore'])->name('logbook.store');
+});
+
+/* ==========================================
+   DOKUMEN & TEMPLATE RESMI (MAHASISWA & DPL)
+========================================== */
+Route::middleware('auth')->group(function () {
+    Route::get('/mahasiswa/template-laporan', [PengajuanMagangController::class, 'downloadTemplateLaporan'])->name('mahasiswa.laporan.template');
+    Route::get('/mahasiswa/template-penilaian-instansi', [PengajuanMagangController::class, 'downloadFormPenilaianInstansi'])->name('mahasiswa.penilaian_instansi.template');
 });
 
 /* ==========================================

@@ -221,4 +221,127 @@ class MagangRevisionTest extends TestCase
         $response->assertOk();
         $this->assertStringContainsString('application/pdf', $response->headers->get('Content-Type'));
     }
+
+    public function test_mahasiswa_can_download_panduan_dan_template_laporan_docx(): void
+    {
+        $mahasiswa = User::factory()->create([
+            'role' => 'mahasiswa',
+            'prodi_id' => $this->prodi->id,
+            'nim' => '2111050015',
+        ]);
+
+        $response = $this->actingAs($mahasiswa)->get(route('mahasiswa.laporan.template'));
+
+        $response->assertOk();
+        $this->assertStringContainsString('Panduan_dan_Template_Laporan_Magang_SI.docx', $response->headers->get('content-disposition'));
+    }
+
+    public function test_mahasiswa_can_download_form_penilaian_instansi_docx(): void
+    {
+        $mahasiswa = User::factory()->create([
+            'role' => 'mahasiswa',
+            'prodi_id' => $this->prodi->id,
+            'nim' => '2111050016',
+        ]);
+
+        $response = $this->actingAs($mahasiswa)->get(route('mahasiswa.penilaian_instansi.template'));
+
+        $response->assertOk();
+        $this->assertStringContainsString('Form_Penilaian_Pembimbing_Instansi_SI.docx', $response->headers->get('content-disposition'));
+    }
+
+    public function test_dpl_can_also_download_form_penilaian_instansi_docx(): void
+    {
+        $dpl = User::factory()->create([
+            'role' => 'dpl',
+            'prodi_id' => $this->prodi->id,
+            'name' => 'Dosen Pembimbing DPL',
+        ]);
+
+        $response = $this->actingAs($dpl)->get(route('mahasiswa.penilaian_instansi.template'));
+
+        $response->assertOk();
+        $this->assertStringContainsString('Form_Penilaian_Pembimbing_Instansi_SI.docx', $response->headers->get('content-disposition'));
+    }
+
+    public function test_surat_pengantar_renders_with_official_kop_and_kaprodi(): void
+    {
+        $mahasiswa = User::factory()->create([
+            'role' => 'mahasiswa',
+            'prodi_id' => $this->prodi->id,
+            'nim' => '2111050017',
+        ]);
+
+        $pengajuan = MagangApplication::create([
+            'user_id' => $mahasiswa->id,
+            'prodi_id' => $this->prodi->id,
+            'is_group' => false,
+            'jenis_magang' => 'prodi',
+            'instansi' => 'PT. Inovasi Lampung',
+            'alamat' => 'Bandar Lampung',
+            'start_date' => now()->format('Y-m-d'),
+            'end_date' => now()->addMonths(2)->format('Y-m-d'),
+            'status' => 'pending',
+        ]);
+
+        $response = $this->actingAs($mahasiswa)->get(route('mahasiswa.pengajuan.surat_pengantar', $pengajuan->id));
+
+        $response->assertOk();
+        $this->assertStringContainsString('application/pdf', $response->headers->get('Content-Type'));
+    }
+
+    public function test_admin_can_view_rekap_nilai_page(): void
+    {
+        $admin = User::factory()->create([
+            'role' => 'admin',
+            'prodi_id' => $this->prodi->id,
+        ]);
+
+        $response = $this->actingAs($admin)->get(route('admin.rekap.index'));
+
+        $response->assertOk();
+        $response->assertSee('Daftar Rekapitulasi Nilai Mahasiswa');
+        $response->assertSee('Cetak PDF Laporan');
+    }
+
+    public function test_admin_can_download_rekap_nilai_pdf(): void
+    {
+        $admin = User::factory()->create([
+            'role' => 'admin',
+            'prodi_id' => $this->prodi->id,
+        ]);
+
+        $mahasiswa = User::factory()->create([
+            'role' => 'mahasiswa',
+            'prodi_id' => $this->prodi->id,
+        ]);
+
+        $pengajuan = MagangApplication::create([
+            'user_id' => $mahasiswa->id,
+            'prodi_id' => $this->prodi->id,
+            'is_group' => false,
+            'jenis_magang' => 'prodi',
+            'instansi' => 'PT. Rekap Test',
+            'alamat' => 'Bandar Lampung',
+            'start_date' => now()->subMonths(2)->format('Y-m-d'),
+            'end_date' => now()->format('Y-m-d'),
+            'status' => 'selesai',
+        ]);
+
+        Evaluation::create([
+            'application_id' => $pengajuan->id,
+            'dpl_user_id' => $admin->id,
+            'nilai_instansi' => 90.00,
+            'nilai_dpl' => 85.00,
+            'nilai_akhir' => 87.50,
+            'published_at' => now(),
+        ]);
+
+        $response = $this->actingAs($admin)->get(route('admin.rekap.cetak'));
+
+        $response->assertOk();
+        $this->assertStringContainsString('application/pdf', $response->headers->get('Content-Type'));
+    }
 }
+
+

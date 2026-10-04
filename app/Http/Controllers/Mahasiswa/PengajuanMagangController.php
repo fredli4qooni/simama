@@ -265,11 +265,26 @@ class PengajuanMagangController extends Controller
 
     public function downloadTemplateLaporan()
     {
+        $filePath = public_path('doc/Panduan KKN TEMATIK MAGANG.docx');
+        if (file_exists($filePath)) {
+            return response()->download($filePath, 'Panduan_dan_Template_Laporan_Magang_SI.docx');
+        }
+
         $content = "PEDOMAN DAN TEMPLATE LAPORAN AKHIR MAGANG\nPROGRAM STUDI SISTEM INFORMASI\n\n1. HALAMAN JUDUL\n2. LEMBAR PENGESAHAN DPL & INSTANSI\n3. KATA PENGANTAR\n4. DAFTAR ISI\n5. BAB I: PENDAHULUAN (Latar Belakang, Tujuan, Manfaat)\n6. BAB II: GAMBARAN UMUM INSTANSI\n7. BAB III: PELAKSANAAN MAGANG & PEMBAHASAN\n8. BAB IV: PENUTUP (Kesimpulan & Saran)\n9. LAMPIRAN (Logbook, Rekap Presensi, Dokumentasi)";
 
         return response($content)
             ->header('Content-Type', 'text/plain')
             ->header('Content-Disposition', 'attachment; filename="Template_Laporan_Magang.txt"');
+    }
+
+    public function downloadFormPenilaianInstansi()
+    {
+        $filePath = public_path('doc/form penilaian pembimbing instansi-perusahaan.docx');
+        if (file_exists($filePath)) {
+            return response()->download($filePath, 'Form_Penilaian_Pembimbing_Instansi_SI.docx');
+        }
+
+        return redirect()->back()->with('error', 'Berkas form penilaian instansi tidak ditemukan.');
     }
 
     public function uploadLaporanAkhir(Request $request, string $id)
