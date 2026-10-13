@@ -1,0 +1,199 @@
+================================================================================
+          DOKUMENTASI ALUR SISTEM & KREDENSIAL PENGGUNA (SIMAMA)
+          Sistem Informasi Magang Mahasiswa - UIN Raden Intan Lampung
+          Program Studi: S1 Sistem Informasi, Fakultas Sains dan Teknologi
+================================================================================
+
+A. IDENTITAS INSTITUSI RESMI
+--------------------------------------------------------------------------------
+Universitas        : Universitas Islam Negeri (UIN) Raden Intan Lampung
+Fakultas           : Fakultas Sains dan Teknologi (FST)
+Program Studi      : S1 Sistem Informasi
+Dekan FST          : Dr. Sovia Mas Ayu, M.A. (NIP. 197611302005012006)
+Ketua Program Studi: Fiqih Satria, M.T.I. (NIP. 199211102019031016)
+Alamat Kampus      : Jl. Letkol H. Endro Suratmin Sukarame Bandar Lampung (35131)
+Email / Kontak     : saintek@radenintan.ac.id / Telp. 0721-70360
+
+
+================================================================================
+B. KREDENSIAL LOGIN AKUN (DEFAULT SEEDER)
+================================================================================
+URL Halaman Login: http://127.0.0.1:8000/login
+
+1. ROLE: ADMIN (Koordinator Magang Program Studi SI)
+   - Email          : adminprodi@radenintan.ac.id
+   - Password       : password
+   - Nama Akun      : Koordinator Magang SI
+   - NIP            : 198501012010121001
+   - Hak Akses Utama:
+     * Dashboard statistik pengajuan magang prodi
+     * Verifikasi berkas pengajuan awal (KTM & Transkrip)
+     * Penetapan Dosen Pembimbing Lapangan (DPL) & Cetak SK/Surat Tugas DPL
+     * Monitoring & Rekapitulasi Nilai Akhir Magang serta Cetak Rekap PDF
+     * Manajemen akun pengguna (Admin, DPL, Mahasiswa)
+
+2. ROLE: DPL (Dosen Pembimbing Lapangan)
+   - Email          : dpl@radenintan.ac.id
+   - Password       : password
+   - Nama Akun      : Dosen Pembimbing Lapangan, M.Kom.
+   - NIP            : 198802022015041002
+   - Hak Akses Utama:
+     * Dashboard bimbingan mahasiswa aktif
+     * Pemantauan presensi harian & radius lokasi (GPS) mahasiswa
+     * Pemeriksaan logbook mingguan & input catatan/feedback bimbingan
+     * Input Evaluasi Nilai: Nilai Mitra (50%) + Nilai DPL (50%)
+     * Unduh Blanko Nilai Mitra (DOCX) & Panduan Laporan (DOCX)
+     * Cetak Lembar Penilaian Resmi (PDF) bertandatangan DPL & Kaprodi SI
+
+3. ROLE: MAHASISWA (Program Studi Sistem Informasi)
+   - Email          : mahasiswa@radenintan.ac.id
+   - Password       : password
+   - Nama Akun      : FREDLI FOURQONI
+   - NIM            : 2271020103
+   - Total SKS / IPK: 142 SKS / 3.75
+   - Hak Akses Utama:
+     * Registrasi Pengajuan Magang (Magang Prodi / Magang Mandiri)
+     * Mode pendaftaran individu atau kelompok (tambah anggota tim)
+     * Document Hub: Unduh Blanko Nilai Mitra (DOCX) & Template Laporan (DOCX)
+     * Cetak PDF Surat Pengantar Magang ke Instansi
+     * Unggah Surat Balasan Instansi / Berkas Bukti Magang Mandiri
+     * Pengisian Presensi Harian (Status Kehadiran, Jam, GPS, Foto)
+     * Pengisian Logbook Kegiatan Harian / Mingguan
+     * Unggah Naskah PDF Laporan Akhir Magang
+     * Transparansi Nilai Akhir (Nilai Instansi, Nilai DPL, Rata-rata, Predikat)
+     * Unduh Lembar Penilaian Resmi (PDF) langsung dari akun mahasiswa
+
+
+================================================================================
+C. PENJELASAN ALUR SISTEM (END-TO-END WORKFLOW)
+================================================================================
+
+Terdapat 2 skema magang di SIMAMA:
+1. Magang Program Studi (Alur Reguler)
+2. Magang Mandiri (Alur Ringkas / Inisiatif Mitra)
+
+--------------------------------------------------------------------------------
+1. ALUR MAGANG PROGRAM STUDI (REGULER)
+--------------------------------------------------------------------------------
+Tahap 1: Pengajuan oleh Mahasiswa
+  - Mahasiswa login dan masuk ke menu "Pengajuan Magang".
+  - Mahasiswa memilih jenis "Magang Prodi" dan tipe (Individu / Kelompok).
+  - Mahasiswa mengisi nama instansi, alamat lengkap, tanggal mulai & selesai.
+  - Mahasiswa mengunggah berkas persyaratan: KTM dan Transkrip Nilai (PDF).
+  - Berkas diajukan ke sistem, status berubah menjadi: "Pending".
+
+Tahap 2: Verifikasi Berkas oleh Admin Prodi
+  - Admin login dan masuk ke menu "Verifikasi Berkas".
+  - Admin memeriksa kelayakan akademik pemohon dan anggota tim.
+  - Admin mengecek keabsahan berkas KTM & Transkrip.
+  - Admin menekan tombol "Setujui" (Approved) atau "Tolak" (Rejected).
+  - Jika disetujui, status berubah menjadi: "Approved".
+
+Tahap 3: Surat Pengantar & Konfirmasi Mitra
+  - Mahasiswa yang disetujui dapat mengunduh "Surat Pengantar Magang" (PDF)
+    resmi bertandatangan Ketua Program Studi Sistem Informasi.
+  - Mahasiswa meminta stempel/ttd basah di fakultas/prodi lalu membawanya
+    ke pimpinan instansi tempat magang.
+  - Instansi menerbitkan Surat Balasan Persetujuan / Acceptance Letter.
+  - Mahasiswa mengunggah scan Surat Balasan tersebut ke Document Hub SIMAMA.
+
+Tahap 4: Penetapan DPL oleh Admin
+  - Admin masuk ke menu "Penetapan DPL".
+  - Admin memilih Dosen Pembimbing Lapangan (DPL) untuk kelompok/mahasiswa tsb.
+  - Admin dapat mencetak "Surat Tugas / Keputusan DPL" (PDF) resmi
+    bertandatangan Dekan FST dan mengetahui Kaprodi SI.
+  - Status magang resmi aktif: "Active".
+
+Tahap 5: Pelaksanaan Magang (Presensi & Logbook)
+  - Mahasiswa login setiap hari kerja ke menu "Presensi" untuk mencatat
+    kehadiran (Hadir/Izin/Sakit), jam, titik koordinat GPS, dan foto bukti.
+  - Mahasiswa mengisi menu "Logbook" mingguan mencakup aktivitas harian,
+    analisis permasalahan, serta dokumentasi kegiatan.
+  - DPL login ke menu "Pemantauan Magang" untuk memantau rekap absensi serta
+    memberikan feedback / arahan tertulis pada setiap logbook mahasiswa.
+
+Tahap 6: Laporan Akhir & Blanko Nilai Mitra
+  - Mahasiswa mengunduh berkas "Panduan KKN Tematik & Template Laporan (DOCX)"
+    dan menyusun naskah laporan akhir.
+  - Mahasiswa mengunggah file PDF "Laporan Akhir Magang" ke sistem.
+  - Mahasiswa mengunduh berkas "Blanko Penilaian Mitra (DOCX)" (10 aspek evaluasi)
+    untuk diserahkan kepada mentor/pembimbing lapangan instansi agar diisi,
+    diberi nilai angka, ditandatangani, dan distempel resmi.
+
+Tahap 7: Evaluasi & Perhitungan Nilai Otomatis oleh DPL
+  - DPL login ke menu "Evaluasi & Penilaian".
+  - DPL memasukkan 2 komponen nilai:
+    1. Nilai Dosen Pembimbing (DPL) (Bobot 50%) -> berdasarkan logbook & bimbingan
+    2. Nilai Pembimbing Instansi Mitra (Bobot 50%) -> dari lembar nilai mitra
+  - DPL menuliskan catatan/komentar evaluasi kinerja mahasiswa.
+  - Sistem secara otomatis menghitung nilai rata-rata:
+      NILAI AKHIR = (Nilai Instansi + Nilai DPL) / 2
+  - Status magang otomatis diperbarui menjadi: "Selesai".
+  - DPL dapat langsung mencetak "Lembar Penilaian Magang (PDF)" resmi.
+
+Tahap 8: Transparansi Nilai Mahasiswa & Rekapitulasi Admin
+  - Mahasiswa login -> Dashboard & Document Hub:
+    * Mahasiswa langsung melihat rincian Nilai Instansi, Nilai DPL,
+      Nilai Akhir Rata-rata, Catatan DPL, dan Predikat Huruf Mutu.
+    * Mahasiswa dapat mengunduh sendiri "Lembar Penilaian (PDF)" resmi.
+  - Admin login -> Menu "Rekap Nilai":
+    * Admin melihat tabel rekapitulasi seluruh nilai mahasiswa prodi SI.
+    * Admin dapat mencetak "Rekapitulasi Nilai Akhir Magang (PDF)" resmi
+      bertandatangan Kaprodi SI.
+
+
+--------------------------------------------------------------------------------
+2. ALUR MAGANG MANDIRI (INISIATIF SENDIRI / MSIB / MITRA KHUSUS)
+--------------------------------------------------------------------------------
+Tahap 1: Registrasi Mandiri Fleksibel
+  - Mahasiswa memilih jenis "Magang Mandiri" saat pendaftaran.
+  - Mahasiswa mengisi profil instansi dan langsung mengunggah dokumen bukti
+    penerimaan / MoU / sertifikat mitra.
+  - Jalur ini BYPASS pencetakan surat pengantar manual kampus.
+
+Tahap 2: Verifikasi & Penetapan DPL Langsung
+  - Admin memeriksa bukti penerimaan mandiri yang diunggah.
+  - Admin langsung menetapkan DPL untuk membimbing dan menilai kegiatan.
+
+Tahap 3: Pelaksanaan & Penyerahan Lembar Nilai
+  - Mahasiswa mengunduh "Blanko Penilaian Mitra (DOCX)" dari sistem SIMAMA.
+  - Mentor instansi mengisi dan menstempel lembar nilai tersebut.
+  - Mahasiswa mengunggah berkas bukti nilai mitra tersebut ke kartu bukti mandiri.
+
+Tahap 4: Penilaian DPL & Terbitnya Nilai Akhir
+  - DPL memeriksa bukti berkas mitra melalui tombol "Lihat Bukti Berkas".
+  - DPL menginput Nilai Instansi dan Nilai DPL.
+  - Sistem menghitung nilai akhir rata-rata dan menerbitkan lembar nilai resmi.
+
+
+================================================================================
+D. SKALA KONVERSI NILAI RESMI UIN RADEN INTAN LAMPUNG
+================================================================================
+  Rentang Angka  | Huruf Mutu | Predikat
+  ----------------------------------------------
+  86.00 - 100.00 |     A      | Sangat Baik / Terpuji
+  76.00 -  85.99 |     B      | Baik
+  66.00 -  75.99 |     C      | Cukup
+  56.00 -  65.99 |     D      | Kurang
+   0.00 -  55.99 |     E      | Sangat Kurang / Gagal
+
+Formula Penilaian Akhir:
+  Nilai Akhir = (Nilai Pembimbing Instansi 50% + Nilai DPL 50%) / 2
+
+
+================================================================================
+E. DAFTAR BERKAS DOKUMEN DALAM SISTEM
+================================================================================
+1. Template Word Resmi (Tersedia Unduh DOCX):
+   - public/doc/Panduan KKN TEMATIK MAGANG.docx
+     -> Rute: GET /mahasiswa/template-laporan
+   - public/doc/form penilaian pembimbing instansi-perusahaan.docx
+     -> Rute: GET /mahasiswa/template-penilaian-instansi
+
+2. Template Cetak PDF Resmi Ber-Kop UIN Raden Intan Lampung:
+   - Surat Pengantar Magang ke Instansi (ttd Kaprodi SI)
+   - Surat Permohonan / Rekomendasi Magang Admin (ttd Kaprodi SI)
+   - Surat Tugas Penetapan DPL (ttd Dekan FST & Mengetahui Kaprodi SI)
+   - Lembar Penilaian Akhir Magang (ttd DPL & Mengetahui Kaprodi SI)
+   - Rekapitulasi Nilai Akhir Magang Mahasiswa (ttd Kaprodi SI)
+================================================================================

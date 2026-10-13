@@ -16,18 +16,33 @@ class PenetapanDplController extends Controller
     {
         $user = $request->user();
 
-        $pengajuan = MagangApplication::with(['user', 'members.user', 'dplAssignment.dpl'])
-            ->whereHas('user', function ($q) use ($user) {
-                $q->where('prodi_id', $user->prodi_id);
-            })
-            ->whereIn('status', ['approved', 'active'])
-            ->latest()
-            ->get();
+        $query = MagangApplication::with(['user.prodi', 'members.user', 'dplAssignment.dpl', 'documents'])
+            ->whereIn('status', ['approved', 'active']);
 
-        $dosen = User::where('role', 'dpl')
-            ->where('prodi_id', $user->prodi_id)
-            ->where('is_active', true)
-            ->get();
+        if ($user->prodi_id) {
+            $query->where(function ($q) use ($user) {
+                $q->where('prodi_id', $user->prodi_id)
+                  ->orWhereNull('prodi_id')
+                  ->orWhereHas('user', function ($uq) use ($user) {
+                      $uq->where('prodi_id', $user->prodi_id)
+                         ->orWhereNull('prodi_id');
+                  });
+            });
+        }
+
+        $pengajuan = $query->latest()->get();
+
+        $dosenQuery = User::where('role', 'dpl')
+            ->where('is_active', true);
+
+        if ($user->prodi_id) {
+            $dosenQuery->where(function ($dq) use ($user) {
+                $dq->where('prodi_id', $user->prodi_id)
+                   ->orWhereNull('prodi_id');
+            });
+        }
+
+        $dosen = $dosenQuery->get();
 
         return view('admin.penetapan_dpl.index', compact('pengajuan', 'dosen'));
     }
@@ -57,7 +72,16 @@ class PenetapanDplController extends Controller
             $dpl->notify(new PenetapanDplNotification($pengajuan));
         }
 
-        $pengajuan->update(['status' => 'active']);
+        $adminUser = $request->user();
+        $updateData = ['status' => 'active'];
+        if (!$pengajuan->prodi_id && $adminUser && $adminUser->prodi_id) {
+            $updateData['prodi_id'] = $adminUser->prodi_id;
+        }
+        $pengajuan->update($updateData);
+
+        if ($pengajuan->user && !$pengajuan->user->prodi_id && $adminUser && $adminUser->prodi_id) {
+            $pengajuan->user->update(['prodi_id' => $adminUser->prodi_id]);
+        }
 
         return redirect()->back()->with('success', 'DPL berhasil ditetapkan untuk kelompok mahasiswa dan status magang sekarang Aktif.');
     }

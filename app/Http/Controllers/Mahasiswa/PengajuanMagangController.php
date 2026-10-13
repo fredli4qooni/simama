@@ -46,6 +46,20 @@ class PengajuanMagangController extends Controller
             return redirect()->back()->with('error', 'Maaf, Anda tidak memenuhi syarat akademik untuk mengajukan magang. Syarat minimal adalah 100 SKS dan IPK 2.50.');
         }
 
+        // Sanitasi dan pastikan data anggota kelompok bersih
+        $isGroup = $request->jenis_magang === 'prodi' && $request->is_group == '1';
+
+        if (!$isGroup) {
+            $request->merge(['member_user_ids' => null, 'is_group' => '0']);
+        } else {
+            // Bersihkan string kosong jika slot anggota tidak dipilih
+            $rawMembers = $request->input('member_user_ids', []);
+            $cleanMembers = is_array($rawMembers)
+                ? array_values(array_filter($rawMembers, fn($id) => !empty($id)))
+                : [];
+            $request->merge(['member_user_ids' => !empty($cleanMembers) ? $cleanMembers : null]);
+        }
+
         $request->validate([
             'is_group' => 'required|in:0,1',
             'jenis_magang' => 'required|in:prodi,mandiri',
@@ -53,24 +67,39 @@ class PengajuanMagangController extends Controller
             'alamat' => 'required|string',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after:start_date',
-            'leader_ktm' => 'required|mimes:pdf,jpg,png|max:2048',
-            'leader_transkrip' => 'required|mimes:pdf,jpg,png|max:2048',
-            'bukti_magang_mandiri' => 'nullable|mimes:pdf,jpg,png|max:10240',
+            'leader_ktm' => 'required|mimes:pdf,jpg,jpeg,png|max:5120',
+            'leader_transkrip' => 'required|mimes:pdf,jpg,jpeg,png|max:5120',
+            'bukti_magang_mandiri' => 'nullable|mimes:pdf,jpg,jpeg,png|max:10240',
             'member_user_ids' => 'nullable|array|max:3',
-            'member_user_ids.*' => 'exists:users,id',
-            'member_ktm.*' => 'nullable|mimes:pdf,jpg,png|max:2048',
-            'member_transkrip.*' => 'nullable|mimes:pdf,jpg,png|max:2048',
+            'member_user_ids.*' => 'required|exists:users,id',
+            'member_ktm.*' => 'nullable|mimes:pdf,jpg,jpeg,png|max:5120',
+            'member_transkrip.*' => 'nullable|mimes:pdf,jpg,jpeg,png|max:5120',
         ], [
+            'instansi.required' => 'Nama instansi / perusahaan tujuan wajib diisi.',
+            'alamat.required' => 'Alamat lengkap instansi wajib diisi.',
+            'start_date.required' => 'Tanggal mulai magang wajib diisi.',
+            'end_date.required' => 'Tanggal selesai magang wajib diisi.',
+            'end_date.after' => 'Tanggal selesai magang harus setelah tanggal mulai magang.',
             'leader_ktm.required' => 'KTM ketua/pemohon wajib diunggah.',
+            'leader_ktm.mimes' => 'Format KTM harus berupa PDF, JPG, JPEG, atau PNG.',
+            'leader_ktm.max' => 'Ukuran berkas KTM maksimal 5MB.',
             'leader_transkrip.required' => 'Transkrip nilai ketua/pemohon wajib diunggah.',
+            'leader_transkrip.mimes' => 'Format transkrip harus berupa PDF, JPG, JPEG, atau PNG.',
+            'leader_transkrip.max' => 'Ukuran berkas transkrip nilai maksimal 5MB.',
             'member_user_ids.max' => 'Jumlah anggota kelompok maksimal 3 orang (total 4 orang termasuk ketua).',
+            'member_user_ids.*.exists' => 'Mahasiswa anggota yang dipilih tidak valid atau tidak terdaftar.',
+            'bukti_magang_mandiri.mimes' => 'Format bukti magang mandiri harus berupa PDF, JPG, JPEG, atau PNG.',
+            'bukti_magang_mandiri.max' => 'Ukuran berkas bukti magang mandiri maksimal 10MB.',
         ]);
 
-        $isGroup = $request->jenis_magang === 'mandiri' ? false : (bool) $request->is_group;
+        $prodiId = $user->prodi_id ?: (\App\Models\Prodi::where('kode_prodi', 'SI')->value('id') ?? \App\Models\Prodi::value('id'));
+        if (!$user->prodi_id && $prodiId) {
+            $user->update(['prodi_id' => $prodiId]);
+        }
 
         $pengajuan = MagangApplication::create([
             'user_id' => $user->id,
-            'prodi_id' => $user->prodi_id,
+            'prodi_id' => $prodiId,
             'is_group' => $isGroup,
             'jenis_magang' => $request->jenis_magang,
             'instansi' => $request->instansi,
@@ -121,7 +150,7 @@ class PengajuanMagangController extends Controller
         }
 
         // Jika Kelompok (Khusus Jalur Prodi): Simpan Anggota dan Dokumennya
-        if ($isGroup && $request->has('member_user_ids')) {
+        if ($isGroup && is_array($request->member_user_ids)) {
             foreach ($request->member_user_ids as $index => $memberId) {
                 if ($memberId && $memberId != $user->id) {
                     MagangMember::create([
@@ -159,7 +188,7 @@ class PengajuanMagangController extends Controller
             ? 'Pendaftaran magang mandiri berhasil dikirim. Anda dapat mengunggah atau memperbarui bukti berkas magang mandiri untuk dinilai DPL.'
             : 'Pengajuan magang berhasil dikirim. Silakan unduh Surat Pengantar dari Program Studi untuk dimintakan tanda tangan manual.';
 
-        return redirect()->back()->with('success', $pesanSukses);
+        return redirect()->route('mahasiswa.pengajuan.index')->with('success', $pesanSukses);
     }
 
     public function cetakSuratPengantar(string $id)

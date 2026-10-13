@@ -36,10 +36,15 @@ class RegisteredUserController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
+        $prodiSI = \App\Models\Prodi::where('kode_prodi', 'SI')->first() ?? \App\Models\Prodi::first();
+
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'role' => 'mahasiswa',
+            'prodi_id' => $prodiSI ? $prodiSI->id : null,
+            'is_active' => true,
         ]);
 
         event(new Registered($user));

@@ -45,6 +45,25 @@
             </div>
             @endif
 
+            <!-- ALERT ERROR VALIDASI GLOBAL -->
+            @if ($errors->any())
+            <div class="p-5 bg-rose-50 border-2 border-rose-300 rounded-2xl shadow-sm text-rose-800 text-xs space-y-2.5">
+                <div class="flex items-center font-bold text-sm text-rose-900">
+                    <div class="p-1.5 bg-rose-200 text-rose-700 rounded-lg mr-2.5">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                        </svg>
+                    </div>
+                    <span>Pendaftaran Belum Berhasil. Silakan periksa hal-hal berikut:</span>
+                </div>
+                <ul class="list-disc list-inside space-y-1 ml-2 text-rose-700 font-medium">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+            @endif
+
             <!-- 1. JOURNEY STEPPER (TAHAPAN STATUS MAGANG) -->
             @php
                 $isAcademicEligible = (!empty(auth()->user()->nim) && auth()->user()->total_sks >= 100 && auth()->user()->ipk >= 2.50);
@@ -827,7 +846,7 @@
 
                                     <div>
                                         <label class="block text-xs font-bold text-gray-700 mb-1">Pilih Mahasiswa Anggota *</label>
-                                        <select :name="'member_user_ids[' + (i - 1) + ']'" class="w-full text-xs rounded-xl border-gray-300 shadow-xs focus:border-uin focus:ring-uin p-2.5 bg-white">
+                                        <select :name="'member_user_ids[' + (i - 1) + ']'" :disabled="jenisMagang !== 'prodi' || isGroup !== '1'" class="w-full text-xs rounded-xl border-gray-300 shadow-xs focus:border-uin focus:ring-uin p-2.5 bg-white">
                                             <option value="">-- Pilih Mahasiswa (Sistem Informasi) --</option>
                                             @foreach($mahasiswaProdi as $mhs)
                                                 <option value="{{ $mhs->id }}">{{ $mhs->name }} (NIM: {{ $mhs->nim }})</option>
@@ -838,12 +857,12 @@
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div class="p-3.5 bg-white rounded-xl border border-gray-200 shadow-xs space-y-1">
                                             <label class="block text-[11px] font-bold text-gray-700">KTM Anggota</label>
-                                            <input type="file" :name="'member_ktm[' + (i - 1) + ']'" accept=".pdf,.jpg,.jpeg,.png" class="block w-full text-xs text-gray-700 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 file:mr-2 file:py-1 file:px-2.5 file:border-0 file:text-[11px] file:font-bold file:bg-gray-100 file:text-gray-700">
+                                            <input type="file" :name="'member_ktm[' + (i - 1) + ']'" :disabled="jenisMagang !== 'prodi' || isGroup !== '1'" accept=".pdf,.jpg,.jpeg,.png" class="block w-full text-xs text-gray-700 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 file:mr-2 file:py-1 file:px-2.5 file:border-0 file:text-[11px] file:font-bold file:bg-gray-100 file:text-gray-700">
                                         </div>
 
                                         <div class="p-3.5 bg-white rounded-xl border border-gray-200 shadow-xs space-y-1">
                                             <label class="block text-[11px] font-bold text-gray-700">Transkrip Nilai Anggota</label>
-                                            <input type="file" :name="'member_transkrip[' + (i - 1) + ']'" accept=".pdf,.jpg,.jpeg,.png" class="block w-full text-xs text-gray-700 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 file:mr-2 file:py-1 file:px-2.5 file:border-0 file:text-[11px] file:font-bold file:bg-gray-100 file:text-gray-700">
+                                            <input type="file" :name="'member_transkrip[' + (i - 1) + ']'" :disabled="jenisMagang !== 'prodi' || isGroup !== '1'" accept=".pdf,.jpg,.jpeg,.png" class="block w-full text-xs text-gray-700 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 file:mr-2 file:py-1 file:px-2.5 file:border-0 file:text-[11px] file:font-bold file:bg-gray-100 file:text-gray-700">
                                         </div>
                                     </div>
                                 </div>
@@ -855,10 +874,17 @@
                     <!-- SUBMIT BUTTON BAR -->
                     <div class="p-6 bg-gray-50 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-4">
                         <span class="text-xs text-gray-500">Pastikan seluruh data dan berkas persyaratan telah diisi dengan benar.</span>
-                        <button type="submit" class="w-full sm:w-auto inline-flex items-center justify-center px-8 py-3 bg-uin hover:bg-uin-hover text-white text-xs font-bold rounded-xl shadow-md transition-all">
-                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
-                            Kirim Pendaftaran Magang
-                        </button>
+                        @if($isAcademicEligible)
+                            <button type="submit" class="w-full sm:w-auto inline-flex items-center justify-center px-8 py-3 bg-uin hover:bg-uin-hover text-white text-xs font-bold rounded-xl shadow-md transition-all">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                                Kirim Pendaftaran Magang
+                            </button>
+                        @else
+                            <a href="{{ route('profile.edit') }}" class="w-full sm:w-auto inline-flex items-center justify-center px-8 py-3 bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold rounded-xl shadow-md transition-all">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                                Lengkapi Profil (NIM, SKS, IPK) Terlebih Dahulu
+                            </a>
+                        @endif
                     </div>
                 </div>
             </form>
