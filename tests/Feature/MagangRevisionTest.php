@@ -61,6 +61,7 @@ class MagangRevisionTest extends TestCase
             'end_date' => now()->addMonths(3)->format('Y-m-d'),
             'leader_ktm' => UploadedFile::fake()->create('ktm.pdf', 500, 'application/pdf'),
             'leader_transkrip' => UploadedFile::fake()->create('transkrip.pdf', 500, 'application/pdf'),
+            'leader_spp' => UploadedFile::fake()->create('spp.pdf', 500, 'application/pdf'),
             'bukti_magang_mandiri' => UploadedFile::fake()->create('surat_penerimaan_msib.pdf', 800, 'application/pdf'),
         ]);
 
@@ -72,6 +73,11 @@ class MagangRevisionTest extends TestCase
             'jenis_magang' => 'mandiri',
             'is_group' => false,
             'instansi' => 'PT. GoTo Gojek Tokopedia Tbk',
+        ]);
+
+        $this->assertDatabaseHas('application_documents', [
+            'user_id' => $mahasiswa->id,
+            'type' => 'SLIP_SPP',
         ]);
 
         $this->assertDatabaseHas('application_documents', [
@@ -101,11 +107,17 @@ class MagangRevisionTest extends TestCase
             'end_date' => now()->addMonths(3)->format('Y-m-d'),
             'leader_ktm' => UploadedFile::fake()->create('ktm.pdf', 500, 'application/pdf'),
             'leader_transkrip' => UploadedFile::fake()->create('transkrip.pdf', 500, 'application/pdf'),
+            'leader_spp' => UploadedFile::fake()->create('spp.pdf', 500, 'application/pdf'),
             'member_user_ids' => [''],
         ]);
 
         $response->assertSessionHasNoErrors();
         $response->assertRedirect(route('mahasiswa.pengajuan.index'));
+
+        $this->assertDatabaseHas('application_documents', [
+            'user_id' => $mahasiswa->id,
+            'type' => 'SLIP_SPP',
+        ]);
     }
 
     public function test_form_submission_individu_with_empty_member_select_and_jpeg(): void
@@ -129,6 +141,7 @@ class MagangRevisionTest extends TestCase
             'end_date' => now()->addMonths(3)->format('Y-m-d'),
             'leader_ktm' => UploadedFile::fake()->create('ktm.jpeg', 800, 'image/jpeg'),
             'leader_transkrip' => UploadedFile::fake()->create('transkrip.jpg', 800, 'image/jpeg'),
+            'leader_spp' => UploadedFile::fake()->create('spp.jpg', 800, 'image/jpeg'),
             'member_user_ids' => [''],
         ]);
 
@@ -139,6 +152,71 @@ class MagangRevisionTest extends TestCase
             'user_id' => $mahasiswa->id,
             'is_group' => false,
             'jenis_magang' => 'prodi',
+        ]);
+
+        $this->assertDatabaseHas('application_documents', [
+            'user_id' => $mahasiswa->id,
+            'type' => 'SLIP_SPP',
+        ]);
+    }
+
+    public function test_form_submission_kelompok_with_member_spp(): void
+    {
+        Storage::fake('public');
+
+        $leader = User::factory()->create([
+            'role' => 'mahasiswa',
+            'prodi_id' => $this->prodi->id,
+            'nim' => '2111050091',
+            'total_sks' => 120,
+            'ipk' => 3.80,
+        ]);
+
+        $member = User::factory()->create([
+            'role' => 'mahasiswa',
+            'prodi_id' => $this->prodi->id,
+            'nim' => '2111050092',
+            'total_sks' => 110,
+            'ipk' => 3.50,
+        ]);
+
+        $response = $this->actingAs($leader)->post(route('mahasiswa.pengajuan.store'), [
+            'is_group' => '1',
+            'jenis_magang' => 'prodi',
+            'instansi' => 'PT. Inovasi Bersama',
+            'alamat' => 'Bandar Lampung',
+            'start_date' => now()->addDays(5)->format('Y-m-d'),
+            'end_date' => now()->addMonths(3)->format('Y-m-d'),
+            'leader_ktm' => UploadedFile::fake()->create('ktm_leader.pdf', 500, 'application/pdf'),
+            'leader_transkrip' => UploadedFile::fake()->create('transkrip_leader.pdf', 500, 'application/pdf'),
+            'leader_spp' => UploadedFile::fake()->create('spp_leader.pdf', 500, 'application/pdf'),
+            'member_user_ids' => [$member->id],
+            'member_ktm' => [UploadedFile::fake()->create('ktm_member.pdf', 500, 'application/pdf')],
+            'member_transkrip' => [UploadedFile::fake()->create('transkrip_member.pdf', 500, 'application/pdf')],
+            'member_spp' => [UploadedFile::fake()->create('spp_member.pdf', 500, 'application/pdf')],
+        ]);
+
+        $response->assertSessionHasNoErrors();
+        $response->assertRedirect(route('mahasiswa.pengajuan.index'));
+
+        // Assert leader documents
+        $this->assertDatabaseHas('application_documents', [
+            'user_id' => $leader->id,
+            'type' => 'SLIP_SPP',
+        ]);
+
+        // Assert member documents
+        $this->assertDatabaseHas('application_documents', [
+            'user_id' => $member->id,
+            'type' => 'SLIP_SPP',
+        ]);
+        $this->assertDatabaseHas('application_documents', [
+            'user_id' => $member->id,
+            'type' => 'KTM',
+        ]);
+        $this->assertDatabaseHas('application_documents', [
+            'user_id' => $member->id,
+            'type' => 'TRANSKRIP',
         ]);
     }
 

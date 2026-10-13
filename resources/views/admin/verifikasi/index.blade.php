@@ -4,7 +4,7 @@
             <h2 class="font-bold text-2xl text-gray-900 leading-tight">
                 Verifikasi Pengajuan Magang Kelompok & Individu
             </h2>
-            <p class="text-sm text-gray-500 mt-1">Tinjau berkas persyaratan (KTM & Transkrip) setiap anggota kelompok dan berikan persetujuan.</p>
+            <p class="text-sm text-gray-500 mt-1">Tinjau berkas persyaratan (KTM, Transkrip & Slip SPP) setiap anggota kelompok dan berikan persetujuan.</p>
         </div>
     </x-slot>
 

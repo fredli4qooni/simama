@@ -800,19 +800,26 @@
                                 </div>
                             </div>
 
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 <div class="p-4 bg-white rounded-xl border border-gray-200 shadow-xs space-y-1.5">
                                     <label class="block text-xs font-bold text-gray-700">📄 Unggah Kartu Tanda Mahasiswa (KTM) *</label>
-                                    <p class="text-[11px] text-gray-400">Format PDF/JPG/PNG (Maks. 2MB)</p>
+                                    <p class="text-[11px] text-gray-400">Format PDF/JPG/PNG (Maks. 5MB)</p>
                                     <input type="file" name="leader_ktm" required accept=".pdf,.jpg,.jpeg,.png" class="block w-full text-xs text-gray-700 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 file:mr-2 file:py-1.5 file:px-3 file:border-0 file:text-xs file:font-bold file:bg-uin-light file:text-uin">
                                     <x-input-error :messages="$errors->get('leader_ktm')" class="text-xs" />
                                 </div>
 
                                 <div class="p-4 bg-white rounded-xl border border-gray-200 shadow-xs space-y-1.5">
                                     <label class="block text-xs font-bold text-gray-700">📑 Unggah Transkrip Nilai Akademik *</label>
-                                    <p class="text-[11px] text-gray-400">Bukti minimal 100 SKS & IPK 2.50 (Maks. 2MB)</p>
+                                    <p class="text-[11px] text-gray-400">Min. 100 SKS & IPK 2.50 (Maks. 5MB)</p>
                                     <input type="file" name="leader_transkrip" required accept=".pdf,.jpg,.jpeg,.png" class="block w-full text-xs text-gray-700 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 file:mr-2 file:py-1.5 file:px-3 file:border-0 file:text-xs file:font-bold file:bg-uin-light file:text-uin">
                                     <x-input-error :messages="$errors->get('leader_transkrip')" class="text-xs" />
+                                </div>
+
+                                <div class="p-4 bg-white rounded-xl border border-gray-200 shadow-xs space-y-1.5">
+                                    <label class="block text-xs font-bold text-gray-700">💳 Slip Pembayaran SPP / UKT *</label>
+                                    <p class="text-[11px] text-gray-400">Bukti lunas semester aktif (Maks. 5MB)</p>
+                                    <input type="file" name="leader_spp" required accept=".pdf,.jpg,.jpeg,.png" class="block w-full text-xs text-gray-700 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 file:mr-2 file:py-1.5 file:px-3 file:border-0 file:text-xs file:font-bold file:bg-uin-light file:text-uin">
+                                    <x-input-error :messages="$errors->get('leader_spp')" class="text-xs" />
                                 </div>
                             </div>
 
@@ -854,7 +861,7 @@
                                         </select>
                                     </div>
 
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                                         <div class="p-3.5 bg-white rounded-xl border border-gray-200 shadow-xs space-y-1">
                                             <label class="block text-[11px] font-bold text-gray-700">KTM Anggota</label>
                                             <input type="file" :name="'member_ktm[' + (i - 1) + ']'" :disabled="jenisMagang !== 'prodi' || isGroup !== '1'" accept=".pdf,.jpg,.jpeg,.png" class="block w-full text-xs text-gray-700 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 file:mr-2 file:py-1 file:px-2.5 file:border-0 file:text-[11px] file:font-bold file:bg-gray-100 file:text-gray-700">
@@ -863,6 +870,11 @@
                                         <div class="p-3.5 bg-white rounded-xl border border-gray-200 shadow-xs space-y-1">
                                             <label class="block text-[11px] font-bold text-gray-700">Transkrip Nilai Anggota</label>
                                             <input type="file" :name="'member_transkrip[' + (i - 1) + ']'" :disabled="jenisMagang !== 'prodi' || isGroup !== '1'" accept=".pdf,.jpg,.jpeg,.png" class="block w-full text-xs text-gray-700 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 file:mr-2 file:py-1 file:px-2.5 file:border-0 file:text-[11px] file:font-bold file:bg-gray-100 file:text-gray-700">
+                                        </div>
+
+                                        <div class="p-3.5 bg-white rounded-xl border border-gray-200 shadow-xs space-y-1">
+                                            <label class="block text-[11px] font-bold text-gray-700">Slip SPP Anggota</label>
+                                            <input type="file" :name="'member_spp[' + (i - 1) + ']'" :disabled="jenisMagang !== 'prodi' || isGroup !== '1'" accept=".pdf,.jpg,.jpeg,.png" class="block w-full text-xs text-gray-700 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 file:mr-2 file:py-1 file:px-2.5 file:border-0 file:text-[11px] file:font-bold file:bg-gray-100 file:text-gray-700">
                                         </div>
                                     </div>
                                 </div>

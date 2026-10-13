@@ -69,11 +69,13 @@ class PengajuanMagangController extends Controller
             'end_date' => 'required|date|after:start_date',
             'leader_ktm' => 'required|mimes:pdf,jpg,jpeg,png|max:5120',
             'leader_transkrip' => 'required|mimes:pdf,jpg,jpeg,png|max:5120',
+            'leader_spp' => 'required|mimes:pdf,jpg,jpeg,png|max:5120',
             'bukti_magang_mandiri' => 'nullable|mimes:pdf,jpg,jpeg,png|max:10240',
             'member_user_ids' => 'nullable|array|max:3',
             'member_user_ids.*' => 'required|exists:users,id',
             'member_ktm.*' => 'nullable|mimes:pdf,jpg,jpeg,png|max:5120',
             'member_transkrip.*' => 'nullable|mimes:pdf,jpg,jpeg,png|max:5120',
+            'member_spp.*' => 'nullable|mimes:pdf,jpg,jpeg,png|max:5120',
         ], [
             'instansi.required' => 'Nama instansi / perusahaan tujuan wajib diisi.',
             'alamat.required' => 'Alamat lengkap instansi wajib diisi.',
@@ -86,6 +88,9 @@ class PengajuanMagangController extends Controller
             'leader_transkrip.required' => 'Transkrip nilai ketua/pemohon wajib diunggah.',
             'leader_transkrip.mimes' => 'Format transkrip harus berupa PDF, JPG, JPEG, atau PNG.',
             'leader_transkrip.max' => 'Ukuran berkas transkrip nilai maksimal 5MB.',
+            'leader_spp.required' => 'Slip pembayaran SPP/UKT terakhir pemohon wajib diunggah.',
+            'leader_spp.mimes' => 'Format slip SPP harus berupa PDF, JPG, JPEG, atau PNG.',
+            'leader_spp.max' => 'Ukuran berkas slip SPP maksimal 5MB.',
             'member_user_ids.max' => 'Jumlah anggota kelompok maksimal 3 orang (total 4 orang termasuk ketua).',
             'member_user_ids.*.exists' => 'Mahasiswa anggota yang dipilih tidak valid atau tidak terdaftar.',
             'bukti_magang_mandiri.mimes' => 'Format bukti magang mandiri harus berupa PDF, JPG, JPEG, atau PNG.',
@@ -117,7 +122,7 @@ class PengajuanMagangController extends Controller
             'is_leader' => true,
         ]);
 
-        // Simpan Berkas KTM & Transkrip Ketua
+        // Simpan Berkas KTM, Transkrip & Slip SPP Ketua
         if ($request->hasFile('leader_ktm')) {
             $pathKtm = $request->file('leader_ktm')->store('dokumen_pengajuan', 'public');
             ApplicationDocument::create([
@@ -135,6 +140,16 @@ class PengajuanMagangController extends Controller
                 'user_id' => $user->id,
                 'type' => 'TRANSKRIP',
                 'file_path' => $pathTranskrip,
+            ]);
+        }
+
+        if ($request->hasFile('leader_spp')) {
+            $pathSpp = $request->file('leader_spp')->store('dokumen_pengajuan', 'public');
+            ApplicationDocument::create([
+                'application_id' => $pengajuan->id,
+                'user_id' => $user->id,
+                'type' => 'SLIP_SPP',
+                'file_path' => $pathSpp,
             ]);
         }
 
@@ -178,6 +193,17 @@ class PengajuanMagangController extends Controller
                             'user_id' => $memberId,
                             'type' => 'TRANSKRIP',
                             'file_path' => $pathMemberTranskrip,
+                        ]);
+                    }
+
+                    // Dokumen Slip SPP Anggota
+                    if ($request->hasFile("member_spp.{$index}")) {
+                        $pathMemberSpp = $request->file("member_spp.{$index}")->store('dokumen_pengajuan', 'public');
+                        ApplicationDocument::create([
+                            'application_id' => $pengajuan->id,
+                            'user_id' => $memberId,
+                            'type' => 'SLIP_SPP',
+                            'file_path' => $pathMemberSpp,
                         ]);
                     }
                 }

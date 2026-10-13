@@ -79,13 +79,13 @@ Tahap 1: Pengajuan oleh Mahasiswa
   - Mahasiswa login dan masuk ke menu "Pengajuan Magang".
   - Mahasiswa memilih jenis "Magang Prodi" dan tipe (Individu / Kelompok).
   - Mahasiswa mengisi nama instansi, alamat lengkap, tanggal mulai & selesai.
-  - Mahasiswa mengunggah berkas persyaratan: KTM dan Transkrip Nilai (PDF).
+  - Mahasiswa mengunggah berkas persyaratan: KTM, Transkrip Nilai, dan Slip Pembayaran SPP/UKT Terakhir (PDF/JPG/PNG).
   - Berkas diajukan ke sistem, status berubah menjadi: "Pending".
 
 Tahap 2: Verifikasi Berkas oleh Admin Prodi
   - Admin login dan masuk ke menu "Verifikasi Berkas".
   - Admin memeriksa kelayakan akademik pemohon dan anggota tim.
-  - Admin mengecek keabsahan berkas KTM & Transkrip.
+  - Admin mengecek keabsahan berkas KTM, Transkrip Nilai, & Slip SPP.
   - Admin menekan tombol "Setujui" (Approved) atau "Tolak" (Rejected).
   - Jika disetujui, status berubah menjadi: "Approved".
 
@@ -147,8 +147,8 @@ Tahap 8: Transparansi Nilai Mahasiswa & Rekapitulasi Admin
 --------------------------------------------------------------------------------
 Tahap 1: Registrasi Mandiri Fleksibel
   - Mahasiswa memilih jenis "Magang Mandiri" saat pendaftaran.
-  - Mahasiswa mengisi profil instansi dan langsung mengunggah dokumen bukti
-    penerimaan / MoU / sertifikat mitra.
+  - Mahasiswa mengisi profil instansi, mengunggah berkas akademik (KTM, Transkrip, Slip SPP),
+    dan dapat langsung melampirkan berkas bukti penerimaan / MoU mitra jika sudah ada.
   - Jalur ini BYPASS pencetakan surat pengantar manual kampus.
 
 Tahap 2: Verifikasi & Penetapan DPL Langsung
