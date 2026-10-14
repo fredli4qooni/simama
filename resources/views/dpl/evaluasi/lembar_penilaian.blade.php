@@ -255,7 +255,7 @@
                     <p style="margin: 0;">Bandar Lampung, {{ \Carbon\Carbon::parse($application->evaluation->published_at ?? now())->isoFormat('D MMMM Y') }}<br>Dosen Pembimbing Lapangan (DPL),</p>
                     <div class="signature-space"></div>
                     <p style="margin: 0; font-weight: bold; text-decoration: underline;">{{ $application->dplAssignment->dpl->name ?? '( ________________________ )' }}</p>
-                    <p style="margin: 0;">NIDN/NIP. {{ $application->dplAssignment->dpl->nim ?? '....................................' }}</p>
+                    <p style="margin: 0;">NIDN/NIP. {{ $application->dplAssignment->dpl->nip ?? $application->dplAssignment->dpl->nim ?? '....................................' }}</p>
                 </td>
             </tr>
         </table>

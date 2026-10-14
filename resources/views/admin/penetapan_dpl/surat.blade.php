@@ -88,7 +88,7 @@
             </tr>
             <tr>
                 <td>NIP / NIDN</td>
-                <td>: {{ $assignment->dpl->nim ?? '-' }}</td>
+                <td>: {{ $assignment->dpl->nip ?? $assignment->dpl->nim ?? '-' }}</td>
             </tr>
             <tr>
                 <td>Email</td>

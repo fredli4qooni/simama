@@ -667,6 +667,65 @@ class MagangRevisionTest extends TestCase
             'longitude' => '105.29664',
         ]);
     }
+
+    public function test_admin_can_create_dpl_user_with_nip(): void
+    {
+        $admin = User::factory()->create([
+            'role' => 'admin',
+            'prodi_id' => $this->prodi->id,
+        ]);
+
+        $response = $this->actingAs($admin)->post(route('admin.users.store'), [
+            'name' => 'Dr. Ahmad Fauzi, M.Kom',
+            'email' => 'ahmad.fauzi@radenintan.ac.id',
+            'password' => 'password123',
+            'role' => 'dpl',
+            'nip' => '198501012010121001',
+        ]);
+
+        $response->assertRedirect();
+        $response->assertSessionHas('success');
+
+        $this->assertDatabaseHas('users', [
+            'name' => 'Dr. Ahmad Fauzi, M.Kom',
+            'email' => 'ahmad.fauzi@radenintan.ac.id',
+            'role' => 'dpl',
+            'nip' => '198501012010121001',
+            'prodi_id' => $this->prodi->id,
+        ]);
+    }
+
+    public function test_admin_can_update_dpl_user_with_nip(): void
+    {
+        $admin = User::factory()->create([
+            'role' => 'admin',
+            'prodi_id' => $this->prodi->id,
+        ]);
+
+        $dpl = User::factory()->create([
+            'name' => 'Dosen Lama',
+            'email' => 'dosen.lama@radenintan.ac.id',
+            'role' => 'dpl',
+            'nip' => '198001012005011001',
+            'prodi_id' => $this->prodi->id,
+        ]);
+
+        $response = $this->actingAs($admin)->patch(route('admin.users.update', $dpl->id), [
+            'name' => 'Dosen Baru, M.T.I.',
+            'email' => 'dosen.lama@radenintan.ac.id',
+            'role' => 'dpl',
+            'nip' => '198001012005011002',
+        ]);
+
+        $response->assertRedirect(route('admin.users.index'));
+        $response->assertSessionHas('success');
+
+        $this->assertDatabaseHas('users', [
+            'id' => $dpl->id,
+            'name' => 'Dosen Baru, M.T.I.',
+            'nip' => '198001012005011002',
+        ]);
+    }
 }
 
 
