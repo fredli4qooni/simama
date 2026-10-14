@@ -312,8 +312,10 @@
                             <p class="text-xs text-white/80">Instansi: {{ $pengajuan->instansi }}</p>
                         </div>
                     </div>
-                    <div class="text-sm font-medium bg-white/10 px-3 py-1 rounded-full">
-                        {{ \Carbon\Carbon::now()->translatedFormat('l, d F Y') }}
+                    <div class="text-xs md:text-sm font-bold bg-white/15 px-3.5 py-1.5 rounded-full flex items-center space-x-2 border border-white/20 shadow-xs">
+                        <span>{{ \Carbon\Carbon::now()->translatedFormat('l, d F Y') }}</span>
+                        <span class="text-white/40">•</span>
+                        <span x-data="{ time: '' }" x-init="time = new Date().toLocaleTimeString('id-ID', { timeZone: 'Asia/Jakarta', hour12: false }); setInterval(() => time = new Date().toLocaleTimeString('id-ID', { timeZone: 'Asia/Jakarta', hour12: false }), 1000)" class="font-mono text-emerald-300 font-black" x-text="time + ' WIB'"></span>
                     </div>
                 </div>
                 
