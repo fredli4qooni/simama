@@ -51,8 +51,8 @@
 
                             <!-- NIM (JIKA MAHASISWA) -->
                             <div x-show="selectedRole === 'mahasiswa'">
-                                <label for="nim" class="block text-xs font-bold text-gray-700 mb-1">NIM / NPM Mahasiswa <span class="text-rose-500">*</span></label>
-                                <input type="text" name="nim" id="nim" class="w-full text-xs rounded-xl border-gray-300 shadow-xs focus:border-uin focus:ring-uin p-2.5 font-mono" placeholder="Contoh: 2111050001" />
+                                <label for="nim" class="block text-xs font-bold text-gray-700 mb-1">NPM / NIM Mahasiswa <span class="text-rose-500">*</span></label>
+                                <input type="text" name="nim" id="nim" class="w-full text-xs rounded-xl border-gray-300 shadow-xs focus:border-uin focus:ring-uin p-2.5 font-mono" placeholder="Contoh: 2271xxxx" />
                                 <x-input-error :messages="$errors->get('nim')" class="mt-1 text-xs" />
                             </div>
 
@@ -117,12 +117,23 @@
                             @forelse($users as $u)
                             <tr class="bg-white hover:bg-blue-50/30 transition-colors duration-150">
                                 <td class="px-6 py-4 align-middle">
-                                    <div class="font-bold text-gray-900 text-sm">{{ $u->name }}</div>
-                                    <div class="text-[11px] text-gray-500 font-mono mt-0.5">
-                                        @if($u->nim) NIM: {{ $u->nim }}
-                                        @elseif($u->nip) NIP: {{ $u->nip }}
-                                        @else -
+                                    <div class="flex items-center space-x-3">
+                                        @if($u->avatar_url)
+                                            <img src="{{ $u->avatar_url }}" alt="{{ $u->name }}" class="w-9 h-9 rounded-full object-cover shadow-xs ring-1 ring-gray-200 flex-shrink-0">
+                                        @else
+                                            <div class="w-9 h-9 rounded-full bg-uin-light text-uin flex items-center justify-center font-bold text-xs flex-shrink-0 border border-uin/20">
+                                                {{ substr($u->name, 0, 1) }}
+                                            </div>
                                         @endif
+                                        <div>
+                                            <div class="font-bold text-gray-900 text-sm">{{ $u->name }}</div>
+                                            <div class="text-[11px] text-gray-500 font-mono mt-0.5">
+                                                @if($u->nim) NIM: {{ $u->nim }}
+                                                @elseif($u->nip) NIP: {{ $u->nip }}
+                                                @else -
+                                                @endif
+                                            </div>
+                                        </div>
                                     </div>
                                 </td>
                                 <td class="px-6 py-4 align-middle font-mono text-gray-700">

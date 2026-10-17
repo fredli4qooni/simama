@@ -74,9 +74,9 @@
 
         @if($user->role === 'mahasiswa')
         <div>
-            <label for="nim" class="block text-xs font-bold text-gray-700 mb-1">Nomor Induk Mahasiswa (NIM / NPM) *</label>
-            <input id="nim" name="nim" type="text" class="w-full text-xs rounded-xl border-gray-300 shadow-xs focus:border-uin focus:ring-uin p-2.5 font-mono" value="{{ old('nim', $user->nim) }}" placeholder="Contoh: 2111050001" required />
-            <p class="text-[11px] text-gray-400 mt-0.5">NIM/NPM wajib diisi sebagai identitas resmi pendaftaran magang.</p>
+            <label for="nim" class="block text-xs font-bold text-gray-700 mb-1">Nomor Pokok Mahasiswa (NPM / NIM) *</label>
+            <input id="nim" name="nim" type="text" class="w-full text-xs rounded-xl border-gray-300 shadow-xs focus:border-uin focus:ring-uin p-2.5 font-mono" value="{{ old('nim', $user->nim) }}" placeholder="Contoh: 2271xxxx" required />
+            <p class="text-[11px] text-gray-400 mt-0.5">NPM/NIM wajib diisi sebagai identitas resmi pendaftaran magang.</p>
             <x-input-error class="mt-1 text-xs" :messages="$errors->get('nim')" />
         </div>
         @elseif($user->role === 'dpl' || $user->role === 'admin')
@@ -113,15 +113,15 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
             <div>
                 <label for="total_sks" class="block text-xs font-bold text-gray-700 mb-1">Total SKS Ditempuh *</label>
-                <input id="total_sks" name="total_sks" type="number" min="0" class="w-full text-xs rounded-xl border-gray-300 shadow-xs focus:border-uin focus:ring-uin p-2.5" value="{{ old('total_sks', $user->total_sks) }}" required />
-                <p class="text-[11px] text-gray-400 mt-0.5">Syarat magang min. 100 SKS</p>
+                <input id="total_sks" name="total_sks" type="number" min="{{ $user->role === 'mahasiswa' ? '110' : '0' }}" class="w-full text-xs rounded-xl border-gray-300 shadow-xs focus:border-uin focus:ring-uin p-2.5" value="{{ old('total_sks', $user->total_sks) }}" required />
+                <p class="text-[11px] text-gray-400 mt-0.5">Syarat magang min. 110 SKS (setara semester 6 ke atas)</p>
                 <x-input-error class="mt-1 text-xs" :messages="$errors->get('total_sks')" />
             </div>
 
             <div>
                 <label for="ipk" class="block text-xs font-bold text-gray-700 mb-1">IPK Terakhir *</label>
-                <input id="ipk" name="ipk" type="number" step="0.01" min="0" max="4.00" class="w-full text-xs rounded-xl border-gray-300 shadow-xs focus:border-uin focus:ring-uin p-2.5" value="{{ old('ipk', $user->ipk) }}" required />
-                <p class="text-[11px] text-gray-400 mt-0.5">Skala 0.00 - 4.00</p>
+                <input id="ipk" name="ipk" type="number" step="0.01" min="{{ $user->role === 'mahasiswa' ? '2.75' : '0' }}" max="4.00" class="w-full text-xs rounded-xl border-gray-300 shadow-xs focus:border-uin focus:ring-uin p-2.5" value="{{ old('ipk', $user->ipk) }}" required />
+                <p class="text-[11px] text-gray-400 mt-0.5">Syarat magang min. IPK 2.75 (Skala 0.00 - 4.00)</p>
                 <x-input-error class="mt-1 text-xs" :messages="$errors->get('ipk')" />
             </div>
         </div>

@@ -14,12 +14,10 @@ class Evaluation extends Model
         'dpl_user_id', 
         'nilai_dpl',
         'nilai_instansi',
-        'kedisiplinan', 
-        'teknis', 
-        'komunikasi', 
-        'inisiatif', 
         'nilai_akhir', 
         'komentar', 
+        'berkas_nilai_instansi',
+        'berkas_nilai_dpl',
         'published_at'
     ];
 

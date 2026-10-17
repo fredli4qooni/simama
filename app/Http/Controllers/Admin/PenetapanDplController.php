@@ -7,7 +7,6 @@ use App\Models\MagangApplication;
 use App\Models\DplAssignment;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Barryvdh\DomPDF\Facade\Pdf;
 use App\Notifications\PenetapanDplNotification;
 
 class PenetapanDplController extends Controller
@@ -85,19 +84,5 @@ class PenetapanDplController extends Controller
 
         return redirect()->back()->with('success', 'DPL berhasil ditetapkan untuk kelompok mahasiswa dan status magang sekarang Aktif.');
     }
-
-    public function cetakSuratTugas(string $id)
-    {
-        $assignment = \App\Models\DplAssignment::with(['application.user.prodi', 'application.members.user.prodi', 'dpl'])->findOrFail($id);
-
-        $namaMahasiswa = $assignment->application->user->name ?? 'Mahasiswa';
-        $safeName = str_replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|'], '-', $namaMahasiswa);
-
-        $filename = 'Surat_Tugas_DPL_' . $safeName . '.pdf';
-
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.penetapan_dpl.surat', compact('assignment'));
-        $pdf->setPaper('A4', 'portrait');
-
-        return $pdf->stream($filename);
-    }
 }
+

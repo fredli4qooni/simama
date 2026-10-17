@@ -30,50 +30,83 @@
                 </div>
             @endif
 
-            <!-- 1. FORM INPUT LOGBOOK BARU -->
-            <div class="bg-white shadow-sm sm:rounded-2xl border border-gray-100 overflow-hidden">
-                <div class="p-5 border-b border-gray-100 bg-gradient-to-r from-uin to-uin-hover text-white flex items-center justify-between">
-                    <h3 class="text-base font-bold flex items-center">
-                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
-                        Tulis Jurnal Kegiatan Harian Baru
-                    </h3>
-                    <span class="text-xs bg-white/20 px-3 py-1 rounded-full font-medium">Wajib diisi berkala</span>
+            <!-- BANNER NOTIFIKASI JIKA STATUS MAGANG SELESAI -->
+            @if($pengajuan->status === 'selesai')
+                <div class="bg-gradient-to-r from-emerald-50 via-teal-50 to-emerald-50 border-2 border-emerald-300 rounded-2xl p-6 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-5">
+                    <div class="flex items-center space-x-4">
+                        <div class="p-3 bg-emerald-600 text-white rounded-2xl shadow-md flex-shrink-0">
+                            <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <h4 class="text-base font-bold text-gray-900">Kegiatan Magang Anda Telah Selesai!</h4>
+                                <span class="px-2.5 py-0.5 bg-emerald-200 text-emerald-900 font-bold text-[10px] rounded-full uppercase tracking-wider">Status: Selesai</span>
+                            </div>
+                            <p class="text-xs text-emerald-800 mt-1">
+                                Seluruh rangkaian kegiatan magang di <strong>{{ $pengajuan->instansi }}</strong> telah dievaluasi.
+                                Anda dapat mengunduh dan mencetak berkas <strong>Logbook Resmi</strong> sesuai format baku Fakultas Sains dan Teknologi UIN Raden Intan Lampung untuk arsip dan pengesahan.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3 w-full md:w-auto">
+                        <a href="{{ route('mahasiswa.logbook.cetak') }}" target="_blank" class="w-full md:w-auto inline-flex items-center justify-center px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-md transition whitespace-nowrap">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                            Cetak Logbook Resmi (PDF)
+                        </a>
+                    </div>
                 </div>
-                <div class="p-6 md:p-8">
-                    <form action="{{ route('mahasiswa.logbook.store') }}" method="POST" class="space-y-5">
-                        @csrf
-                        <div class="max-w-xs">
-                            <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Tanggal Kegiatan *</label>
-                            <input class="block w-full border-gray-300 focus:border-uin focus:ring-uin rounded-xl shadow-xs text-xs p-2.5" type="date" name="date" value="{{ old('date', \Carbon\Carbon::today()->format('Y-m-d')) }}" required max="{{ \Carbon\Carbon::today()->format('Y-m-d') }}" />
-                            <x-input-error :messages="$errors->get('date')" class="text-xs mt-1" />
-                        </div>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                            <div>
-                                <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Uraian Aktivitas & Kegiatan *</label>
-                                <textarea name="kegiatan" rows="4" class="block w-full border-gray-300 focus:border-uin focus:ring-uin rounded-xl shadow-xs text-xs p-3 leading-relaxed" required placeholder="Deskripsikan pekerjaan, proyek, atau penugasan yang Anda kerjakan pada hari tersebut...">{{ old('kegiatan') }}</textarea>
-                                <x-input-error :messages="$errors->get('kegiatan')" class="text-xs mt-1" />
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Hasil / Luaran (Output) *</label>
-                                <textarea name="output" rows="4" class="block w-full border-gray-300 focus:border-uin focus:ring-uin rounded-xl shadow-xs text-xs p-3 leading-relaxed" required placeholder="Contoh: Modul autentikasi selesai, dokumentasi ERD diserahkan, 20 data terinput...">{{ old('output') }}</textarea>
-                                <x-input-error :messages="$errors->get('output')" class="text-xs mt-1" />
-                            </div>
-                        </div>
+            @endif
 
-                        <div class="flex justify-end pt-2 border-t border-gray-100">
-                            <button type="submit" class="inline-flex items-center px-6 py-2.5 bg-uin hover:bg-uin-hover text-white rounded-xl text-xs font-bold shadow-sm transition">
-                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                                Simpan Jurnal Logbook
-                            </button>
-                        </div>
-                    </form>
+            <!-- 1. FORM INPUT LOGBOOK BARU (HANYA AKTIF SAAT MAGANG BELUM SELESAI) -->
+            @if($pengajuan->status !== 'selesai')
+                <div class="bg-white shadow-sm sm:rounded-2xl border border-gray-100 overflow-hidden">
+                    <div class="p-5 border-b border-gray-100 bg-gradient-to-r from-uin to-uin-hover text-white flex items-center justify-between">
+                        <h3 class="text-base font-bold flex items-center">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                            Tulis Jurnal Kegiatan Harian Baru
+                        </h3>
+                        <span class="text-xs bg-white/20 px-3 py-1 rounded-full font-medium">Wajib diisi berkala</span>
+                    </div>
+                    <div class="p-6 md:p-8">
+                        <form action="{{ route('mahasiswa.logbook.store') }}" method="POST" class="space-y-5">
+                            @csrf
+                            <div class="max-w-xs">
+                                <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Tanggal Kegiatan *</label>
+                                <input class="block w-full border-gray-300 focus:border-uin focus:ring-uin rounded-xl shadow-xs text-xs p-2.5" type="date" name="date" value="{{ old('date', \Carbon\Carbon::today()->format('Y-m-d')) }}" required max="{{ \Carbon\Carbon::today()->format('Y-m-d') }}" />
+                                <x-input-error :messages="$errors->get('date')" class="text-xs mt-1" />
+                            </div>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Uraian Aktivitas & Kegiatan *</label>
+                                    <textarea name="kegiatan" rows="4" class="block w-full border-gray-300 focus:border-uin focus:ring-uin rounded-xl shadow-xs text-xs p-3 leading-relaxed" required placeholder="Deskripsikan pekerjaan, proyek, atau penugasan yang Anda kerjakan pada hari tersebut...">{{ old('kegiatan') }}</textarea>
+                                    <x-input-error :messages="$errors->get('kegiatan')" class="text-xs mt-1" />
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">Hasil / Luaran (Output) *</label>
+                                    <textarea name="output" rows="4" class="block w-full border-gray-300 focus:border-uin focus:ring-uin rounded-xl shadow-xs text-xs p-3 leading-relaxed" required placeholder="Contoh: Modul autentikasi selesai, dokumentasi ERD diserahkan, 20 data terinput...">{{ old('output') }}</textarea>
+                                    <x-input-error :messages="$errors->get('output')" class="text-xs mt-1" />
+                                </div>
+                            </div>
+
+                            <div class="flex justify-end pt-2 border-t border-gray-100">
+                                <button type="submit" class="inline-flex items-center px-6 py-2.5 bg-uin hover:bg-uin-hover text-white rounded-xl text-xs font-bold shadow-sm transition">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                                    Simpan Jurnal Logbook
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-            </div>
+            @endif
 
             <!-- 2. RIWAYAT LOGBOOK MAHASISWA -->
             <div class="bg-white shadow-sm sm:rounded-2xl border border-gray-100 overflow-hidden">
-                <div class="p-5 border-b border-gray-100 bg-gray-50/80 flex items-center justify-between">
+                <div class="p-5 border-b border-gray-100 bg-gray-50/80 flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div>
                         <h3 class="text-sm font-bold text-gray-900 flex items-center">
                             <svg class="w-4 h-4 mr-2 text-uin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
@@ -81,9 +114,34 @@
                         </h3>
                         <p class="text-xs text-gray-500 mt-0.5">Daftar rekaman kegiatan yang telah Anda simpan beserta ulasan dari Dosen Pembimbing.</p>
                     </div>
-                    <span class="text-xs font-bold px-3 py-1 bg-gray-200/80 text-gray-700 rounded-full">
-                        Total: {{ $logbooks->count() }} Catatan
-                    </span>
+                    <div class="flex items-center gap-2.5 flex-wrap">
+                        <a href="{{ route('mahasiswa.logbook.template_docx') }}" class="inline-flex items-center px-3.5 py-2 bg-white hover:bg-sky-50 text-sky-800 border border-sky-300 rounded-xl text-xs font-bold shadow-2xs hover:shadow-xs transition" title="Unduh format resmi Log Book Kegiatan Magang dari Fakultas (DOCX)">
+                            <svg class="w-3.5 h-3.5 mr-1.5 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                            Format Logbook (DOCX)
+                        </a>
+
+                        @if($pengajuan->status === 'selesai')
+                            <a href="{{ route('mahasiswa.logbook.cetak') }}" target="_blank" class="inline-flex items-center px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-xs hover:shadow transition">
+                                <svg class="w-3.5 h-3.5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                </svg>
+                                Cetak Logbook Resmi (PDF)
+                            </a>
+                        @else
+                            <span class="inline-flex items-center px-3 py-2 bg-gray-100 text-gray-500 rounded-xl text-xs font-medium border border-gray-200" title="Cetak logbook resmi format fakultas akan terbuka setelah kegiatan magang berstatus selesai">
+                                <svg class="w-3.5 h-3.5 mr-1.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                                </svg>
+                                Cetak Logbook (Tersedia Saat Selesai)
+                            </span>
+                        @endif
+
+                        <span class="text-xs font-bold px-3 py-2 bg-gray-200/80 text-gray-700 rounded-xl">
+                            Total: {{ $logbooks->count() }} Catatan
+                        </span>
+                    </div>
                 </div>
 
                 <div class="p-6 divide-y divide-gray-100 space-y-4">

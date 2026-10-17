@@ -9,6 +9,9 @@ use App\Models\Attendance;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
+use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
+
 class PemantauanMagangController extends Controller
 {
     public function index(Request $request)
@@ -50,5 +53,32 @@ class PemantauanMagangController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Feedback logbook berhasil disimpan.');
+    }
+
+    public function cetakLogbookPdf(string $id, string $userId)
+    {
+        $pengajuan = MagangApplication::with(['user.prodi', 'members.user.prodi', 'dplAssignment.dpl'])->findOrFail($id);
+        Gate::authorize('view', $pengajuan);
+
+        $targetUser = User::with('prodi')->findOrFail($userId);
+        $isMember = $pengajuan->user_id == $targetUser->id || $pengajuan->members()->where('user_id', $targetUser->id)->exists();
+        if (!$isMember) {
+            abort(404, 'Mahasiswa tidak terdaftar pada kelompok magang ini.');
+        }
+
+        $logbooks = Logbook::where('application_id', $id)
+            ->where('user_id', $userId)
+            ->orderBy('date', 'asc')
+            ->get();
+
+        $pdf = Pdf::loadView('mahasiswa.kegiatan.logbook_pdf', [
+            'pengajuan' => $pengajuan,
+            'logbooks' => $logbooks,
+            'user' => $targetUser,
+        ]);
+        $pdf->setPaper('A4', 'portrait');
+
+        $safeNim = str_replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|'], '-', $targetUser->nim ?? 'Mahasiswa');
+        return $pdf->stream('Logbook_Magang_' . $safeNim . '.pdf');
     }
 }

@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Mahasiswa;
 use App\Http\Controllers\Controller;
 use App\Models\Attendance;
 use App\Models\Logbook;
+use App\Models\MagangApplication;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -83,10 +85,10 @@ class KegiatanMagangController extends Controller
     public function logbookIndex(Request $request)
     {
         $user = $request->user();
-        $pengajuan = $user->activeMagangApplication();
+        $pengajuan = $user->completedOrActiveMagangApplication();
         
         if (!$pengajuan) {
-            return redirect()->route('mahasiswa.dashboard')->with('error', 'Akses ditolak. Anda tidak memiliki status magang aktif.');
+            return redirect()->route('mahasiswa.dashboard')->with('error', 'Akses ditolak. Anda belum memiliki data magang aktif atau selesai.');
         }
 
         $logbooks = Logbook::where('application_id', $pengajuan->id)
@@ -100,10 +102,18 @@ class KegiatanMagangController extends Controller
     public function logbookStore(Request $request)
     {
         $user = $request->user();
-        $pengajuan = $user->activeMagangApplication();
+        $pengajuan = $user->completedOrActiveMagangApplication();
 
         if (!$pengajuan) {
             return redirect()->back()->with('error', 'Anda tidak memiliki magang aktif.');
+        }
+
+        if ($pengajuan->status === 'selesai') {
+            return redirect()->back()->with('error', 'Kegiatan magang telah berstatus selesai. Periode pengisian logbook telah ditutup.');
+        }
+
+        if (!in_array($pengajuan->status, ['active', 'approved'])) {
+            return redirect()->back()->with('error', 'Status magang Anda saat ini belum aktif.');
         }
 
         $request->validate([
@@ -130,5 +140,62 @@ class KegiatanMagangController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Logbook harian berhasil ditambahkan.');
+    }
+
+    public function cetakLogbookPdf(Request $request, ?string $id = null)
+    {
+        $user = $request->user();
+
+        if ($id) {
+            $pengajuan = MagangApplication::with(['user.prodi', 'members.user.prodi', 'dplAssignment.dpl'])->findOrFail($id);
+            $isAuthorized = $pengajuan->user_id == $user->id || $pengajuan->members()->where('user_id', $user->id)->exists();
+            if (!$isAuthorized) {
+                abort(403, 'Akses ditolak. Anda tidak terdaftar pada pengajuan magang ini.');
+            }
+        } else {
+            $pengajuan = $user->magangApplications()->where('status', 'selesai')->latest()->first()
+                ?? MagangApplication::whereHas('members', function ($q) use ($user) {
+                    $q->where('user_id', $user->id);
+                })->where('status', 'selesai')->latest()->first();
+
+            if (!$pengajuan) {
+                $appAktif = $user->activeMagangApplication();
+                if ($appAktif) {
+                    return redirect()->back()->with('error', 'Cetak logbook resmi format fakultas hanya dapat dilakukan setelah kegiatan magang berstatus SELESAI.');
+                }
+                return redirect()->route('mahasiswa.dashboard')->with('error', 'Tidak ditemukan data kegiatan magang yang berstatus selesai.');
+            }
+        }
+
+        if ($pengajuan->status !== 'selesai') {
+            return redirect()->back()->with('error', 'Cetak logbook resmi format fakultas hanya dapat dilakukan setelah kegiatan magang berstatus SELESAI.');
+        }
+
+        $pengajuan->loadMissing(['user.prodi', 'members.user.prodi', 'dplAssignment.dpl']);
+
+        $logbooks = Logbook::where('application_id', $pengajuan->id)
+            ->where('user_id', $user->id)
+            ->orderBy('date', 'asc')
+            ->get();
+
+        $pdf = Pdf::loadView('mahasiswa.kegiatan.logbook_pdf', compact('pengajuan', 'logbooks', 'user'));
+        $pdf->setPaper('A4', 'portrait');
+
+        $safeNim = str_replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|'], '-', $user->nim ?? 'Mahasiswa');
+        return $pdf->stream('Logbook_Magang_' . $safeNim . '.pdf');
+    }
+
+    public function downloadTemplateLogbookDocx()
+    {
+        $filePath = public_path('doc/Log_Book_Kegiatan_Magang.docx');
+        if (!file_exists($filePath)) {
+            $filePath = base_path('Log_Book_Kegiatan_Magang.docx');
+        }
+
+        if (file_exists($filePath)) {
+            return response()->download($filePath, 'Log_Book_Kegiatan_Magang.docx');
+        }
+
+        return redirect()->back()->with('error', 'File format Logbook tidak ditemukan.');
     }
 }

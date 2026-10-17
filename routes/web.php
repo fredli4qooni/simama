@@ -42,10 +42,9 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::patch('/verifikasi/{id}', [VerifikasiMagangController::class, 'update'])->name('verifikasi.update');
     Route::get('/verifikasi/{id}/surat', [VerifikasiMagangController::class, 'cetakSuratPermohonan'])->name('verifikasi.surat');
     
-    // Penetapan DPL & Surat Tugas
+    // Penetapan Dosen Pembimbing Lapangan (DPL)
     Route::get('/penetapan-dpl', [PenetapanDplController::class, 'index'])->name('penetapan_dpl.index');
     Route::post('/penetapan-dpl', [PenetapanDplController::class, 'store'])->name('penetapan_dpl.store');
-    Route::get('/penetapan-dpl/{id}/surat', [PenetapanDplController::class, 'cetakSuratTugas'])->name('penetapan_dpl.surat');
 
     // Rekapitulasi Nilai Akhir Magang
     Route::get('/rekap-nilai', [RekapNilaiController::class, 'index'])->name('rekap.index');
@@ -70,6 +69,7 @@ Route::middleware(['auth', 'role:dpl'])->prefix('dpl')->name('dpl.')->group(func
     Route::get('/pemantauan', [PemantauanMagangController::class, 'index'])->name('pemantauan.index');
     Route::get('/pemantauan/{id}', [PemantauanMagangController::class, 'show'])->name('pemantauan.show');
     Route::patch('/pemantauan/logbook/{id}', [PemantauanMagangController::class, 'updateFeedback'])->name('pemantauan.feedback');
+    Route::get('/pemantauan/{id}/logbook/{user_id}/cetak', [PemantauanMagangController::class, 'cetakLogbookPdf'])->name('pemantauan.logbook.cetak');
 
     Route::get('/evaluasi', [EvaluasiMagangController::class, 'index'])->name('evaluasi.index');
     Route::post('/evaluasi/{id}', [EvaluasiMagangController::class, 'store'])->name('evaluasi.store');
@@ -97,14 +97,21 @@ Route::middleware(['auth', 'role:mahasiswa'])->prefix('mahasiswa')->name('mahasi
     
     Route::get('/logbook', [KegiatanMagangController::class, 'logbookIndex'])->name('logbook.index');
     Route::post('/logbook', [KegiatanMagangController::class, 'logbookStore'])->name('logbook.store');
+    Route::get('/logbook/cetak', [KegiatanMagangController::class, 'cetakLogbookPdf'])->name('logbook.cetak');
+    Route::get('/pengajuan/{id}/logbook/cetak', [KegiatanMagangController::class, 'cetakLogbookPdf'])->name('pengajuan.logbook.cetak');
 });
 
 /* ==========================================
    DOKUMEN & TEMPLATE RESMI (MAHASISWA & DPL)
 ========================================== */
 Route::middleware('auth')->group(function () {
+    Route::get('/mahasiswa/template-izin-magang', [PengajuanMagangController::class, 'downloadTemplateIzinMagang'])->name('mahasiswa.izin_magang.template');
+    Route::get('/mahasiswa/template-logbook', [KegiatanMagangController::class, 'downloadTemplateLogbookDocx'])->name('mahasiswa.logbook.template_docx');
     Route::get('/mahasiswa/template-laporan', [PengajuanMagangController::class, 'downloadTemplateLaporan'])->name('mahasiswa.laporan.template');
     Route::get('/mahasiswa/template-penilaian-instansi', [PengajuanMagangController::class, 'downloadFormPenilaianInstansi'])->name('mahasiswa.penilaian_instansi.template');
+    Route::get('/mahasiswa/template-penilaian-dpl', [PengajuanMagangController::class, 'downloadFormPenilaianDpl'])->name('mahasiswa.penilaian_dpl.template');
+    Route::get('/evaluasi/{id}/berkas-instansi', [EvaluasiMagangController::class, 'lihatBerkasInstansi'])->name('evaluasi.berkas_instansi');
+    Route::get('/evaluasi/{id}/berkas-dpl', [EvaluasiMagangController::class, 'lihatBerkasDpl'])->name('evaluasi.berkas_dpl');
 });
 
 /* ==========================================

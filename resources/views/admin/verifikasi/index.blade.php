@@ -36,21 +36,38 @@
                                     
                                     <!-- MAHASISWA / KELOMPOK -->
                                     <td class="px-5 py-4 align-top">
-                                        <div class="flex items-center gap-1.5 mb-1.5">
-                                            <span class="px-1.5 py-0.5 text-[9px] font-bold rounded uppercase {{ $item->is_group ? 'bg-indigo-100 text-indigo-800' : 'bg-gray-100 text-gray-700' }}">
-                                                {{ $item->is_group ? 'Kelompok' : 'Individu' }}
-                                            </span>
-                                            <span class="text-[11px] font-bold text-gray-900">{{ $item->user->name }} (Ketua)</span>
+                                        <div class="flex items-start space-x-3">
+                                            @if($item->user->avatar_url)
+                                                <img src="{{ $item->user->avatar_url }}" alt="{{ $item->user->name }}" class="w-9 h-9 rounded-full object-cover shadow-xs ring-1 ring-gray-200 flex-shrink-0 mt-0.5">
+                                            @else
+                                                <div class="w-9 h-9 rounded-full bg-uin-light text-uin flex items-center justify-center font-bold text-xs shadow-xs flex-shrink-0 border border-uin/20 mt-0.5">
+                                                    {{ substr($item->user->name, 0, 1) }}
+                                                </div>
+                                            @endif
+                                            <div>
+                                                <div class="flex items-center gap-1.5 mb-0.5">
+                                                    <span class="px-1.5 py-0.5 text-[9px] font-bold rounded uppercase {{ $item->is_group ? 'bg-indigo-100 text-indigo-800' : 'bg-gray-100 text-gray-700' }}">
+                                                        {{ $item->is_group ? 'Kelompok' : 'Individu' }}
+                                                    </span>
+                                                    <span class="text-[11px] font-bold text-gray-900">{{ $item->user->name }}{{ $item->is_group ? ' (Ketua)' : '' }}</span>
+                                                </div>
+                                                <div class="text-[11px] text-gray-500">NIM: {{ $item->user->nim ?? '-' }}</div>
+                                            </div>
                                         </div>
-                                        <div class="text-[11px] text-gray-500">NIM: {{ $item->user->nim ?? '-' }}</div>
 
                                         @if($item->members && $item->members->count() > 1)
-                                            <div class="mt-2 pt-2 border-t border-gray-100 space-y-1">
+                                            <div class="mt-2.5 pt-2 border-t border-gray-100 space-y-1">
                                                 <p class="text-[10px] font-bold text-gray-400 uppercase">Anggota Lainnya:</p>
                                                 @foreach($item->members as $m)
-                                                    @if($m->user_id !== $item->user_id)
-                                                        <div class="text-[11px] text-gray-700">
-                                                            • {{ $m->user->name ?? '-' }} <span class="text-gray-400">({{ $m->user->nim ?? '-' }})</span>
+                                                    @if($m->user_id !== $item->user_id && $m->user)
+                                                        <div class="text-[11px] text-gray-700 flex items-center gap-1.5">
+                                                            @if($m->user->avatar_url)
+                                                                <img src="{{ $m->user->avatar_url }}" alt="{{ $m->user->name }}" class="w-4 h-4 rounded-full object-cover">
+                                                            @else
+                                                                <span class="text-gray-400">•</span>
+                                                            @endif
+                                                            <span>{{ $m->user->name ?? '-' }}</span>
+                                                            <span class="text-gray-400">({{ $m->user->nim ?? '-' }})</span>
                                                         </div>
                                                     @endif
                                                 @endforeach
@@ -70,14 +87,33 @@
                                     
                                     <!-- DOKUMEN -->
                                     <td class="px-5 py-4 align-top">
-                                        <div class="flex flex-col space-y-1.5">
+                                        <div class="flex flex-col space-y-2">
                                             @forelse($item->documents as $doc)
-                                                <a href="{{ asset('storage/' . $doc->file_path) }}" target="_blank" class="text-uin hover:underline font-medium flex items-center">
-                                                    <span class="px-1.5 py-0.5 bg-uin-light text-uin text-[10px] font-bold rounded mr-1.5">{{ $doc->type }}</span>
-                                                    <span class="text-[11px] text-gray-700 truncate max-w-[150px]">{{ $doc->user->name ?? 'Pemohon' }}</span>
+                                                <a href="{{ asset('storage/' . $doc->file_path) }}" 
+                                                   target="_blank" 
+                                                   rel="noopener noreferrer"
+                                                   class="group inline-flex items-center justify-between gap-1.5 py-1 px-1.5 -mx-1 rounded hover:bg-blue-50/80 border-b-2 border-blue-200 hover:border-uin transition-all text-left w-fit max-w-full"
+                                                   title="Buka & lihat berkas {{ $doc->type }} (Tab Baru)">
+                                                    <div class="flex items-center gap-1.5 min-w-0">
+                                                        <span class="px-1.5 py-0.5 bg-uin-light text-uin text-[10px] font-bold rounded border border-blue-100 flex-shrink-0">
+                                                            {{ $doc->type }}
+                                                        </span>
+                                                        <span class="text-[11px] font-medium text-gray-700 group-hover:text-uin truncate max-w-[125px]">
+                                                            {{ $doc->user->name ?? 'Pemohon' }}
+                                                        </span>
+                                                    </div>
+                                                    <span class="inline-flex items-center text-blue-500 group-hover:text-uin flex-shrink-0 ml-1 transition-colors">
+                                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" title="Lihat Berkas">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                                        </svg>
+                                                        <svg class="w-2.5 h-2.5 ml-0.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                                                        </svg>
+                                                    </span>
                                                 </a>
                                             @empty
-                                                <span class="text-gray-400 text-[11px]">Belum ada berkas terunggah.</span>
+                                                <span class="text-gray-400 text-[11px] italic">Belum ada berkas terunggah.</span>
                                             @endforelse
                                         </div>
                                     </td>

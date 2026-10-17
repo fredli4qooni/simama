@@ -42,8 +42,8 @@ class PengajuanMagangController extends Controller
             return redirect()->route('profile.edit')->with('error', 'Silakan lengkapi data SKS dan IPK di profil Anda terlebih dahulu sebelum mengajukan magang.');
         }
 
-        if ($user->total_sks < 100 || $user->ipk < 2.50) {
-            return redirect()->back()->with('error', 'Maaf, Anda tidak memenuhi syarat akademik untuk mengajukan magang. Syarat minimal adalah 100 SKS dan IPK 2.50.');
+        if ($user->total_sks < 110 || $user->ipk < 2.75) {
+            return redirect()->back()->with('error', 'Maaf, Anda tidak memenuhi syarat akademik untuk mengajukan magang. Syarat minimal adalah 110 SKS (setara semester 6 ke atas) dan IPK 2.75.');
         }
 
         // Sanitasi dan pastikan data anggota kelompok bersih
@@ -221,6 +221,10 @@ class PengajuanMagangController extends Controller
     {
         $pengajuan = MagangApplication::with(['user.prodi', 'members.user.prodi'])->findOrFail($id);
 
+        if ($pengajuan->status === 'pending') {
+            return redirect()->back()->with('error', 'Surat Pengantar belum dapat diunduh karena pengajuan masih dalam proses verifikasi oleh Admin Program Studi.');
+        }
+
         $pdf = Pdf::loadView('mahasiswa.pengajuan.surat_pengantar', compact('pengajuan'));
         $pdf->setPaper('A4', 'portrait');
 
@@ -231,20 +235,24 @@ class PengajuanMagangController extends Controller
 
     public function uploadSuratBalasan(Request $request, string $id)
     {
-        $request->validate([
-            'surat_balasan' => 'required|mimes:pdf,jpg,png|max:2048',
-        ], [
-            'surat_balasan.required' => 'File surat balasan/penerimaan wajib diunggah.',
-            'surat_balasan.max' => 'Ukuran file maksimal 2MB.',
-        ]);
-
         $pengajuan = MagangApplication::findOrFail($id);
+
+        if ($pengajuan->status === 'pending') {
+            return redirect()->back()->with('error', 'Surat Balasan belum dapat diunggah karena pengajuan masih dalam proses verifikasi oleh Admin Program Studi.');
+        }
 
         // Hanya ketua atau anggota yang boleh mengunggah
         $isMember = $pengajuan->members()->where('user_id', $request->user()->id)->exists() || $pengajuan->user_id == $request->user()->id;
         if (!$isMember) {
             return redirect()->back()->with('error', 'Anda tidak memiliki akses ke pengajuan ini.');
         }
+
+        $request->validate([
+            'surat_balasan' => 'required|mimes:pdf,jpg,png|max:2048',
+        ], [
+            'surat_balasan.required' => 'File surat balasan/penerimaan wajib diunggah.',
+            'surat_balasan.max' => 'Ukuran file maksimal 2MB.',
+        ]);
 
         if ($request->hasFile('surat_balasan')) {
             $path = $request->file('surat_balasan')->store('dokumen_pengajuan', 'public');
@@ -332,14 +340,43 @@ class PengajuanMagangController extends Controller
             ->header('Content-Disposition', 'attachment; filename="Template_Laporan_Magang.txt"');
     }
 
-    public function downloadFormPenilaianInstansi()
+    public function downloadFormPenilaianInstansi(Request $request)
     {
+        if ($request->query('format') === 'pdf') {
+            $pdf = Pdf::loadView('templates.form_penilaian_instansi_pdf');
+            $pdf->setPaper('A4', 'portrait');
+            return $pdf->stream('Form_Penilaian_Pembimbing_Instansi_SI.pdf');
+        }
+
         $filePath = public_path('doc/form penilaian pembimbing instansi-perusahaan.docx');
         if (file_exists($filePath)) {
             return response()->download($filePath, 'Form_Penilaian_Pembimbing_Instansi_SI.docx');
         }
 
-        return redirect()->back()->with('error', 'Berkas form penilaian instansi tidak ditemukan.');
+        $pdf = Pdf::loadView('templates.form_penilaian_instansi_pdf');
+        $pdf->setPaper('A4', 'portrait');
+        return $pdf->stream('Form_Penilaian_Pembimbing_Instansi_SI.pdf');
+    }
+
+    public function downloadFormPenilaianDpl(Request $request)
+    {
+        $pdf = Pdf::loadView('templates.form_penilaian_dpl_pdf');
+        $pdf->setPaper('A4', 'portrait');
+        return $pdf->stream('Form_Penilaian_DPL_Magang_SI.pdf');
+    }
+
+    public function downloadTemplateIzinMagang()
+    {
+        $filePath = public_path('doc/Surat_Permohonan_Izin_Magang.docx');
+        if (!file_exists($filePath)) {
+            $filePath = base_path('Surat_Permohonan_Izin_Magang.docx');
+        }
+
+        if (file_exists($filePath)) {
+            return response()->download($filePath, 'Surat_Permohonan_Izin_Magang.docx');
+        }
+
+        return redirect()->back()->with('error', 'File format Surat Permohonan Izin Magang tidak ditemukan.');
     }
 
     public function uploadLaporanAkhir(Request $request, string $id)
@@ -356,6 +393,10 @@ class PengajuanMagangController extends Controller
         $isMember = $pengajuan->members()->where('user_id', $request->user()->id)->exists() || $pengajuan->user_id == $request->user()->id;
         if (!$isMember) {
             return redirect()->back()->with('error', 'Anda tidak memiliki akses ke pengajuan ini.');
+        }
+
+        if (!in_array($pengajuan->status, ['active', 'selesai'])) {
+            return redirect()->back()->with('error', 'Laporan akhir hanya dapat diunggah pada Fase 5 setelah status magang aktif atau selesai.');
         }
 
         if ($request->hasFile('laporan_akhir')) {

@@ -33,8 +33,8 @@
 
                             <!-- NIM / NIP -->
                             <div x-show="selectedRole === 'mahasiswa'">
-                                <label for="nim" class="block text-xs font-bold text-gray-700 mb-1">NIM / NPM Mahasiswa</label>
-                                <input type="text" name="nim" id="nim" value="{{ old('nim', $userToEdit->nim) }}" class="w-full text-xs rounded-xl border-gray-300 shadow-xs focus:border-uin focus:ring-uin p-2.5 font-mono" placeholder="Contoh: 2111050001">
+                                <label for="nim" class="block text-xs font-bold text-gray-700 mb-1">NPM / NIM Mahasiswa</label>
+                                <input type="text" name="nim" id="nim" value="{{ old('nim', $userToEdit->nim) }}" class="w-full text-xs rounded-xl border-gray-300 shadow-xs focus:border-uin focus:ring-uin p-2.5 font-mono" placeholder="Contoh: 2271xxxx">
                                 <x-input-error :messages="$errors->get('nim')" class="mt-1 text-xs" />
                             </div>
 

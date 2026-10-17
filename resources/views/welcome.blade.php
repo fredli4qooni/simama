@@ -50,10 +50,9 @@
 
     <div class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
         <div class="absolute inset-0 z-0">
-            <div class="absolute inset-0 bg-gradient-to-br from-uin-light/30 to-white opacity-90"></div>
-            <svg class="absolute right-0 top-0 text-uin/5 w-1/2 h-full transform translate-x-1/3 -translate-y-1/4" fill="currentColor" viewBox="0 0 100 100">
-                <circle cx="50" cy="50" r="50" />
-            </svg>
+            <img src="{{ asset('bg-saintek.jpg') }}" alt="Gedung Fakultas Sains dan Teknologi UIN Raden Intan Lampung" class="w-full h-full object-cover object-center">
+            <div class="absolute inset-0 bg-gradient-to-b from-white/75 via-white/85 to-gray-50"></div>
+            <div class="absolute inset-0 bg-gradient-to-r from-uin-light/40 via-transparent to-blue-50/30"></div>
         </div>
 
         <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">

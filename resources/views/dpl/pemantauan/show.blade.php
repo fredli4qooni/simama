@@ -3,11 +3,15 @@
         <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
             <div>
                 <h2 class="font-bold text-2xl text-gray-900 leading-tight">
-                    Pemantauan Magang & Konsultasi
+                    Pemantauan Magang
                 </h2>
                 <p class="text-sm text-gray-500 mt-1">Pemantauan kelompok/mahasiswa: <span class="font-semibold text-uin">{{ $pengajuan->user->name }}</span> ({{ $pengajuan->instansi }}).</p>
             </div>
-            <div>
+            <div class="flex items-center gap-2">
+                <a href="{{ route('mahasiswa.logbook.template_docx') }}" class="inline-flex items-center px-3.5 py-2 bg-white border border-sky-300 text-sky-800 rounded-md text-sm font-semibold hover:bg-sky-50 transition shadow-xs" title="Unduh format resmi Log Book Kegiatan Magang (DOCX)">
+                    <svg class="w-4 h-4 mr-1.5 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    Format Logbook (DOCX)
+                </a>
                 <a href="{{ route('dpl.pemantauan.index') }}" class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-md text-sm font-semibold hover:bg-gray-50 transition shadow-sm">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
                     Kembali ke Daftar
@@ -42,18 +46,31 @@
                     </div>
 
                     <!-- Anggota Kelompok -->
-                    <div class="flex flex-wrap gap-2">
+                    <div class="flex flex-wrap items-center gap-2">
                         @if($pengajuan->members && $pengajuan->members->count() > 0)
                             @foreach($pengajuan->members as $m)
-                                <div class="px-3 py-1 bg-gray-50 border border-gray-200 rounded-lg text-xs">
+                                <div class="px-3 py-1 bg-gray-50 border border-gray-200 rounded-lg text-xs flex items-center gap-1.5">
+                                    @if($m->user && $m->user->avatar_url)
+                                        <img src="{{ $m->user->avatar_url }}" alt="{{ $m->user->name }}" class="w-5 h-5 rounded-full object-cover">
+                                    @endif
                                     <span class="font-bold text-gray-800">{{ $m->user->name }}</span>
                                     <span class="text-gray-400">({{ $m->user->nim }})</span>
-                                    <span class="ml-1 text-[10px] font-bold text-uin">[{{ $m->is_leader ? 'Ketua' : 'Anggota' }}]</span>
+                                    <span class="text-[10px] font-bold text-uin">[{{ $m->is_leader ? 'Ketua' : 'Anggota' }}]</span>
+                                    <a href="{{ route('dpl.pemantauan.logbook.cetak', ['id' => $pengajuan->id, 'user_id' => $m->user_id]) }}" target="_blank" title="Cetak Berkas Logbook PDF Mahasiswa Ini" class="text-uin hover:text-uin-hover ml-1 inline-flex items-center">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                                    </a>
                                 </div>
                             @endforeach
                         @else
-                            <div class="px-3 py-1 bg-gray-50 border border-gray-200 rounded-lg text-xs font-bold text-gray-800">
-                                {{ $pengajuan->user->name }} ({{ $pengajuan->user->nim }})
+                            <div class="px-3 py-1 bg-gray-50 border border-gray-200 rounded-lg text-xs font-bold text-gray-800 flex items-center gap-2">
+                                @if($pengajuan->user && $pengajuan->user->avatar_url)
+                                    <img src="{{ $pengajuan->user->avatar_url }}" alt="{{ $pengajuan->user->name }}" class="w-5 h-5 rounded-full object-cover">
+                                @endif
+                                <span>{{ $pengajuan->user->name }} ({{ $pengajuan->user->nim }})</span>
+                                <a href="{{ route('dpl.pemantauan.logbook.cetak', ['id' => $pengajuan->id, 'user_id' => $pengajuan->user_id]) }}" target="_blank" title="Cetak Berkas Logbook PDF Mahasiswa Ini" class="text-uin hover:text-uin-hover inline-flex items-center text-[11px] font-semibold">
+                                    <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                                    Cetak PDF
+                                </a>
                             </div>
                         @endif
                     </div>

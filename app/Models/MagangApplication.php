@@ -53,11 +53,6 @@ class MagangApplication extends Model
         return $this->belongsTo(Prodi::class);
     }
 
-    public function consultations()
-    {
-        return $this->hasMany(Consultation::class, 'magang_application_id');
-    }
-
     public function attendances()
     {
         return $this->hasMany(Attendance::class, 'application_id');

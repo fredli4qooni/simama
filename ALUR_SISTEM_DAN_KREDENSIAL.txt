@@ -28,7 +28,7 @@ URL Halaman Login: http://127.0.0.1:8000/login
    - Hak Akses Utama:
      * Dashboard statistik pengajuan magang prodi
      * Verifikasi berkas pengajuan awal (KTM & Transkrip)
-     * Penetapan Dosen Pembimbing Lapangan (DPL) & Cetak SK/Surat Tugas DPL
+     * Penetapan Dosen Pembimbing Lapangan (DPL)
      * Monitoring & Rekapitulasi Nilai Akhir Magang serta Cetak Rekap PDF
      * Manajemen akun pengguna (Admin, DPL, Mahasiswa)
 
@@ -100,8 +100,6 @@ Tahap 3: Surat Pengantar & Konfirmasi Mitra
 Tahap 4: Penetapan DPL oleh Admin
   - Admin masuk ke menu "Penetapan DPL".
   - Admin memilih Dosen Pembimbing Lapangan (DPL) untuk kelompok/mahasiswa tsb.
-  - Admin dapat mencetak "Surat Tugas / Keputusan DPL" (PDF) resmi
-    bertandatangan Dekan FST dan mengetahui Kaprodi SI.
   - Status magang resmi aktif: "Active".
 
 Tahap 5: Pelaksanaan Magang (Presensi & Logbook)
@@ -185,6 +183,10 @@ Formula Penilaian Akhir:
 E. DAFTAR BERKAS DOKUMEN DALAM SISTEM
 ================================================================================
 1. Template Word Resmi (Tersedia Unduh DOCX):
+   - public/doc/Surat_Permohonan_Izin_Magang.docx
+     -> Rute: GET /mahasiswa/template-izin-magang
+   - public/doc/Log_Book_Kegiatan_Magang.docx
+     -> Rute: GET /mahasiswa/template-logbook
    - public/doc/Panduan KKN TEMATIK MAGANG.docx
      -> Rute: GET /mahasiswa/template-laporan
    - public/doc/form penilaian pembimbing instansi-perusahaan.docx
@@ -193,7 +195,6 @@ E. DAFTAR BERKAS DOKUMEN DALAM SISTEM
 2. Template Cetak PDF Resmi Ber-Kop UIN Raden Intan Lampung:
    - Surat Pengantar Magang ke Instansi (ttd Kaprodi SI)
    - Surat Permohonan / Rekomendasi Magang Admin (ttd Kaprodi SI)
-   - Surat Tugas Penetapan DPL (ttd Dekan FST & Mengetahui Kaprodi SI)
    - Lembar Penilaian Akhir Magang (ttd DPL & Mengetahui Kaprodi SI)
    - Rekapitulasi Nilai Akhir Magang Mahasiswa (ttd Kaprodi SI)
 ================================================================================

@@ -17,7 +17,7 @@
         <div class="max-w-7xl mx-auto space-y-6">
 
             <!-- INFOBOX JIKA NIM, SKS & IPK BELUM DIISI ATAU BELUM MEMENUHI SYARAT -->
-            @if($user->role === 'mahasiswa' && (empty($user->nim) || empty($user->total_sks) || empty($user->ipk) || $user->total_sks < 100 || $user->ipk < 2.50))
+            @if($user->role === 'mahasiswa' && (empty($user->nim) || empty($user->total_sks) || empty($user->ipk) || $user->total_sks < 110 || $user->ipk < 2.75))
                 <div class="bg-gradient-to-r from-amber-500/10 via-orange-500/10 to-amber-500/10 border-2 border-amber-400/80 rounded-2xl p-5 shadow-sm flex items-start space-x-4">
                     <div class="p-2.5 bg-amber-500 text-white rounded-xl shadow-sm flex-shrink-0">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -28,9 +28,9 @@
                         <h4 class="text-sm font-bold text-gray-900">Perhatian: Lengkapi NIM & Data Akademik Anda</h4>
                         <p class="text-xs text-gray-600 mt-1 leading-relaxed">
                             @if(empty($user->nim) || empty($user->total_sks) || empty($user->ipk))
-                                Anda belum melengkapi data <strong>NIM/NPM</strong>, <strong>Total SKS Ditempuh</strong>, atau <strong>IPK Terakhir</strong>. Silakan lengkapi formulir di bawah ini agar memenuhi syarat validasi pendaftaran magang (Minimal: 100 SKS & IPK 2.50).
+                                Anda belum melengkapi data <strong>NIM/NPM</strong>, <strong>Total SKS Ditempuh</strong>, atau <strong>IPK Terakhir</strong>. Silakan lengkapi formulir di bawah ini agar memenuhi syarat validasi pendaftaran magang (Minimal: 110 SKS (setara semester 6 ke atas) & IPK 2.75).
                             @else
-                                Data SKS Anda saat ini (<strong>{{ $user->total_sks }} SKS</strong>) atau IPK (<strong>{{ number_format($user->ipk, 2) }}</strong>) belum memenuhi syarat minimum pendaftaran magang (Min. 100 SKS & IPK 2.50).
+                                Data SKS Anda saat ini (<strong>{{ $user->total_sks }} SKS</strong>) atau IPK (<strong>{{ number_format($user->ipk, 2) }}</strong>) belum memenuhi syarat minimum pendaftaran magang (Min. 110 SKS & IPK 2.75).
                             @endif
                         </p>
                     </div>
@@ -73,13 +73,13 @@
 
                 @if($user->role === 'mahasiswa')
                 <div class="flex items-center gap-3 bg-gray-50 p-3.5 rounded-xl border border-gray-200">
-                    <div class="px-3.5 py-1.5 bg-white rounded-xl border {{ $user->total_sks >= 100 ? 'border-emerald-200' : 'border-rose-200' }} text-center shadow-xs">
+                    <div class="px-3.5 py-1.5 bg-white rounded-xl border {{ $user->total_sks >= 110 ? 'border-emerald-200' : 'border-rose-200' }} text-center shadow-xs">
                         <span class="text-[10px] uppercase font-bold text-gray-400 block">Total SKS</span>
-                        <span class="text-sm font-black {{ $user->total_sks >= 100 ? 'text-emerald-700' : 'text-rose-600' }}">{{ $user->total_sks ?? 0 }} SKS</span>
+                        <span class="text-sm font-black {{ $user->total_sks >= 110 ? 'text-emerald-700' : 'text-rose-600' }}">{{ $user->total_sks ?? 0 }} SKS</span>
                     </div>
-                    <div class="px-3.5 py-1.5 bg-white rounded-xl border {{ $user->ipk >= 2.50 ? 'border-emerald-200' : 'border-rose-200' }} text-center shadow-xs">
+                    <div class="px-3.5 py-1.5 bg-white rounded-xl border {{ $user->ipk >= 2.75 ? 'border-emerald-200' : 'border-rose-200' }} text-center shadow-xs">
                         <span class="text-[10px] uppercase font-bold text-gray-400 block">IPK Kumulatif</span>
-                        <span class="text-sm font-black {{ $user->ipk >= 2.50 ? 'text-emerald-700' : 'text-rose-600' }}">{{ number_format($user->ipk ?? 0, 2) }}</span>
+                        <span class="text-sm font-black {{ $user->ipk >= 2.75 ? 'text-emerald-700' : 'text-rose-600' }}">{{ number_format($user->ipk ?? 0, 2) }}</span>
                     </div>
                 </div>
                 @endif

@@ -26,9 +26,13 @@
                         @forelse($mahasiswa as $item)
                             <div class="bg-white border border-gray-200 rounded-xl p-5 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 border-b-4 border-b-transparent hover:border-b-uin flex flex-col h-full">
                                 <div class="flex items-center space-x-4 mb-5">
-                                    <div class="bg-uin-light p-3 rounded-full text-uin border border-uin/10">
-                                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-                                    </div>
+                                    @if($item->user->avatar_url)
+                                        <img src="{{ $item->user->avatar_url }}" alt="{{ $item->user->name }}" class="w-12 h-12 rounded-full object-cover shadow-sm ring-2 ring-white border border-gray-200 flex-shrink-0">
+                                    @else
+                                        <div class="bg-uin-light w-12 h-12 rounded-full text-uin font-bold text-base flex items-center justify-center border border-uin/10 flex-shrink-0">
+                                            {{ substr($item->user->name, 0, 1) }}
+                                        </div>
+                                    @endif
                                     <div>
                                         <h4 class="font-bold text-gray-900 leading-tight">{{ $item->user->name }}</h4>
                                         <p class="text-xs text-gray-500 mt-0.5">NIM: {{ $item->user->nim }}</p>

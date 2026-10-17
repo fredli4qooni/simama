@@ -71,7 +71,7 @@
     <script src="{{ asset('vendor/leaflet/leaflet.js') }}"></script>
 
     <div class="py-8" x-data="{
-        type: 'masuk',
+        type: '{{ $hariIniMasuk && !$hariIniPulang ? 'pulang' : 'masuk' }}',
         status: 'hadir',
         latitude: '',
         longitude: '',
@@ -89,6 +89,16 @@
         modalCoords: '',
         modalMap: null,
         modalMarker: null,
+
+        init() {
+            this.$nextTick(() => {
+                this.initMap();
+                this.initGps();
+            });
+            window.addEventListener('resize', () => {
+                if (this.map) this.map.invalidateSize();
+            });
+        },
 
         getPinIcon() {
             if (typeof L === 'undefined') return null;
@@ -109,7 +119,10 @@
                 }
 
                 const mapElem = document.getElementById('map-presensi');
-                if (!mapElem) return;
+                if (!mapElem) {
+                    setTimeout(startInit, 50);
+                    return;
+                }
 
                 if (this.map) {
                     this.map.invalidateSize();
@@ -222,13 +235,21 @@
                         }
                     },
                     (error) => {
-                        this.gpsStatus = 'Gagal mengakses GPS: ' + error.message + '. Anda dapat mengeklik titik lokasi di peta secara langsung.';
+                        let msg = error.message;
+                        if (error.code === 1) {
+                            msg = 'Izin lokasi belum diberikan. Mohon klik Izinkan (Allow) lokasi pada browser atau pilih titik manual di peta.';
+                        } else if (error.code === 2) {
+                            msg = 'Informasi lokasi GPS tidak tersedia. Anda dapat menentukan titik manual di peta.';
+                        } else if (error.code === 3) {
+                            msg = 'Waktu permintaan GPS habis. Klik tombol Refresh GPS atau tentukan titik manual di peta.';
+                        }
+                        this.gpsStatus = msg;
                         this.gpsLoading = false;
                         if (!this.map) {
                             this.initMap();
                         }
                     },
-                    { enableHighAccuracy: true, timeout: 12000, maximumAge: 0 }
+                    { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
                 );
             } else {
                 this.gpsStatus = 'Browser tidak mendukung Geolocation GPS. Silakan klik titik langsung pada peta.';
@@ -284,7 +305,7 @@
         closeHistoryMap() {
             this.modalOpen = false;
         }
-    }" x-init="this.$nextTick(() => { initMap(); initGps(); }); window.addEventListener('resize', () => { if (map) map.invalidateSize(); });">
+    }">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             
             @if (session('success'))
@@ -436,7 +457,7 @@
                             <div class="flex justify-end pt-3 border-t border-gray-100">
                                 <button type="submit" :disabled="!gpsReady" class="inline-flex items-center px-5 py-2.5 border border-transparent text-xs font-bold rounded-lg text-white bg-uin hover:bg-uin-hover disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-md">
                                     <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                                    Kirim Presensi Sekarang
+                                    <span x-text="type === 'pulang' ? 'Kirim Presensi Pulang (Check-Out)' : 'Kirim Presensi Masuk (Check-In)'"></span>
                                 </button>
                             </div>
                         </form>

@@ -136,4 +136,98 @@ class ProfileTest extends TestCase
 
         $this->assertNotNull($user->fresh());
     }
+
+    public function test_mahasiswa_cannot_update_profile_with_ipk_below_2_75(): void
+    {
+        $user = User::factory()->create([
+            'role' => 'mahasiswa',
+            'ipk' => 3.00,
+            'total_sks' => 110,
+        ]);
+
+        $response = $this
+            ->actingAs($user)
+            ->patch('/profile', [
+                'name' => 'Mahasiswa Test',
+                'email' => $user->email,
+                'nim' => '2111050099',
+                'total_sks' => 110,
+                'ipk' => 2.50, // di bawah 2.75
+            ]);
+
+        $response->assertSessionHasErrors('ipk');
+        $user->refresh();
+        $this->assertEquals(3.00, $user->ipk); // Data tidak berubah
+    }
+
+    public function test_mahasiswa_can_update_profile_with_ipk_2_75(): void
+    {
+        $user = User::factory()->create([
+            'role' => 'mahasiswa',
+            'ipk' => 3.00,
+            'total_sks' => 110,
+        ]);
+
+        $response = $this
+            ->actingAs($user)
+            ->patch('/profile', [
+                'name' => 'Mahasiswa Test',
+                'email' => $user->email,
+                'nim' => '2111050099',
+                'total_sks' => 110,
+                'ipk' => 2.75, // pas 2.75
+            ]);
+
+        $response->assertSessionHasNoErrors();
+        $response->assertRedirect('/profile');
+        $user->refresh();
+        $this->assertEquals(2.75, $user->ipk);
+    }
+
+    public function test_mahasiswa_cannot_update_profile_with_sks_below_110(): void
+    {
+        $user = User::factory()->create([
+            'role' => 'mahasiswa',
+            'ipk' => 3.00,
+            'total_sks' => 120,
+        ]);
+
+        $response = $this
+            ->actingAs($user)
+            ->patch('/profile', [
+                'name' => 'Mahasiswa Test SKS',
+                'email' => $user->email,
+                'nim' => '2111050099',
+                'total_sks' => 105, // di bawah 110
+                'ipk' => 3.00,
+            ]);
+
+        $response->assertSessionHasErrors('total_sks');
+        $user->refresh();
+        $this->assertEquals(120, $user->total_sks); // Data tidak berubah
+    }
+
+    public function test_mahasiswa_can_update_profile_with_sks_110(): void
+    {
+        $user = User::factory()->create([
+            'role' => 'mahasiswa',
+            'ipk' => 3.00,
+            'total_sks' => 120,
+        ]);
+
+        $response = $this
+            ->actingAs($user)
+            ->patch('/profile', [
+                'name' => 'Mahasiswa Test SKS',
+                'email' => $user->email,
+                'nim' => '2111050099',
+                'total_sks' => 110, // pas 110
+                'ipk' => 3.00,
+            ]);
+
+        $response->assertSessionHasNoErrors();
+        $response->assertRedirect('/profile');
+        $user->refresh();
+        $this->assertEquals(110, $user->total_sks);
+    }
 }

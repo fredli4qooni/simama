@@ -76,6 +76,23 @@ class User extends Authenticatable
     }
 
     /**
+     * Helper: Mendapatkan pengajuan magang aktif atau yang sudah selesai
+     */
+    public function completedOrActiveMagangApplication()
+    {
+        $asLeader = $this->magangApplications()->whereIn('status', ['active', 'approved', 'selesai'])->latest()->first();
+        if ($asLeader) {
+            return $asLeader;
+        }
+
+        $asMember = MagangApplication::whereHas('members', function ($q) {
+            $q->where('user_id', $this->id);
+        })->whereIn('status', ['active', 'approved', 'selesai'])->latest()->first();
+
+        return $asMember;
+    }
+
+    /**
      * Helper: Mendapatkan pengajuan magang terbaru (apapun statusnya)
      */
     public function latestMagangApplication()

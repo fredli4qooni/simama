@@ -18,7 +18,9 @@
         <div class="flex min-h-screen">
             
             <div class="hidden lg:flex lg:w-3/5 relative items-center justify-center overflow-hidden bg-uin">
-                <div class="absolute inset-0 bg-gradient-to-br from-uin-hover to-uin opacity-95"></div>
+                <img src="{{ asset('bg-saintek.jpg') }}" alt="Fakultas Sains dan Teknologi UIN Raden Intan Lampung" class="absolute inset-0 w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-br from-uin/90 via-uin-hover/85 to-blue-950/90 mix-blend-multiply"></div>
+                <div class="absolute inset-0 bg-uin/30"></div>
                 
                 <div class="relative z-10 px-16 text-white max-w-2xl">
                     <h1 class="text-5xl font-bold mb-6 leading-tight">Sistem Informasi <br> Manajemen Peserta Magang</h1>
@@ -36,7 +38,7 @@
             </div>
 
             <div class="flex flex-col justify-center w-full lg:w-2/5 px-8 sm:px-16 lg:px-24 py-12 bg-white shadow-2xl z-20">
-                <div class="w-full max-w-sm mx-auto">
+                <div class="w-full max-w-md mx-auto">
                     
                     <div class="lg:hidden mb-8 text-center">
                         <h1 class="text-3xl font-bold text-uin tracking-wider">SIMAMA</h1>

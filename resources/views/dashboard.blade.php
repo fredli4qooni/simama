@@ -43,7 +43,7 @@
             </div>
 
             <!-- INFOBOX JIKA MAHASISWA BELUM MENGISI NIM / SKS & IPK -->
-            @if(auth()->user()->role === 'mahasiswa' && (empty(auth()->user()->nim) || empty(auth()->user()->total_sks) || empty(auth()->user()->ipk) || auth()->user()->total_sks < 100 || auth()->user()->ipk < 2.50))
+            @if(auth()->user()->role === 'mahasiswa' && (empty(auth()->user()->nim) || empty(auth()->user()->total_sks) || empty(auth()->user()->ipk) || auth()->user()->total_sks < 110 || auth()->user()->ipk < 2.75))
                 <div class="bg-gradient-to-r from-amber-500/10 via-orange-500/10 to-amber-500/10 border-2 border-amber-400/80 rounded-2xl p-6 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-5">
                     <div class="flex items-start space-x-4">
                         <div class="p-3 bg-amber-500 text-white rounded-2xl shadow-md flex-shrink-0">
@@ -58,9 +58,9 @@
                             </div>
                             <p class="text-xs text-gray-600 leading-relaxed max-w-2xl">
                                 @if(empty(auth()->user()->nim) || empty(auth()->user()->total_sks) || empty(auth()->user()->ipk))
-                                    Anda belum melengkapi data <strong>NIM/NPM</strong>, <strong>Total SKS</strong>, atau <strong>IPK Kumulatif</strong> di profil akun Anda. Data ini diperlukan untuk memvalidasi kelayakan pendaftaran magang (Syarat: Min. 100 SKS & IPK 2.50).
+                                    Anda belum melengkapi data <strong>NIM/NPM</strong>, <strong>Total SKS</strong>, atau <strong>IPK Kumulatif</strong> di profil akun Anda. Data ini diperlukan untuk memvalidasi kelayakan pendaftaran magang (Syarat: Min. 110 SKS (setara semester 6 ke atas) & IPK 2.75).
                                 @else
-                                    Data akademik Anda saat ini (<strong>{{ auth()->user()->total_sks }} SKS</strong>, <strong>IPK {{ number_format(auth()->user()->ipk, 2) }}</strong>) belum memenuhi batas minimum persyaratan magang (Min. 100 SKS & IPK 2.50).
+                                    Data akademik Anda saat ini (<strong>{{ auth()->user()->total_sks }} SKS</strong>, <strong>IPK {{ number_format(auth()->user()->ipk, 2) }}</strong>) belum memenuhi batas minimum persyaratan magang (Min. 110 SKS & IPK 2.75).
                                 @endif
                             </p>
                         </div>
@@ -98,11 +98,27 @@
                             </p>
                         </div>
                     </div>
-                    <div class="flex items-center gap-3 w-full md:w-auto">
-                        <a href="{{ route('mahasiswa.pengajuan.lembar_nilai', $mhsPengajuan->id) }}" target="_blank" class="w-full md:w-auto inline-flex items-center justify-center px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-md transition whitespace-nowrap">
+                    <div class="flex flex-wrap items-center gap-2.5 w-full md:w-auto">
+                        <a href="{{ route('mahasiswa.pengajuan.lembar_nilai', $mhsPengajuan->id) }}" target="_blank" class="w-full md:w-auto inline-flex items-center justify-center px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-md transition whitespace-nowrap">
                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                             Unduh Lembar Nilai (PDF)
                         </a>
+                        <a href="{{ route('mahasiswa.logbook.cetak') }}" target="_blank" class="w-full md:w-auto inline-flex items-center justify-center px-4 py-2.5 bg-uin hover:bg-uin-hover text-white text-xs font-bold rounded-xl shadow-md transition whitespace-nowrap">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                            Cetak Logbook Resmi (PDF)
+                        </a>
+                        @if($mhsPengajuan->evaluation->berkas_nilai_instansi)
+                            <a href="{{ route('evaluasi.berkas_instansi', $mhsPengajuan->id) }}" target="_blank" class="w-full md:w-auto inline-flex items-center justify-center px-3.5 py-2.5 bg-emerald-100 hover:bg-emerald-200 text-emerald-900 text-xs font-bold rounded-xl border border-emerald-300 transition whitespace-nowrap shadow-xs">
+                                <svg class="w-4 h-4 mr-1.5 text-emerald-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                Berkas Nilai Instansi ↗
+                            </a>
+                        @endif
+                        @if($mhsPengajuan->evaluation->berkas_nilai_dpl)
+                            <a href="{{ route('evaluasi.berkas_dpl', $mhsPengajuan->id) }}" target="_blank" class="w-full md:w-auto inline-flex items-center justify-center px-3.5 py-2.5 bg-blue-100 hover:bg-blue-200 text-blue-900 text-xs font-bold rounded-xl border border-blue-300 transition whitespace-nowrap shadow-xs">
+                                <svg class="w-4 h-4 mr-1.5 text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                Berkas Nilai DPL ↗
+                            </a>
+                        @endif
                     </div>
                 </div>
             @endif
@@ -231,7 +247,7 @@
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                         </div>
                         <h4 class="text-base font-bold text-gray-900 mb-1">Penetapan DPL</h4>
-                        <p class="text-xs text-gray-500">Tetapkan DPL pembimbing dan cetak Surat Tugas resmi.</p>
+                        <p class="text-xs text-gray-500">Tetapkan Dosen Pembimbing Lapangan (DPL) mahasiswa magang.</p>
                     </a>
 
                     <a href="{{ route('admin.rekap.index') }}" class="group bg-white overflow-hidden shadow-xs rounded-2xl p-6 hover:shadow-lg transition-all border border-gray-100 hover:border-uin">
