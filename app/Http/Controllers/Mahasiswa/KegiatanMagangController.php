@@ -153,22 +153,19 @@ class KegiatanMagangController extends Controller
                 abort(403, 'Akses ditolak. Anda tidak terdaftar pada pengajuan magang ini.');
             }
         } else {
-            $pengajuan = $user->magangApplications()->where('status', 'selesai')->latest()->first()
+            $pengajuan = $user->activeMagangApplication()
+                ?? $user->magangApplications()->whereIn('status', ['active', 'selesai', 'approved'])->latest()->first()
                 ?? MagangApplication::whereHas('members', function ($q) use ($user) {
                     $q->where('user_id', $user->id);
-                })->where('status', 'selesai')->latest()->first();
+                })->whereIn('status', ['active', 'selesai', 'approved'])->latest()->first();
 
             if (!$pengajuan) {
-                $appAktif = $user->activeMagangApplication();
-                if ($appAktif) {
-                    return redirect()->back()->with('error', 'Cetak logbook resmi format fakultas hanya dapat dilakukan setelah kegiatan magang berstatus SELESAI.');
-                }
-                return redirect()->route('mahasiswa.dashboard')->with('error', 'Tidak ditemukan data kegiatan magang yang berstatus selesai.');
+                return redirect()->route('mahasiswa.dashboard')->with('error', 'Tidak ditemukan data kegiatan magang yang aktif atau selesai.');
             }
         }
 
-        if ($pengajuan->status !== 'selesai') {
-            return redirect()->back()->with('error', 'Cetak logbook resmi format fakultas hanya dapat dilakukan setelah kegiatan magang berstatus SELESAI.');
+        if (!in_array($pengajuan->status, ['active', 'selesai', 'approved'])) {
+            return redirect()->back()->with('error', 'Cetak logbook belum dapat dilakukan untuk status pengajuan ini.');
         }
 
         $pengajuan->loadMissing(['user.prodi', 'members.user.prodi', 'dplAssignment.dpl']);

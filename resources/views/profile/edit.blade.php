@@ -73,6 +73,10 @@
 
                 @if($user->role === 'mahasiswa')
                 <div class="flex items-center gap-3 bg-gray-50 p-3.5 rounded-xl border border-gray-200">
+                    <div class="px-3.5 py-1.5 bg-white rounded-xl border border-blue-200 text-center shadow-xs">
+                        <span class="text-[10px] uppercase font-bold text-gray-400 block">Semester</span>
+                        <span class="text-sm font-black text-blue-700">Sem. {{ $user->semester ?? 7 }} ({{ $user->semester_roman }})</span>
+                    </div>
                     <div class="px-3.5 py-1.5 bg-white rounded-xl border {{ $user->total_sks >= 110 ? 'border-emerald-200' : 'border-rose-200' }} text-center shadow-xs">
                         <span class="text-[10px] uppercase font-bold text-gray-400 block">Total SKS</span>
                         <span class="text-sm font-black {{ $user->total_sks >= 110 ? 'text-emerald-700' : 'text-rose-600' }}">{{ $user->total_sks ?? 0 }} SKS</span>

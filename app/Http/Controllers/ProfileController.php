@@ -53,6 +53,9 @@ class ProfileController extends Controller
             if (array_key_exists('ipk', $validatedData)) {
                 $fillData['ipk'] = $validatedData['ipk'];
             }
+            if (array_key_exists('semester', $validatedData)) {
+                $fillData['semester'] = $validatedData['semester'];
+            }
         }
 
         if (array_key_exists('nim', $validatedData)) {

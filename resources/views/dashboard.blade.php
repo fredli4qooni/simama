@@ -187,16 +187,26 @@
                                     @if($mhsDpl->avatar_url)
                                         <img src="{{ $mhsDpl->avatar_url }}" alt="{{ $mhsDpl->name }}" class="w-11 h-11 rounded-full object-cover ring-2 ring-blue-500/30 shadow-xs flex-shrink-0">
                                     @else
-                                        <div class="w-11 h-11 rounded-full bg-uin text-white font-bold flex items-center justify-center text-sm shadow-xs flex-shrink-0">
-                                            {{ substr($mhsDpl->name, 0, 1) }}
+                                        <div class="w-11 h-11 rounded-full bg-uin text-white font-bold flex items-center justify-center text-sm shadow-xs flex-shrink-0" style="background-color: #1d4ed8;">
+                                            {{ strtoupper(substr($mhsDpl->name, 0, 1)) }}
                                         </div>
                                     @endif
                                     <div class="overflow-hidden min-w-0">
-                                        <p class="font-bold text-gray-900 text-xs truncate" title="{{ $mhsDpl->name }}">{{ $mhsDpl->name }}</p>
+                                        <div class="flex items-center gap-1.5">
+                                            <p class="font-bold text-gray-900 text-xs truncate" title="{{ $mhsDpl->name }}">{{ $mhsDpl->name }}</p>
+                                            <span class="inline-flex items-center text-blue-600 flex-shrink-0" title="Dosen Pembimbing Lapangan Resmi">
+                                                <svg class="w-3.5 h-3.5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                                </svg>
+                                            </span>
+                                        </div>
                                         <p class="text-gray-600 text-[11px] font-mono truncate">
                                             {{ !empty($mhsDpl->nip) ? 'NIP. ' . $mhsDpl->nip : (!empty($mhsDpl->nim) ? 'NIDN. ' . $mhsDpl->nim : '') }}
                                         </p>
-                                        <p class="text-gray-400 text-[10px] truncate">{{ $mhsDpl->email }}</p>
+                                        <p class="text-gray-500 text-[10px] truncate flex items-center gap-1 mt-0.5">
+                                            <svg class="w-3 h-3 text-blue-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                                            <span>{{ $mhsDpl->email }}</span>
+                                        </p>
                                     </div>
                                 </div>
                             @else

@@ -129,7 +129,7 @@
                 <th style="width: 8%;">No</th>
                 <th style="width: 37%;">Nama Mahasiswa</th>
                 <th style="width: 25%;">NPM / NIM</th>
-                <th style="width: 30%;">Status / Peran</th>
+                <th style="width: 30%;">Jurusan / Semester</th>
             </tr>
         </thead>
         <tbody>
@@ -139,7 +139,7 @@
                         <td style="text-align: center;">{{ $idx + 1 }}</td>
                         <td>{{ $member->user->name ?? '-' }}</td>
                         <td style="text-align: center;">{{ $member->user->nim ?? '-' }}</td>
-                        <td style="text-align: center;">{{ $member->is_leader ? 'Ketua Kelompok' : 'Anggota Kelompok' }}</td>
+                        <td style="text-align: center;">{{ $member->user->prodi->name ?? 'Sistem Informasi' }} / {{ $member->user->semester_roman ?? 'VII' }}</td>
                     </tr>
                 @endforeach
             @else
@@ -147,7 +147,7 @@
                     <td style="text-align: center;">1</td>
                     <td>{{ $pengajuan->user->name ?? '-' }}</td>
                     <td style="text-align: center;">{{ $pengajuan->user->nim ?? '-' }}</td>
-                    <td style="text-align: center;">Pemohon Tunggal</td>
+                    <td style="text-align: center;">{{ $pengajuan->user->prodi->name ?? 'Sistem Informasi' }} / {{ $pengajuan->user->semester_roman ?? 'VII' }}</td>
                 </tr>
             @endif
         </tbody>

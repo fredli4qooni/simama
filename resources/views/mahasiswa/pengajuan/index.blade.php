@@ -380,27 +380,60 @@
                             </h4>
                             <p class="text-xs text-gray-500 mt-1">Unduh blanko & panduan resmi atau upload berkas magang Anda di bawah ini.</p>
                         </div>
-                        <div class="flex items-center gap-2 flex-wrap">
-                            <a href="{{ route('mahasiswa.izin_magang.template') }}" class="inline-flex items-center px-3 py-1.5 text-xs font-bold text-slate-700 bg-slate-50 hover:bg-amber-50 hover:text-amber-700 hover:border-amber-300 border border-slate-200 rounded-xl transition shadow-xs" title="Unduh format resmi Surat Permohonan Izin Magang dari Akademik (DOCX)">
-                                <svg class="w-3.5 h-3.5 mr-1.5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                                Format Izin Magang (DOCX)
-                            </a>
-                            <a href="{{ route('mahasiswa.logbook.template_docx') }}" class="inline-flex items-center px-3 py-1.5 text-xs font-bold text-slate-700 bg-slate-50 hover:bg-sky-50 hover:text-sky-700 hover:border-sky-300 border border-slate-200 rounded-xl transition shadow-xs" title="Unduh format resmi Log Book Kegiatan Magang (DOCX)">
-                                <svg class="w-3.5 h-3.5 mr-1.5 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                                Format Logbook (DOCX)
-                            </a>
-                            <a href="{{ route('mahasiswa.penilaian_instansi.template') }}" class="inline-flex items-center px-3 py-1.5 text-xs font-bold text-slate-700 bg-slate-50 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-300 border border-slate-200 rounded-xl transition shadow-xs">
-                                <svg class="w-3.5 h-3.5 mr-1.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                                Blanko Nilai Mitra (DOCX)
-                            </a>
-                            <a href="{{ route('mahasiswa.penilaian_dpl.template') }}" target="_blank" class="inline-flex items-center px-3 py-1.5 text-xs font-bold text-slate-700 bg-slate-50 hover:bg-blue-50 hover:text-blue-700 hover:border-blue-300 border border-slate-200 rounded-xl transition shadow-xs">
-                                <svg class="w-3.5 h-3.5 mr-1.5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                                Blanko Nilai DPL (PDF)
-                            </a>
-                            <a href="{{ route('mahasiswa.laporan.template') }}" class="inline-flex items-center px-3 py-1.5 text-xs font-bold text-slate-700 bg-slate-50 hover:bg-purple-50 hover:text-purple-700 hover:border-purple-300 border border-slate-200 rounded-xl transition shadow-xs">
-                                <svg class="w-3.5 h-3.5 mr-1.5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                                Panduan & Format Laporan (DOCX)
-                            </a>
+                        <div class="relative inline-block text-left" x-data="{ open: false }">
+                            <button @click="open = !open" @click.outside="open = false" type="button" class="inline-flex items-center gap-2 px-3.5 py-2 text-xs font-bold text-gray-700 bg-white hover:bg-gray-50 border border-gray-200 rounded-xl transition shadow-xs focus:outline-none focus:ring-2 focus:ring-uin/20">
+                                <svg class="w-4 h-4 text-uin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                </svg>
+                                <span>Format & Dokumen Resmi</span>
+                                <svg class="w-3.5 h-3.5 text-gray-400 transition-transform duration-200" :class="{ 'rotate-180': open }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+                            <div x-show="open" x-transition:enter="transition ease-out duration-100" x-transition:enter-start="transform opacity-0 scale-95" x-transition:enter-end="transform opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="transform opacity-100 scale-100" x-transition:leave-end="transform opacity-0 scale-95" class="absolute right-0 mt-2 w-72 bg-white rounded-2xl shadow-xl border border-gray-100 py-2 z-30 divide-y divide-gray-100" style="display: none;">
+                                <div class="px-4 py-2">
+                                    <p class="text-[10px] font-black uppercase tracking-wider text-gray-400">Blanko & Panduan Resmi</p>
+                                    <p class="text-[11px] text-gray-500 mt-0.5">Format dokumen Program Studi Sistem Informasi</p>
+                                </div>
+                                <div class="py-1">
+                                    <a href="{{ route('mahasiswa.logbook.template_docx') }}" class="flex items-center px-4 py-2 text-xs text-gray-700 hover:bg-sky-50 hover:text-sky-800 transition">
+                                        <span class="p-2 rounded-lg bg-sky-100 text-sky-700 mr-3 flex-shrink-0">
+                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                        </span>
+                                        <div class="flex-1 min-w-0">
+                                            <p class="font-bold text-gray-900 truncate">Format Logbook Kegiatan</p>
+                                            <p class="text-[10px] text-gray-400">Microsoft Word (.DOCX)</p>
+                                        </div>
+                                    </a>
+                                    <a href="{{ route('mahasiswa.penilaian_instansi.template') }}" class="flex items-center px-4 py-2 text-xs text-gray-700 hover:bg-emerald-50 hover:text-emerald-800 transition">
+                                        <span class="p-2 rounded-lg bg-emerald-100 text-emerald-700 mr-3 flex-shrink-0">
+                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                        </span>
+                                        <div class="flex-1 min-w-0">
+                                            <p class="font-bold text-gray-900 truncate">Blanko Nilai Pembimbing Mitra</p>
+                                            <p class="text-[10px] text-gray-400">Form penilaian instansi (DOCX)</p>
+                                        </div>
+                                    </a>
+                                    <a href="{{ route('mahasiswa.penilaian_dpl.template') }}" target="_blank" class="flex items-center px-4 py-2 text-xs text-gray-700 hover:bg-blue-50 hover:text-blue-800 transition">
+                                        <span class="p-2 rounded-lg bg-blue-100 text-blue-700 mr-3 flex-shrink-0">
+                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                                        </span>
+                                        <div class="flex-1 min-w-0">
+                                            <p class="font-bold text-gray-900 truncate">Blanko Nilai DPL Magang</p>
+                                            <p class="text-[10px] text-gray-400">Lembar penilaian dosen (PDF)</p>
+                                        </div>
+                                    </a>
+                                    <a href="{{ route('mahasiswa.laporan.template') }}" class="flex items-center px-4 py-2 text-xs text-gray-700 hover:bg-purple-50 hover:text-purple-800 transition">
+                                        <span class="p-2 rounded-lg bg-purple-100 text-purple-700 mr-3 flex-shrink-0">
+                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                                        </span>
+                                        <div class="flex-1 min-w-0">
+                                            <p class="font-bold text-gray-900 truncate">Panduan & Draf Laporan</p>
+                                            <p class="text-[10px] text-gray-400">Sistematika laporan akhir (DOCX)</p>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -506,14 +539,27 @@
                                             @if($dpl->avatar_url)
                                                 <img src="{{ $dpl->avatar_url }}" alt="{{ $dpl->name }}" class="w-10 h-10 rounded-full object-cover ring-2 ring-blue-500/30 flex-shrink-0">
                                             @else
-                                                <div class="w-10 h-10 rounded-full bg-uin text-white font-bold flex items-center justify-center text-sm shadow-xs flex-shrink-0">
-                                                    {{ substr($dpl->name, 0, 1) }}
+                                                <div class="w-10 h-10 rounded-full bg-uin text-white font-bold flex items-center justify-center text-sm shadow-xs flex-shrink-0" style="background-color: #1d4ed8;">
+                                                    {{ strtoupper(substr($dpl->name, 0, 1)) }}
                                                 </div>
                                             @endif
                                             <div class="overflow-hidden min-w-0">
-                                                <p class="font-bold text-gray-900 text-xs truncate" title="{{ $dpl->name }}">{{ $dpl->name }}</p>
-                                                <p class="text-gray-500 text-[11px] font-mono truncate">
-                                                    {{ !empty($dpl->nip) ? 'NIP. ' . $dpl->nip : (!empty($dpl->nim) ? 'NIDN. ' . $dpl->nim : $dpl->email) }}
+                                                <div class="flex items-center gap-1.5">
+                                                    <p class="font-bold text-gray-900 text-xs truncate" title="{{ $dpl->name }}">{{ $dpl->name }}</p>
+                                                    <span class="inline-flex items-center text-blue-600 flex-shrink-0" title="Dosen Pembimbing Lapangan Resmi">
+                                                        <svg class="w-3.5 h-3.5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                                        </svg>
+                                                    </span>
+                                                </div>
+                                                @if(!empty($dpl->nip))
+                                                    <p class="text-gray-500 text-[11px] font-mono truncate">NIP. {{ $dpl->nip }}</p>
+                                                @elseif(!empty($dpl->nim))
+                                                    <p class="text-gray-500 text-[11px] font-mono truncate">NIDN. {{ $dpl->nim }}</p>
+                                                @endif
+                                                <p class="text-gray-500 text-[10px] truncate flex items-center gap-1 mt-0.5">
+                                                    <svg class="w-3 h-3 text-blue-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                                                    <span>{{ $dpl->email }}</span>
                                                 </p>
                                             </div>
                                         </div>
@@ -535,25 +581,25 @@
                         </div>
                     @else
                         <!-- ALUR LENGKAP MAGANG PROGRAM STUDI: 4 KARTU TAHAPAN -->
-                        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5 items-stretch">
 
                             <!-- KARTU 1: FASE 2 SURAT PENGANTAR & KUMPULAN FORMAT UNDUHAN -->
-                            <div class="bg-gradient-to-br from-amber-50/60 to-orange-50/40 p-6 rounded-2xl border border-amber-200/80 flex flex-col justify-between space-y-4 hover:shadow-md transition-all">
+                            <div class="bg-gradient-to-br from-amber-50/70 via-white to-amber-50/30 p-5 rounded-2xl border border-amber-200/90 flex flex-col justify-between space-y-4 hover:shadow-md transition-all shadow-2xs h-full">
                                 <div>
                                     <div class="flex items-center justify-between mb-3">
-                                        <span class="p-2.5 bg-amber-100 text-amber-700 rounded-xl">
+                                        <span class="p-2 bg-amber-100 text-amber-700 rounded-xl shadow-2xs">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                                             </svg>
                                         </span>
                                         @if($pengajuan->status == 'pending')
-                                            <span class="px-2.5 py-0.5 text-[10px] font-bold uppercase rounded-full bg-amber-200 text-amber-900">Fase 2 • Menunggu Verifikasi</span>
+                                            <span class="px-2.5 py-1 text-[10px] font-bold uppercase rounded-lg bg-amber-100 text-amber-900 border border-amber-200">Fase 2 • Menunggu Verifikasi</span>
                                         @else
-                                            <span class="px-2.5 py-0.5 text-[10px] font-bold uppercase rounded-full bg-emerald-100 text-emerald-800">Fase 2 • Format Siap Cetak</span>
+                                            <span class="px-2.5 py-1 text-[10px] font-bold uppercase rounded-lg bg-emerald-100 text-emerald-800 border border-emerald-200">Fase 2 • Format Siap Cetak</span>
                                         @endif
                                     </div>
-                                    <h5 class="font-bold text-gray-900 text-base">Fase 2: Surat Pengantar & Format Unduhan</h5>
-                                    <p class="text-xs text-gray-600 mt-1.5 leading-relaxed">
+                                    <h5 class="font-bold text-gray-900 text-sm">Fase 2: Surat Pengantar & Format Unduhan</h5>
+                                    <p class="text-xs text-gray-600 mt-1.5 leading-relaxed min-h-[50px]">
                                         @if($pengajuan->status == 'pending')
                                             Kumpulan format resmi dapat diunduh setelah berkas pendaftaran Anda disetujui (diverifikasi) oleh Admin Prodi.
                                         @else
@@ -561,20 +607,20 @@
                                         @endif
                                     </p>
                                 </div>
-                                <div class="space-y-2">
+                                <div class="space-y-2 pt-3 border-t border-amber-200/60">
                                     @if($pengajuan->status == 'pending')
                                         <button type="button" disabled class="w-full inline-flex items-center justify-center px-4 py-2.5 bg-gray-100 text-gray-400 border border-gray-200 rounded-xl text-xs font-bold cursor-not-allowed" title="Menunggu verifikasi admin prodi">
                                             <svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
                                             Surat Pengantar Belum Terbit
                                         </button>
                                     @else
-                                        <a href="{{ route('mahasiswa.izin_magang.template') }}" class="w-full inline-flex items-center justify-center px-4 py-2.5 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-bold shadow-sm transition-colors" title="Unduh format surat pengantar perizinan magang resmi (Word DOCX)">
+                                        <a href="{{ route('mahasiswa.izin_magang.template', ['pengajuan_id' => $pengajuan->id]) }}" class="w-full inline-flex items-center justify-center px-4 py-2.5 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-bold shadow-xs transition-colors" title="Unduh surat pengantar perizinan magang resmi otomatis terisi (Word DOCX)">
                                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                                             Unduh Surat Pengantar (DOCX)
                                         </a>
                                     @endif
-                                    <a href="{{ route('mahasiswa.penilaian_instansi.template') }}" class="w-full inline-flex items-center justify-center px-3 py-2 bg-white hover:bg-emerald-50 text-emerald-800 border border-emerald-300 rounded-xl text-xs font-bold shadow-xs transition-colors" title="Unduh blanko penilaian untuk pembimbing instansi (Word DOCX)">
-                                        <svg class="w-4 h-4 mr-1.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                    <a href="{{ route('mahasiswa.penilaian_instansi.template') }}" class="w-full inline-flex items-center justify-center px-3 py-2 bg-white hover:bg-amber-100/60 text-amber-900 border border-amber-300 rounded-xl text-xs font-bold shadow-2xs transition-colors" title="Unduh blanko penilaian untuk pembimbing instansi (Word DOCX)">
+                                        <svg class="w-4 h-4 mr-1.5 text-amber-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                                         Blanko Nilai Mitra (DOCX)
                                     </a>
                                 </div>
@@ -584,24 +630,24 @@
                             @php
                                 $hasSuratBalasan = $pengajuan->documents->where('type', 'SURAT_PENERIMAAN')->first();
                             @endphp
-                            <div class="bg-gradient-to-br from-blue-50/60 to-indigo-50/40 p-6 rounded-2xl border border-blue-200/80 flex flex-col justify-between space-y-4 hover:shadow-md transition-all">
+                            <div class="bg-gradient-to-br from-blue-50/70 via-white to-blue-50/30 p-5 rounded-2xl border border-blue-200/90 flex flex-col justify-between space-y-4 hover:shadow-md transition-all shadow-2xs h-full">
                                 <div>
                                     <div class="flex items-center justify-between mb-3">
-                                        <span class="p-2.5 bg-blue-100 text-blue-700 rounded-xl">
+                                        <span class="p-2 bg-blue-100 text-blue-700 rounded-xl shadow-2xs">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 4H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-2m-4-1v8m0 0l3-3m-3 3L9 8m-5 5h2.586a1 1 0 01.707.293l2.414 2.414a1 1 0 00.707.293h3.172a1 1 0 00.707-.293l2.414-2.414a1 1 0 01.707-.293H20"></path>
                                             </svg>
                                         </span>
                                         @if($pengajuan->status == 'pending')
-                                            <span class="px-2.5 py-0.5 text-[10px] font-bold uppercase rounded-full bg-gray-200 text-gray-700">Fase 3 • Terkunci</span>
+                                            <span class="px-2.5 py-1 text-[10px] font-bold uppercase rounded-lg bg-gray-100 text-gray-700 border border-gray-200">Fase 3 • Terkunci</span>
                                         @elseif($hasSuratBalasan)
-                                            <span class="px-2.5 py-0.5 text-[10px] font-bold uppercase rounded-full bg-emerald-100 text-emerald-800">Fase 3 • Sudah Diunggah</span>
+                                            <span class="px-2.5 py-1 text-[10px] font-bold uppercase rounded-lg bg-emerald-100 text-emerald-800 border border-emerald-200">Fase 3 • Sudah Diunggah</span>
                                         @else
-                                            <span class="px-2.5 py-0.5 text-[10px] font-bold uppercase rounded-full bg-blue-200 text-blue-900">Fase 3 • Perlu Diunggah</span>
+                                            <span class="px-2.5 py-1 text-[10px] font-bold uppercase rounded-lg bg-blue-100 text-blue-900 border border-blue-200">Fase 3 • Perlu Diunggah</span>
                                         @endif
                                     </div>
-                                    <h5 class="font-bold text-gray-900 text-base">Fase 3: Surat Balasan Instansi</h5>
-                                    <p class="text-xs text-gray-600 mt-1.5 leading-relaxed">
+                                    <h5 class="font-bold text-gray-900 text-sm">Fase 3: Surat Balasan Instansi</h5>
+                                    <p class="text-xs text-gray-600 mt-1.5 leading-relaxed min-h-[50px]">
                                         @if($pengajuan->status == 'pending')
                                             Formulir unggah surat balasan persetujuan instansi akan dibuka pada <strong>Fase 3</strong> setelah pendaftaran diverifikasi & berkas izin magang (Fase 2) diserahkan ke instansi.
                                         @elseif($hasSuratBalasan)
@@ -612,59 +658,67 @@
                                     </p>
                                 </div>
 
-                                @if($pengajuan->status == 'pending')
-                                    <div class="p-3.5 bg-gray-100/80 rounded-xl border border-dashed border-gray-300 text-xs text-gray-500 space-y-1.5">
-                                        <div class="flex items-center text-gray-700 font-bold gap-1.5">
-                                            <svg class="w-4 h-4 text-gray-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-                                            </svg>
-                                            <span>Upload Belum Dibuka (Fase 3)</span>
+                                <div class="space-y-2 pt-3 border-t border-blue-200/60">
+                                    @if($pengajuan->status == 'pending')
+                                        <div class="p-3 bg-gray-100/80 rounded-xl border border-dashed border-gray-300 text-xs text-gray-500 space-y-1">
+                                            <div class="flex items-center text-gray-700 font-bold gap-1.5">
+                                                <svg class="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                                                </svg>
+                                                <span>Upload Belum Dibuka</span>
+                                            </div>
+                                            <p class="text-[11px] text-gray-400 leading-relaxed">
+                                                Formulir ini aktif setelah pendaftaran diverifikasi & disetujui Admin.
+                                            </p>
                                         </div>
-                                        <p class="text-[11px] text-gray-500 leading-relaxed">
-                                            Formulir ini akan aktif setelah pendaftaran Anda diverifikasi & disetujui oleh Admin Program Studi.
-                                        </p>
-                                    </div>
-                                @elseif($hasSuratBalasan)
-                                    <div class="flex items-center justify-between p-3 bg-white/90 rounded-xl border border-emerald-200 text-xs">
-                                        <span class="font-bold text-emerald-800 flex items-center">
-                                            <svg class="w-4 h-4 mr-1 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                                            Berkas Surat Balasan Aktif
-                                        </span>
-                                        <a href="{{ asset('storage/' . $hasSuratBalasan->file_path) }}" target="_blank" class="text-blue-600 hover:underline font-bold">Lihat File ↗</a>
-                                    </div>
-                                @else
-                                    <form action="{{ route('mahasiswa.pengajuan.surat_balasan', $pengajuan->id) }}" method="POST" enctype="multipart/form-data" class="space-y-2">
-                                        @csrf
-                                        <div class="flex gap-2">
-                                            <input type="file" name="surat_balasan" required accept=".pdf,.jpg,.jpeg,.png" class="block w-full text-xs text-gray-900 border border-blue-300 rounded-xl cursor-pointer bg-white file:py-2 file:px-3 file:border-0 file:bg-blue-600 file:text-white file:text-xs file:font-bold hover:file:bg-blue-700">
-                                            <button type="submit" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition shadow-sm whitespace-nowrap">
-                                                Kirim
-                                            </button>
+                                    @elseif($hasSuratBalasan)
+                                        <div class="p-3 bg-white rounded-xl border border-blue-200/80 shadow-2xs space-y-2">
+                                            <div class="flex items-center justify-between">
+                                                <span class="text-xs font-bold text-gray-800 flex items-center gap-1.5">
+                                                    <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                                    Berkas Surat Balasan Aktif
+                                                </span>
+                                                <span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">Terunggah</span>
+                                            </div>
+                                            <a href="{{ asset('storage/' . $hasSuratBalasan->file_path) }}" target="_blank" class="w-full inline-flex items-center justify-center px-3 py-2 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg text-xs font-bold transition">
+                                                <svg class="w-3.5 h-3.5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                                Lihat File ↗
+                                            </a>
                                         </div>
-                                        <x-input-error :messages="$errors->get('surat_balasan')" class="text-xs" />
-                                    </form>
-                                @endif
+                                    @else
+                                        <form action="{{ route('mahasiswa.pengajuan.surat_balasan', $pengajuan->id) }}" method="POST" enctype="multipart/form-data" class="space-y-2">
+                                            @csrf
+                                            <div class="flex flex-col gap-1.5">
+                                                <input type="file" name="surat_balasan" required accept=".pdf,.jpg,.jpeg,.png" class="block w-full text-xs text-gray-900 border border-blue-300 rounded-xl cursor-pointer bg-white file:py-2 file:px-3 file:border-0 file:bg-blue-600 file:text-white file:text-xs file:font-bold hover:file:bg-blue-700">
+                                                <button type="submit" class="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition shadow-xs">
+                                                    Kirim Surat Balasan
+                                                </button>
+                                            </div>
+                                            <x-input-error :messages="$errors->get('surat_balasan')" class="text-xs" />
+                                        </form>
+                                    @endif
+                                </div>
                             </div>
 
                             <!-- KARTU 3: FASE 4 STATUS DOSEN PEMBIMBING LAPANGAN (DPL) -->
-                            <div class="bg-gradient-to-br from-teal-50/60 to-emerald-50/40 p-6 rounded-2xl border border-teal-200/80 flex flex-col justify-between space-y-4 hover:shadow-md transition-all">
+                            <div class="bg-gradient-to-br from-teal-50/70 via-white to-teal-50/30 p-5 rounded-2xl border border-teal-200/90 flex flex-col justify-between space-y-4 hover:shadow-md transition-all shadow-2xs h-full">
                                 <div>
                                     <div class="flex items-center justify-between mb-3">
-                                        <span class="p-2.5 bg-teal-100 text-teal-700 rounded-xl">
+                                        <span class="p-2 bg-teal-100 text-teal-700 rounded-xl shadow-2xs">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                                             </svg>
                                         </span>
                                         @if($dpl)
-                                            <span class="px-2.5 py-0.5 text-[10px] font-bold uppercase rounded-full bg-emerald-100 text-emerald-800">Fase 4 • DPL Ditetapkan</span>
+                                            <span class="px-2.5 py-1 text-[10px] font-bold uppercase rounded-lg bg-emerald-100 text-emerald-800 border border-emerald-200">Fase 4 • DPL Ditetapkan</span>
                                         @elseif($pengajuan->status == 'pending')
-                                            <span class="px-2.5 py-0.5 text-[10px] font-bold uppercase rounded-full bg-gray-200 text-gray-700">Fase 4 • Terkunci</span>
+                                            <span class="px-2.5 py-1 text-[10px] font-bold uppercase rounded-lg bg-gray-100 text-gray-700 border border-gray-200">Fase 4 • Terkunci</span>
                                         @else
-                                            <span class="px-2.5 py-0.5 text-[10px] font-bold uppercase rounded-full bg-amber-100 text-amber-800">Fase 4 • Menunggu DPL</span>
+                                            <span class="px-2.5 py-1 text-[10px] font-bold uppercase rounded-lg bg-amber-100 text-amber-800 border border-amber-200">Fase 4 • Menunggu DPL</span>
                                         @endif
                                     </div>
-                                    <h5 class="font-bold text-gray-900 text-base">Fase 4: Pembimbing (DPL)</h5>
-                                    <p class="text-xs text-gray-600 mt-1.5 leading-relaxed">
+                                    <h5 class="font-bold text-gray-900 text-sm">Fase 4: Pembimbing (DPL)</h5>
+                                    <p class="text-xs text-gray-600 mt-1.5 leading-relaxed min-h-[50px]">
                                         @if($dpl)
                                             DPL bertugas memantau kegiatan presensi GPS & logbook, serta memberikan nilai bimbingan akademis.
                                         @elseif($hasSuratBalasan)
@@ -675,57 +729,71 @@
                                     </p>
                                 </div>
 
-                                @if($dpl)
-                                    <div class="p-3.5 bg-white/95 rounded-xl border border-teal-200/90 shadow-2xs space-y-2.5">
-                                        <div class="flex items-center space-x-3">
-                                            @if($dpl->avatar_url)
-                                                <img src="{{ $dpl->avatar_url }}" alt="{{ $dpl->name }}" class="w-10 h-10 rounded-full object-cover ring-2 ring-teal-500/30 flex-shrink-0">
-                                            @else
-                                                <div class="w-10 h-10 rounded-full bg-teal-700 text-white font-bold flex items-center justify-center text-sm shadow-xs flex-shrink-0">
-                                                    {{ substr($dpl->name, 0, 1) }}
+                                <div class="space-y-2 pt-3 border-t border-teal-200/60">
+                                    @if($dpl)
+                                        <div class="p-3 bg-white rounded-xl border border-teal-200/80 shadow-2xs space-y-2.5">
+                                            <div class="flex items-center space-x-3">
+                                                @if($dpl->avatar_url)
+                                                    <img src="{{ $dpl->avatar_url }}" alt="{{ $dpl->name }}" class="w-10 h-10 rounded-full object-cover ring-2 ring-teal-500/30 flex-shrink-0">
+                                                @else
+                                                    <div class="w-10 h-10 rounded-full text-white font-bold flex items-center justify-center text-sm shadow-xs flex-shrink-0 ring-2 ring-teal-500/20" style="background-color: #0f766e;">
+                                                        {{ strtoupper(substr($dpl->name, 0, 1)) }}
+                                                    </div>
+                                                @endif
+                                                <div class="overflow-hidden min-w-0">
+                                                    <div class="flex items-center gap-1.5">
+                                                        <p class="font-bold text-gray-900 text-xs truncate" title="{{ $dpl->name }}">{{ $dpl->name }}</p>
+                                                        <span class="inline-flex items-center text-teal-600 flex-shrink-0" title="Dosen Pembimbing Lapangan Resmi">
+                                                            <svg class="w-3.5 h-3.5 text-teal-600" fill="currentColor" viewBox="0 0 20 20">
+                                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                                            </svg>
+                                                        </span>
+                                                    </div>
+                                                    @if(!empty($dpl->nip))
+                                                        <p class="text-gray-500 text-[11px] font-mono truncate">NIP. {{ $dpl->nip }}</p>
+                                                    @elseif(!empty($dpl->nim))
+                                                        <p class="text-gray-500 text-[11px] font-mono truncate">NIDN. {{ $dpl->nim }}</p>
+                                                    @endif
+                                                    <p class="text-gray-500 text-[10px] truncate flex items-center gap-1 mt-0.5">
+                                                        <svg class="w-3 h-3 text-teal-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                                                        <span>{{ $dpl->email }}</span>
+                                                    </p>
                                                 </div>
-                                            @endif
-                                            <div class="overflow-hidden min-w-0">
-                                                <p class="font-bold text-gray-900 text-xs truncate" title="{{ $dpl->name }}">{{ $dpl->name }}</p>
-                                                <p class="text-gray-500 text-[11px] font-mono truncate">
-                                                    {{ !empty($dpl->nip) ? 'NIP. ' . $dpl->nip : (!empty($dpl->nim) ? 'NIDN. ' . $dpl->nim : $dpl->email) }}
-                                                </p>
-                                                <p class="text-gray-400 text-[10px] truncate">{{ $dpl->email }}</p>
+                                            </div>
+                                            <div class="pt-2 border-t border-gray-100 flex items-center justify-between text-[11px]">
+                                                <span class="text-gray-400">Status DPL:</span>
+                                                <span class="font-bold text-emerald-700 flex items-center bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
+                                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5 animate-pulse"></span>
+                                                    Bimbingan Aktif
+                                                </span>
                                             </div>
                                         </div>
-                                        <div class="pt-2 border-t border-gray-100 flex items-center justify-between text-[11px]">
-                                            <span class="text-gray-400">Status DPL:</span>
-                                            <span class="font-bold text-emerald-700 flex items-center">
-                                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5 animate-pulse"></span>
-                                                Bimbingan Aktif
-                                            </span>
+                                    @elseif($pengajuan->status == 'pending')
+                                        <div class="p-3 bg-gray-100/80 rounded-xl border border-dashed border-gray-300 text-xs text-gray-500 space-y-1">
+                                            <div class="flex items-center text-gray-700 font-bold gap-1.5">
+                                                <svg class="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                                                </svg>
+                                                <span>Fase Belum Aktif</span>
+                                            </div>
+                                            <p class="text-[11px] text-gray-400 leading-relaxed">
+                                                Menunggu verifikasi berkas pendaftaran selesai.
+                                            </p>
                                         </div>
-                                    </div>
-                                @elseif($pengajuan->status == 'pending')
-                                    <div class="p-3 bg-gray-100/80 rounded-xl border border-dashed border-gray-300 text-xs text-gray-500 space-y-1">
-                                        <div class="flex items-center text-gray-700 font-bold gap-1.5">
-                                            <svg class="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-                                            </svg>
-                                            <span>Fase Belum Aktif</span>
+                                    @else
+                                        <div class="p-3 bg-teal-50/80 rounded-xl border border-dashed border-teal-300 text-xs text-teal-900 space-y-1">
+                                            <div class="flex items-center text-teal-900 font-bold gap-1.5">
+                                                <svg class="w-4 h-4 text-teal-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                                </svg>
+                                                <span>Menunggu Penetapan Admin</span>
+                                            </div>
+                                            <p class="text-[11px] text-teal-700 leading-relaxed">
+                                                Admin Prodi akan segera menetapkan DPL untuk pengajuan Anda.
+                                            </p>
                                         </div>
-                                        <p class="text-[11px] text-gray-400 leading-relaxed">
-                                            Menunggu verifikasi berkas pendaftaran selesai.
-                                        </p>
-                                    </div>
-                                @else
-                                    <div class="p-3 bg-amber-50/80 rounded-xl border border-dashed border-amber-300 text-xs text-amber-900 space-y-1">
-                                        <div class="flex items-center text-amber-900 font-bold gap-1.5">
-                                            <svg class="w-4 h-4 text-amber-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                            </svg>
-                                            <span>Menunggu Penetapan Admin</span>
-                                        </div>
-                                        <p class="text-[11px] text-amber-700 leading-relaxed">
-                                            Admin Prodi akan segera menetapkan DPL untuk pengajuan Anda.
-                                        </p>
-                                    </div>
-                                @endif
+                                    @endif
+                                </div>
                             </div>
 
                             <!-- KARTU 4: FASE 5 LAPORAN AKHIR MAGANG -->
@@ -733,30 +801,24 @@
                                 $hasLaporan = $pengajuan->documents->where('type', 'LAPORAN_AKHIR')->first();
                                 $isFaseLaporan = in_array($pengajuan->status, ['active', 'selesai']);
                             @endphp
-                            <div class="bg-gradient-to-br from-purple-50/60 to-fuchsia-50/40 p-6 rounded-2xl border border-purple-200/80 flex flex-col justify-between space-y-4 hover:shadow-md transition-all">
+                            <div class="bg-gradient-to-br from-purple-50/70 via-white to-purple-50/30 p-5 rounded-2xl border border-purple-200/90 flex flex-col justify-between space-y-4 hover:shadow-md transition-all shadow-2xs h-full">
                                 <div>
                                     <div class="flex items-center justify-between mb-3">
-                                        <span class="p-2.5 bg-purple-100 text-purple-700 rounded-xl">
+                                        <span class="p-2 bg-purple-100 text-purple-700 rounded-xl shadow-2xs">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                                             </svg>
                                         </span>
-                                        <div class="flex items-center gap-1.5">
-                                            <a href="{{ route('mahasiswa.laporan.template') }}" class="px-2 py-0.5 text-[10px] font-bold bg-white text-purple-700 border border-purple-200 rounded-lg hover:bg-purple-50 transition shadow-xs flex items-center" title="Unduh panduan & format laporan magang resmi (DOCX)">
-                                                <svg class="w-3 h-3 mr-1 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                                                Template
-                                            </a>
-                                            @if($hasLaporan)
-                                                <span class="px-2.5 py-0.5 text-[10px] font-bold uppercase rounded-lg bg-emerald-100 text-emerald-800">Fase 5 • Terunggah</span>
-                                            @elseif($isFaseLaporan)
-                                                <span class="px-2.5 py-0.5 text-[10px] font-bold uppercase rounded-lg bg-purple-200 text-purple-900">Fase 5 • Perlu Diunggah</span>
-                                            @else
-                                                <span class="px-2.5 py-0.5 text-[10px] font-bold uppercase rounded-lg bg-gray-200 text-gray-700">Fase 5 • Terkunci</span>
-                                            @endif
-                                        </div>
+                                        @if($hasLaporan)
+                                            <span class="px-2.5 py-1 text-[10px] font-bold uppercase rounded-lg bg-emerald-100 text-emerald-800 border border-emerald-200">Fase 5 • Terunggah</span>
+                                        @elseif($isFaseLaporan)
+                                            <span class="px-2.5 py-1 text-[10px] font-bold uppercase rounded-lg bg-purple-100 text-purple-900 border border-purple-200">Fase 5 • Perlu Diunggah</span>
+                                        @else
+                                            <span class="px-2.5 py-1 text-[10px] font-bold uppercase rounded-lg bg-gray-100 text-gray-700 border border-gray-200">Fase 5 • Terkunci</span>
+                                        @endif
                                     </div>
-                                    <h5 class="font-bold text-gray-900 text-base">Fase 5: Laporan Akhir Magang</h5>
-                                    <p class="text-xs text-gray-600 mt-1.5 leading-relaxed">
+                                    <h5 class="font-bold text-gray-900 text-sm">Fase 5: Laporan Akhir Magang</h5>
+                                    <p class="text-xs text-gray-600 mt-1.5 leading-relaxed min-h-[50px]">
                                         @if($isFaseLaporan)
                                             Unggah naskah laporan akhir <strong>PDF (Maks. 10MB)</strong> yang telah disetujui DPL dan pembimbing lapangan.
                                         @else
@@ -765,44 +827,52 @@
                                     </p>
                                 </div>
 
-                                @if($hasLaporan)
-                                    <div class="flex items-center justify-between p-3 bg-white/90 rounded-xl border border-purple-200 text-xs">
-                                        <span class="font-bold text-purple-900 flex items-center">
-                                            <svg class="w-4 h-4 mr-1 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                                            Laporan Akhir Terverifikasi
-                                        </span>
-                                        <a href="{{ asset('storage/' . $hasLaporan->file_path) }}" target="_blank" class="text-purple-700 hover:underline font-bold">Lihat File ↗</a>
-                                    </div>
-                                @elseif($isFaseLaporan)
-                                    <form action="{{ route('mahasiswa.pengajuan.laporan_akhir', $pengajuan->id) }}" method="POST" enctype="multipart/form-data" class="space-y-2">
-                                        @csrf
-                                        <div class="flex gap-2">
-                                            <input type="file" name="laporan_akhir" required accept=".pdf" class="block w-full text-xs text-gray-900 border border-purple-300 rounded-xl cursor-pointer bg-white file:py-2 file:px-3 file:border-0 file:bg-purple-600 file:text-white file:text-xs file:font-bold hover:file:bg-purple-700">
-                                            <button type="submit" class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-xl text-xs font-bold transition shadow-sm whitespace-nowrap">
-                                                Upload
-                                            </button>
-                                        </div>
-                                        <x-input-error :messages="$errors->get('laporan_akhir')" class="text-xs" />
-                                    </form>
-                                @else
-                                    <div class="space-y-2">
-                                        <div class="p-3 bg-purple-50/80 rounded-xl border border-dashed border-purple-200 text-xs text-purple-900 space-y-1">
-                                            <div class="flex items-center font-bold gap-1.5 text-purple-900">
-                                                <svg class="w-4 h-4 text-purple-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-                                                </svg>
-                                                <span>Upload Terkunci (Fase 5)</span>
+                                <div class="space-y-2 pt-3 border-t border-purple-200/60">
+                                    @if($hasLaporan)
+                                        <div class="p-3 bg-white rounded-xl border border-purple-200/80 shadow-2xs space-y-2">
+                                            <div class="flex items-center justify-between">
+                                                <span class="text-xs font-bold text-gray-800 flex items-center gap-1.5">
+                                                    <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                                    Laporan Akhir Terverifikasi
+                                                </span>
+                                                <span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">Terunggah</span>
                                             </div>
-                                            <p class="text-[11px] text-purple-700 leading-relaxed">
-                                                Formulir unggah laporan akan terbuka otomatis setelah periode magang berjalan (Fase 5).
-                                            </p>
+                                            <a href="{{ asset('storage/' . $hasLaporan->file_path) }}" target="_blank" class="w-full inline-flex items-center justify-center px-3 py-2 bg-purple-50 hover:bg-purple-100 text-purple-700 rounded-lg text-xs font-bold transition">
+                                                <svg class="w-3.5 h-3.5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                                Lihat File ↗
+                                            </a>
                                         </div>
-                                        <a href="{{ route('mahasiswa.laporan.template') }}" class="w-full inline-flex items-center justify-center px-3 py-2 bg-white hover:bg-purple-50 text-purple-800 border border-purple-300 rounded-xl text-xs font-bold shadow-xs transition" title="Unduh format panduan laporan magang resmi (DOCX)">
-                                            <svg class="w-4 h-4 mr-1.5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                                            Unduh Panduan & Draf Laporan (DOCX)
-                                        </a>
-                                    </div>
-                                @endif
+                                    @elseif($isFaseLaporan)
+                                        <form action="{{ route('mahasiswa.pengajuan.laporan_akhir', $pengajuan->id) }}" method="POST" enctype="multipart/form-data" class="space-y-2">
+                                            @csrf
+                                            <div class="flex flex-col gap-1.5">
+                                                <input type="file" name="laporan_akhir" required accept=".pdf" class="block w-full text-xs text-gray-900 border border-purple-300 rounded-xl cursor-pointer bg-white file:py-2 file:px-3 file:border-0 file:bg-purple-600 file:text-white file:text-xs file:font-bold hover:file:bg-purple-700">
+                                                <button type="submit" class="w-full py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-xl text-xs font-bold transition shadow-xs">
+                                                    Upload Laporan Akhir
+                                                </button>
+                                            </div>
+                                            <x-input-error :messages="$errors->get('laporan_akhir')" class="text-xs" />
+                                        </form>
+                                    @else
+                                        <div class="space-y-2">
+                                            <div class="p-3 bg-purple-50/80 rounded-xl border border-dashed border-purple-200 text-xs text-purple-900 space-y-1">
+                                                <div class="flex items-center font-bold gap-1.5 text-purple-900">
+                                                    <svg class="w-4 h-4 text-purple-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                                                    </svg>
+                                                    <span>Upload Terkunci (Fase 5)</span>
+                                                </div>
+                                                <p class="text-[11px] text-purple-700 leading-relaxed">
+                                                    Formulir unggah laporan akan terbuka otomatis setelah periode magang berjalan (Fase 5).
+                                                </p>
+                                            </div>
+                                            <a href="{{ route('mahasiswa.laporan.template') }}" class="w-full inline-flex items-center justify-center px-3 py-2 bg-white hover:bg-purple-50 text-purple-800 border border-purple-300 rounded-xl text-xs font-bold shadow-2xs transition" title="Unduh format panduan laporan magang resmi (DOCX)">
+                                                <svg class="w-4 h-4 mr-1.5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                                Unduh Panduan & Draf Laporan (DOCX)
+                                            </a>
+                                        </div>
+                                    @endif
+                                </div>
                             </div>
 
                         </div>

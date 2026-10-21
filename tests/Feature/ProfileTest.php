@@ -279,23 +279,54 @@ class ProfileTest extends TestCase
         $admin = User::factory()->create(['role' => 'admin']);
         $response = $this->actingAs($admin)->get('/profile');
         $response->assertOk();
+        $response->assertDontSee('Semester Saat Ini *');
         $response->assertDontSee('Total SKS Ditempuh *');
         $response->assertDontSee('IPK Terakhir *');
 
         $dpl = User::factory()->create(['role' => 'dpl']);
         $responseDpl = $this->actingAs($dpl)->get('/profile');
         $responseDpl->assertOk();
+        $responseDpl->assertDontSee('Semester Saat Ini *');
         $responseDpl->assertDontSee('Total SKS Ditempuh *');
         $responseDpl->assertDontSee('IPK Terakhir *');
 
         $mahasiswa = User::factory()->create([
             'role' => 'mahasiswa',
+            'semester' => 7,
             'total_sks' => 120,
             'ipk' => 3.50,
         ]);
         $responseMahasiswa = $this->actingAs($mahasiswa)->get('/profile');
         $responseMahasiswa->assertOk();
+        $responseMahasiswa->assertSee('Semester Saat Ini *');
         $responseMahasiswa->assertSee('Total SKS Ditempuh *');
         $responseMahasiswa->assertSee('IPK Terakhir *');
+    }
+
+    public function test_mahasiswa_can_update_semester(): void
+    {
+        $user = User::factory()->create([
+            'role' => 'mahasiswa',
+            'semester' => 6,
+            'ipk' => 3.50,
+            'total_sks' => 120,
+        ]);
+
+        $response = $this
+            ->actingAs($user)
+            ->patch('/profile', [
+                'name' => 'Mahasiswa Test Semester',
+                'email' => $user->email,
+                'nim' => '2111050099',
+                'total_sks' => 120,
+                'ipk' => 3.50,
+                'semester' => 8,
+            ]);
+
+        $response->assertSessionHasNoErrors();
+        $response->assertRedirect('/profile');
+        $user->refresh();
+        $this->assertEquals(8, $user->semester);
+        $this->assertEquals('VIII', $user->semester_roman);
     }
 }

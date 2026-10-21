@@ -115,7 +115,23 @@
         </div>
 
         @if($user->role === 'mahasiswa')
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+            <div>
+                <label for="semester" class="block text-xs font-bold text-gray-700 mb-1">Semester Saat Ini *</label>
+                <select id="semester" name="semester" class="w-full text-xs rounded-xl border-gray-300 shadow-xs focus:border-uin focus:ring-uin p-2.5" required>
+                    @php
+                        $romanList = [1=>'I', 2=>'II', 3=>'III', 4=>'IV', 5=>'V', 6=>'VI', 7=>'VII', 8=>'VIII', 9=>'IX', 10=>'X', 11=>'XI', 12=>'XII', 13=>'XIII', 14=>'XIV'];
+                    @endphp
+                    @for($sem = 1; $sem <= 14; $sem++)
+                        <option value="{{ $sem }}" {{ (int)old('semester', $user->semester ?? 7) === $sem ? 'selected' : '' }}>
+                            Semester {{ $sem }} ({{ $romanList[$sem] ?? $sem }})
+                        </option>
+                    @endfor
+                </select>
+                <p class="text-[11px] text-gray-400 mt-0.5">Semester akademik aktif Anda</p>
+                <x-input-error class="mt-1 text-xs" :messages="$errors->get('semester')" />
+            </div>
+
             <div>
                 <label for="total_sks" class="block text-xs font-bold text-gray-700 mb-1">Total SKS Ditempuh *</label>
                 <input id="total_sks" name="total_sks" type="number" min="110" class="w-full text-xs rounded-xl border-gray-300 shadow-xs focus:border-uin focus:ring-uin p-2.5" value="{{ old('total_sks', $user->total_sks) }}" required />

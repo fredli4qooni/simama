@@ -30,9 +30,11 @@ class ProfileUpdateRequest extends FormRequest
         if ($isMahasiswa) {
             $rules['total_sks'] = ['required', 'integer', 'min:110'];
             $rules['ipk'] = ['required', 'numeric', 'min:2.75', 'max:4.00'];
+            $rules['semester'] = ['nullable', 'integer', 'min:1', 'max:14'];
         } else {
             $rules['total_sks'] = ['nullable'];
             $rules['ipk'] = ['nullable'];
+            $rules['semester'] = ['nullable'];
         }
 
         return $rules;
@@ -52,6 +54,10 @@ class ProfileUpdateRequest extends FormRequest
             'ipk.max' => 'Nilai IPK tidak boleh lebih dari 4.00.',
             'ipk.required' => 'Nilai IPK wajib diisi.',
             'ipk.numeric' => 'Format IPK harus berupa angka desimal.',
+            'semester.required' => 'Semester saat ini wajib dipilih/diisi.',
+            'semester.integer' => 'Semester harus berupa bilangan bulat.',
+            'semester.min' => 'Semester tidak valid (minimal 1).',
+            'semester.max' => 'Semester maksimal adalah 14.',
         ];
     }
 }

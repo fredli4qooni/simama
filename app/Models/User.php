@@ -22,7 +22,8 @@ use Illuminate\Support\Facades\Storage;
     'is_active',
     'prodi_id',
     'total_sks',
-    'ipk'
+    'ipk',
+    'semester'
 ])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
@@ -40,6 +41,25 @@ class User extends Authenticatable
         }
 
         return null;
+    }
+
+    /**
+     * Accessor untuk representasi angka romawi semester mahasiswa (contoh: VII)
+     */
+    public function getSemesterRomanAttribute(): string
+    {
+        $romanMap = [
+            1 => 'I', 2 => 'II', 3 => 'III', 4 => 'IV', 5 => 'V',
+            6 => 'VI', 7 => 'VII', 8 => 'VIII', 9 => 'IX', 10 => 'X',
+            11 => 'XI', 12 => 'XII', 13 => 'XIII', 14 => 'XIV'
+        ];
+
+        $sem = (int)($this->semester ?? 7);
+        if ($sem <= 0) {
+            $sem = 7;
+        }
+
+        return $romanMap[$sem] ?? (string)$sem;
     }
 
     /**

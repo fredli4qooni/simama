@@ -837,7 +837,46 @@ class MagangRevisionTest extends TestCase
         $this->assertStringContainsString('Logbook_Magang_2111050099.pdf', (string) $response->headers->get('Content-Disposition'));
     }
 
-    public function test_mahasiswa_cannot_download_logbook_pdf_when_magang_not_selesai(): void
+    public function test_mahasiswa_can_download_logbook_pdf_when_magang_active_or_not_yet_selesai(): void
+    {
+        $mahasiswa = User::factory()->create([
+            'role' => 'mahasiswa',
+            'name' => 'Budi Pratama',
+            'nim' => '2111050099',
+            'total_sks' => 120,
+            'ipk' => 3.75,
+            'prodi_id' => $this->prodi->id,
+        ]);
+
+        $application = MagangApplication::create([
+            'user_id' => $mahasiswa->id,
+            'instansi' => 'PT Telkom Indonesia',
+            'alamat' => 'Bandar Lampung',
+            'alamat_instansi' => 'Bandar Lampung',
+            'start_date' => '2026-07-01',
+            'end_date' => '2026-08-31',
+            'status' => 'active', // sedang berjalan, belum selesai
+            'is_group' => false,
+            'jenis_magang' => 'prodi',
+            'prodi_id' => $this->prodi->id,
+        ]);
+
+        Logbook::create([
+            'user_id' => $mahasiswa->id,
+            'application_id' => $application->id,
+            'date' => '2026-07-02',
+            'kegiatan' => 'Orientasi dan pengenalan tim',
+            'output' => 'Briefing selesai',
+        ]);
+
+        $response = $this->actingAs($mahasiswa)->get(route('mahasiswa.logbook.cetak'));
+
+        $response->assertOk();
+        $this->assertEquals('application/pdf', $response->headers->get('Content-Type'));
+        $this->assertStringContainsString('Logbook_Magang_2111050099.pdf', (string) $response->headers->get('Content-Disposition'));
+    }
+
+    public function test_mahasiswa_cannot_download_logbook_pdf_when_application_still_pending(): void
     {
         $mahasiswa = User::factory()->create([
             'role' => 'mahasiswa',
@@ -855,7 +894,7 @@ class MagangRevisionTest extends TestCase
             'alamat_instansi' => 'Bandar Lampung',
             'start_date' => '2026-07-01',
             'end_date' => '2026-08-31',
-            'status' => 'active', // belum selesai
+            'status' => 'pending',
             'is_group' => false,
             'jenis_magang' => 'prodi',
             'prodi_id' => $this->prodi->id,
@@ -865,7 +904,6 @@ class MagangRevisionTest extends TestCase
 
         $response->assertRedirect();
         $response->assertSessionHas('error');
-        $this->assertStringContainsString('SELESAI', session('error'));
     }
 
     public function test_mahasiswa_can_view_logbook_page_when_magang_selesai_and_sees_print_button(): void
@@ -907,6 +945,38 @@ class MagangRevisionTest extends TestCase
         $response->assertSee(route('mahasiswa.logbook.cetak'));
         // Form input baru tidak ditampilkan karena sudah selesai
         $response->assertDontSee('Tulis Jurnal Kegiatan Harian Baru');
+    }
+
+    public function test_mahasiswa_can_view_logbook_page_when_magang_active_and_sees_print_button(): void
+    {
+        $mahasiswa = User::factory()->create([
+            'role' => 'mahasiswa',
+            'name' => 'Budi Pratama',
+            'nim' => '2111050099',
+            'total_sks' => 120,
+            'ipk' => 3.75,
+            'prodi_id' => $this->prodi->id,
+        ]);
+
+        MagangApplication::create([
+            'user_id' => $mahasiswa->id,
+            'instansi' => 'Dinas Kominfo',
+            'alamat' => 'Bandar Lampung',
+            'alamat_instansi' => 'Bandar Lampung',
+            'start_date' => '2026-07-01',
+            'end_date' => '2026-08-31',
+            'status' => 'active',
+            'is_group' => false,
+            'jenis_magang' => 'prodi',
+            'prodi_id' => $this->prodi->id,
+        ]);
+
+        $response = $this->actingAs($mahasiswa)->get(route('mahasiswa.logbook.index'));
+
+        $response->assertOk();
+        $response->assertSee(route('mahasiswa.logbook.cetak'));
+        $response->assertSee('Cetak Logbook Resmi (PDF)');
+        $response->assertDontSee('Cetak Logbook (Tersedia Saat Selesai)');
     }
 
     public function test_mahasiswa_cannot_store_logbook_when_magang_selesai(): void
@@ -1163,6 +1233,55 @@ class MagangRevisionTest extends TestCase
         auth()->logout();
         $guestResponse = $this->get(route('mahasiswa.izin_magang.template'));
         $guestResponse->assertRedirect(route('login'));
+    }
+
+    public function test_download_surat_permohonan_izin_magang_docx_auto_populates_data(): void
+    {
+        $mahasiswa = User::factory()->create([
+            'name' => 'Fauzi Ramadhan',
+            'role' => 'mahasiswa',
+            'prodi_id' => $this->prodi->id,
+            'nim' => '2271020088',
+            'total_sks' => 125,
+            'ipk' => 3.80,
+        ]);
+
+        $pengajuan = MagangApplication::create([
+            'user_id' => $mahasiswa->id,
+            'prodi_id' => $this->prodi->id,
+            'is_group' => false,
+            'jenis_magang' => 'prodi',
+            'instansi' => 'PT Teknologi Digital Nusantara',
+            'alamat' => 'Jl. ZA Pagar Alam No. 100 Bandar Lampung',
+            'start_date' => '2026-11-01',
+            'end_date' => '2027-01-31',
+            'status' => 'approved',
+        ]);
+
+        $response = $this->actingAs($mahasiswa)->get(route('mahasiswa.izin_magang.template', ['pengajuan_id' => $pengajuan->id]));
+        $response->assertOk();
+        $disposition = $response->headers->get('Content-Disposition') ?? '';
+        $this->assertStringContainsString('Surat_Permohonan_Izin_Magang_2271020088.docx', $disposition);
+
+        // Verify DOCX contents
+        ob_start();
+        $response->sendContent();
+        $content = ob_get_clean();
+
+        $tempFile = tempnam(sys_get_temp_dir(), 'test_docx_') . '.docx';
+        file_put_contents($tempFile, $content);
+
+        $zip = new \ZipArchive();
+        $this->assertTrue($zip->open($tempFile) === true);
+        $documentXml = $zip->getFromName('word/document.xml');
+        $zip->close();
+        @unlink($tempFile);
+
+        $this->assertStringContainsString('PT Teknologi Digital Nusantara', $documentXml);
+        $this->assertStringContainsString('Fauzi Ramadhan', $documentXml);
+        $this->assertStringContainsString('2271020088', $documentXml);
+        $this->assertStringContainsString('Bandar Lampung,', $documentXml);
+        $this->assertStringContainsString('Jurusan/Semester', $documentXml);
     }
 
     public function test_laporan_akhir_upload_is_locked_during_phase_2_and_unlocked_on_active_phase(): void

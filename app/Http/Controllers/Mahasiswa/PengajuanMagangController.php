@@ -10,6 +10,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
+use ZipArchive;
 
 class PengajuanMagangController extends Controller
 {
@@ -365,18 +367,188 @@ class PengajuanMagangController extends Controller
         return $pdf->stream('Form_Penilaian_DPL_Magang_SI.pdf');
     }
 
-    public function downloadTemplateIzinMagang()
+    public function downloadTemplateIzinMagang(Request $request)
     {
         $filePath = public_path('doc/Surat_Permohonan_Izin_Magang.docx');
         if (!file_exists($filePath)) {
             $filePath = base_path('Surat_Permohonan_Izin_Magang.docx');
         }
 
-        if (file_exists($filePath)) {
-            return response()->download($filePath, 'Surat_Permohonan_Izin_Magang.docx');
+        if (!file_exists($filePath)) {
+            return redirect()->back()->with('error', 'File format Surat Permohonan Izin Magang tidak ditemukan.');
         }
 
-        return redirect()->back()->with('error', 'File format Surat Permohonan Izin Magang tidak ditemukan.');
+        $user = $request->user();
+        $pengajuan = null;
+
+        if ($request->filled('pengajuan_id')) {
+            $pengajuan = MagangApplication::with(['user.prodi', 'members.user.prodi', 'dplAssignment.dpl'])
+                ->find($request->pengajuan_id);
+        }
+
+        if (!$pengajuan && $user) {
+            $pengajuan = MagangApplication::with(['user.prodi', 'members.user.prodi', 'dplAssignment.dpl'])
+                ->where(function ($q) use ($user) {
+                    $q->where('user_id', $user->id)
+                      ->orWhereHas('members', function ($m) use ($user) {
+                          $m->where('user_id', $user->id);
+                      });
+                })
+                ->latest()
+                ->first();
+        }
+
+        if ($pengajuan) {
+            return $this->generateSuratPengantarDocx($pengajuan, $filePath);
+        }
+
+        return response()->download($filePath, 'Surat_Permohonan_Izin_Magang.docx');
+    }
+
+    protected function generateSuratPengantarDocx(MagangApplication $pengajuan, string $templatePath)
+    {
+        Carbon::setLocale('id');
+
+        $tanggalHariIni = Carbon::now()->isoFormat('D MMMM Y');
+        $instansi = $pengajuan->instansi ?? '-';
+        $alamat = $pengajuan->alamat ?? $pengajuan->alamat_instansi ?? '';
+        $tujuan = (stripos($instansi, 'pimpinan') === 0 || stripos($instansi, 'kepala') === 0 || stripos($instansi, 'direktur') === 0)
+            ? $instansi
+            : 'Pimpinan ' . $instansi;
+
+        $startDate = $pengajuan->start_date ? Carbon::parse($pengajuan->start_date)->isoFormat('D MMMM Y') : '-';
+        $endDate = $pengajuan->end_date ? Carbon::parse($pengajuan->end_date)->isoFormat('D MMMM Y') : '-';
+        $dplName = $pengajuan->dplAssignment?->dpl?->name;
+
+        // Siapkan list data mahasiswa
+        $students = [];
+        if ($pengajuan->is_group && $pengajuan->members && $pengajuan->members->count() > 0) {
+            $sortedMembers = $pengajuan->members->sortByDesc('is_leader');
+            foreach ($sortedMembers as $member) {
+                $u = $member->user;
+                if ($u) {
+                    $students[] = [
+                        'name' => $u->name,
+                        'nim' => $u->nim ?? '-',
+                        'jurusan_semester' => $this->getJurusanSemester($u),
+                    ];
+                }
+            }
+        }
+
+        if (empty($students) && $pengajuan->user) {
+            $students[] = [
+                'name' => $pengajuan->user->name,
+                'nim' => $pengajuan->user->nim ?? '-',
+                'jurusan_semester' => $this->getJurusanSemester($pengajuan->user),
+            ];
+        }
+
+        // Siapkan file sementara
+        $tempDir = storage_path('app/temp');
+        if (!file_exists($tempDir)) {
+            mkdir($tempDir, 0755, true);
+        }
+        $tempFile = $tempDir . '/Surat_Permohonan_Izin_Magang_' . uniqid() . '.docx';
+        copy($templatePath, $tempFile);
+
+        $zip = new ZipArchive();
+        if ($zip->open($tempFile) === true) {
+            $xml = $zip->getFromName('word/document.xml');
+
+            // 1. Bandar Lampung, … … ….. (diisi otomatis tanggal hari ini)
+            $xml = preg_replace(
+                '/(<w:r><w:t xml:space="preserve">Bandar Lampung, <\/w:t><\/w:r>)(?:<w:r[^>]*><w:t[^>]*>.*?<\/w:t><\/w:r>\s*)+/s',
+                '<w:r><w:rPr><w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman"/><w:sz w:val="24"/><w:szCs w:val="24"/></w:rPr><w:t xml:space="preserve">Bandar Lampung, ' . htmlspecialchars($tanggalHariIni) . '</w:t></w:r>',
+                $xml
+            );
+
+            // 2. Kepada Yth: ……………………………….. (diisi otomatis tempat perusahaan/instansi dituju)
+            $xml = preg_replace(
+                '/(<w:t>Kepada Yth:<\/w:t>.*?<w:t>)[…\.\s]+(<\/w:t>)/s',
+                '${1}' . htmlspecialchars($tujuan) . '${2}',
+                $xml
+            );
+
+            // 3. Tabel Peserta: No | Nama | NPM | Jurusan/Semester (otomatis terisi)
+            preg_match_all('/<w:tbl\b[^>]*>(?:(?!<w:tbl\b).)*?<\/w:tbl>/s', $xml, $allTables);
+            foreach ($allTables[0] as $oldTable) {
+                if (strpos($oldTable, 'Jurusan/Semester') !== false) {
+                    preg_match('/<w:tr\b[^>]*>.*?<\/w:tr>/s', $oldTable, $headerRowMatch);
+                    $headerRow = $headerRowMatch[0] ?? '';
+                    preg_match('/<w:tblPr>.*?<\/w:tblPr>/s', $oldTable, $prMatch);
+                    preg_match('/<w:tblGrid>.*?<\/w:tblGrid>/s', $oldTable, $gridMatch);
+
+                    $newRowsXml = '';
+                    foreach ($students as $idx => $mhs) {
+                        $num = $idx + 1;
+                        $nama = htmlspecialchars($mhs['name']);
+                        $nim = htmlspecialchars($mhs['nim']);
+                        $jurSem = htmlspecialchars($mhs['jurusan_semester']);
+
+                        $newRowsXml .= '<w:tr w:rsidR="005A2E36">' .
+                            '<w:trPr><w:jc w:val="center"/></w:trPr>' .
+                            // Col 1: No
+                            '<w:tc><w:tcPr><w:tcW w:w="624" w:type="dxa"/><w:tcBorders><w:top w:val="single" w:sz="4" w:space="0" w:color="000000"/><w:left w:val="single" w:sz="4" w:space="0" w:color="000000"/><w:bottom w:val="single" w:sz="4" w:space="0" w:color="000000"/><w:right w:val="single" w:sz="4" w:space="0" w:color="000000"/></w:tcBorders><w:tcMar><w:top w:w="35" w:type="dxa"/><w:left w:w="80" w:type="dxa"/><w:bottom w:w="35" w:type="dxa"/><w:right w:w="80" w:type="dxa"/></w:tcMar><w:vAlign w:val="center"/></w:tcPr>' .
+                            '<w:p><w:pPr><w:jc w:val="center"/></w:pPr><w:r><w:rPr><w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman"/><w:sz w:val="24"/><w:szCs w:val="24"/></w:rPr><w:t>' . $num . '</w:t></w:r></w:p></w:tc>' .
+                            // Col 2: Nama
+                            '<w:tc><w:tcPr><w:tcW w:w="2891" w:type="dxa"/><w:tcBorders><w:top w:val="single" w:sz="4" w:space="0" w:color="000000"/><w:left w:val="single" w:sz="4" w:space="0" w:color="000000"/><w:bottom w:val="single" w:sz="4" w:space="0" w:color="000000"/><w:right w:val="single" w:sz="4" w:space="0" w:color="000000"/></w:tcBorders><w:tcMar><w:top w:w="35" w:type="dxa"/><w:left w:w="80" w:type="dxa"/><w:bottom w:w="35" w:type="dxa"/><w:right w:w="80" w:type="dxa"/></w:tcMar><w:vAlign w:val="center"/></w:tcPr>' .
+                            '<w:p><w:r><w:rPr><w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman"/><w:sz w:val="24"/><w:szCs w:val="24"/></w:rPr><w:t>' . $nama . '</w:t></w:r></w:p></w:tc>' .
+                            // Col 3: NPM
+                            '<w:tc><w:tcPr><w:tcW w:w="2494" w:type="dxa"/><w:tcBorders><w:top w:val="single" w:sz="4" w:space="0" w:color="000000"/><w:left w:val="single" w:sz="4" w:space="0" w:color="000000"/><w:bottom w:val="single" w:sz="4" w:space="0" w:color="000000"/><w:right w:val="single" w:sz="4" w:space="0" w:color="000000"/></w:tcBorders><w:tcMar><w:top w:w="35" w:type="dxa"/><w:left w:w="80" w:type="dxa"/><w:bottom w:w="35" w:type="dxa"/><w:right w:w="80" w:type="dxa"/></w:tcMar><w:vAlign w:val="center"/></w:tcPr>' .
+                            '<w:p><w:pPr><w:jc w:val="center"/></w:pPr><w:r><w:rPr><w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman"/><w:sz w:val="24"/><w:szCs w:val="24"/></w:rPr><w:t>' . $nim . '</w:t></w:r></w:p></w:tc>' .
+                            // Col 4: Jurusan/Semester
+                            '<w:tc><w:tcPr><w:tcW w:w="3061" w:type="dxa"/><w:tcBorders><w:top w:val="single" w:sz="4" w:space="0" w:color="000000"/><w:left w:val="single" w:sz="4" w:space="0" w:color="000000"/><w:bottom w:val="single" w:sz="4" w:space="0" w:color="000000"/><w:right w:val="single" w:sz="4" w:space="0" w:color="000000"/></w:tcBorders><w:tcMar><w:top w:w="35" w:type="dxa"/><w:left w:w="80" w:type="dxa"/><w:bottom w:w="35" w:type="dxa"/><w:right w:w="80" w:type="dxa"/></w:tcMar><w:vAlign w:val="center"/></w:tcPr>' .
+                            '<w:p><w:pPr><w:jc w:val="center"/></w:pPr><w:r><w:rPr><w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman"/><w:sz w:val="24"/><w:szCs w:val="24"/></w:rPr><w:t>' . $jurSem . '</w:t></w:r></w:p></w:tc>' .
+                            '</w:tr>';
+                    }
+
+                    $newTable = '<w:tbl>' . ($prMatch[0] ?? '') . ($gridMatch[0] ?? '') . $headerRow . $newRowsXml . '</w:tbl>';
+                    $xml = str_replace($oldTable, $newTable, $xml);
+                    break;
+                }
+            }
+
+            // 4. Lokasi Magang (otomatis terisi)
+            $lokasiFull = $instansi . (!empty($alamat) ? ' (' . $alamat . ')' : '');
+            $xml = preg_replace(
+                '/(Lokasi Magang<\/w:t>.*?<w:t>:<\/w:t>.*?<w:tc>.*?<w:t>)[…\.\s]+(<\/w:t>)/s',
+                '${1}' . htmlspecialchars($lokasiFull) . '${2}',
+                $xml
+            );
+
+            // Penanggungjawab DPL jika ada
+            if (!empty($dplName)) {
+                $xml = preg_replace(
+                    '/(Penanggungjawab<\/w:t>.*?<w:t>:<\/w:t>.*?<w:tc>.*?<w:t>)Dosen Pembimbing(<\/w:t>)/s',
+                    '${1}' . htmlspecialchars('Dosen Pembimbing (' . $dplName . ')') . '${2}',
+                    $xml
+                );
+            }
+
+            // Tanggal pelaksanaan magang: mulai tanggal … s.d …
+            $xml = preg_replace(
+                '/(mulai tanggal <\/w:t><\/w:r><w:r[^>]*><w:t>)[…\.\s]*(<\/w:t><\/w:r><w:r><w:t xml:space="preserve"> s\.d <\/w:t><\/w:r><w:r[^>]*><w:t xml:space="preserve">)[…\.\s]*( <\/w:t>)/s',
+                '${1}' . htmlspecialchars($startDate) . '${2}' . htmlspecialchars($endDate) . '${3}',
+                $xml
+            );
+
+            $zip->addFromString('word/document.xml', $xml);
+            $zip->close();
+
+            $downloadName = 'Surat_Permohonan_Izin_Magang_' . ($pengajuan->user->nim ?? 'Kelompok') . '.docx';
+            return response()->download($tempFile, $downloadName)->deleteFileAfterSend(true);
+        }
+
+        return response()->download($templatePath, 'Surat_Permohonan_Izin_Magang.docx');
+    }
+
+    protected function getJurusanSemester($user): string
+    {
+        $prodiName = $user->prodi->name ?? 'Sistem Informasi';
+        $semester = $user->semester_roman ?? 'VII';
+
+        return $prodiName . ' / ' . $semester;
     }
 
     public function uploadLaporanAkhir(Request $request, string $id)
