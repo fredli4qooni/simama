@@ -151,7 +151,7 @@
                                     <span class="w-6 h-6 rounded-full flex items-center justify-center text-xs font-black {{ $step >= 2 ? 'bg-uin text-white' : 'bg-gray-200 text-gray-600' }}">2</span>
                                     <span class="text-xs font-bold">Surat Pengantar</span>
                                 </div>
-                                <p class="text-[11px] text-gray-500 line-clamp-2">Cetak format tanpa TTD & cap manual Prodi.</p>
+                                <p class="text-[11px] text-gray-500 line-clamp-2">Unduh format surat pengantar & blanko mitra.</p>
                             </div>
 
                             <div class="p-3.5 rounded-xl border {{ $step >= 3 ? ($step == 3 ? 'bg-uin-light/40 border-uin text-uin' : 'bg-gray-50 border-gray-200 text-gray-800') : 'bg-gray-50 border-gray-100 text-gray-400 opacity-60' }}">
@@ -414,18 +414,21 @@
                             <div class="space-y-1">
                                 <h5 class="text-xs font-black text-amber-900 uppercase tracking-wider">Aksi Dokumen Dinonaktifkan Sementara (Menunggu Verifikasi Admin)</h5>
                                 <p class="text-xs text-amber-800 leading-relaxed">
-                                    Pendaftaran magang Anda telah berhasil dikirim dan saat ini sedang menunggu verifikasi berkas pendaftaran (KTM, Transkrip Nilai, SPP, & IPK) oleh Admin Program Studi. Selama verifikasi berlangsung, aksi pengunduhan Surat Pengantar resmi dan pengunggahan berkas tindak lanjut di bawah dinonaktifkan sementara.
+                                    Pendaftaran magang Anda telah berhasil dikirim dan saat ini sedang menunggu verifikasi berkas pendaftaran (KTM, Transkrip Nilai, SPP, & IPK) oleh Admin Program Studi. Selama verifikasi berlangsung, aksi pengunduhan format berkas izin resmi dan pengunggahan berkas tindak lanjut di bawah dinonaktifkan sementara.
                                 </p>
                             </div>
                         </div>
                     @endif
+
+                    @php
+                        $dpl = $pengajuan->dplAssignment->dpl ?? null;
+                    @endphp
 
                     @if($isMandiri)
                         <!-- ALUR KHUSUS MAGANG MANDIRI: 2 KARTU UTAMA -->
                         @php
                             $buktiMandiri = $pengajuan->documents->where('type', 'BUKTI_MAGANG_MANDIRI')->first() 
                                          ?? $pengajuan->documents->where('type', 'SURAT_PENERIMAAN')->first();
-                            $dpl = $pengajuan->dplAssignment->dpl ?? null;
                         @endphp
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -500,12 +503,18 @@
                                 <div class="p-4 bg-white rounded-xl border border-blue-100 text-xs space-y-2">
                                     @if($dpl)
                                         <div class="flex items-center space-x-3">
-                                            <div class="w-9 h-9 rounded-full bg-uin text-white font-bold flex items-center justify-center">
-                                                {{ substr($dpl->name, 0, 1) }}
-                                            </div>
-                                            <div>
-                                                <p class="font-bold text-gray-900">{{ $dpl->name }}</p>
-                                                <p class="text-gray-500 text-[11px]">{{ $dpl->email }}</p>
+                                            @if($dpl->avatar_url)
+                                                <img src="{{ $dpl->avatar_url }}" alt="{{ $dpl->name }}" class="w-10 h-10 rounded-full object-cover ring-2 ring-blue-500/30 flex-shrink-0">
+                                            @else
+                                                <div class="w-10 h-10 rounded-full bg-uin text-white font-bold flex items-center justify-center text-sm shadow-xs flex-shrink-0">
+                                                    {{ substr($dpl->name, 0, 1) }}
+                                                </div>
+                                            @endif
+                                            <div class="overflow-hidden min-w-0">
+                                                <p class="font-bold text-gray-900 text-xs truncate" title="{{ $dpl->name }}">{{ $dpl->name }}</p>
+                                                <p class="text-gray-500 text-[11px] font-mono truncate">
+                                                    {{ !empty($dpl->nip) ? 'NIP. ' . $dpl->nip : (!empty($dpl->nim) ? 'NIDN. ' . $dpl->nim : $dpl->email) }}
+                                                </p>
                                             </div>
                                         </div>
                                         <div class="pt-2 border-t border-gray-100 flex items-center justify-between text-[11px]">
@@ -525,8 +534,8 @@
 
                         </div>
                     @else
-                        <!-- ALUR LENGKAP MAGANG PROGRAM STUDI: 3 KARTU -->
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- ALUR LENGKAP MAGANG PROGRAM STUDI: 4 KARTU TAHAPAN -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
 
                             <!-- KARTU 1: FASE 2 SURAT PENGANTAR & KUMPULAN FORMAT UNDUHAN -->
                             <div class="bg-gradient-to-br from-amber-50/60 to-orange-50/40 p-6 rounded-2xl border border-amber-200/80 flex flex-col justify-between space-y-4 hover:shadow-md transition-all">
@@ -559,15 +568,11 @@
                                             Surat Pengantar Belum Terbit
                                         </button>
                                     @else
-                                        <a href="{{ route('mahasiswa.pengajuan.surat_pengantar', $pengajuan->id) }}" target="_blank" class="w-full inline-flex items-center justify-center px-4 py-2.5 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-bold shadow-sm transition-colors">
+                                        <a href="{{ route('mahasiswa.izin_magang.template') }}" class="w-full inline-flex items-center justify-center px-4 py-2.5 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-bold shadow-sm transition-colors" title="Unduh format surat pengantar perizinan magang resmi (Word DOCX)">
                                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                                            Unduh Surat Pengantar (PDF)
+                                            Unduh Surat Pengantar (DOCX)
                                         </a>
                                     @endif
-                                    <a href="{{ route('mahasiswa.izin_magang.template') }}" class="w-full inline-flex items-center justify-center px-3 py-2 bg-white hover:bg-amber-100/70 text-amber-900 border border-amber-300 rounded-xl text-xs font-bold shadow-xs transition-colors" title="Unduh format perizinan magang resmi fakultas/akademik (Word DOCX)">
-                                        <svg class="w-4 h-4 mr-1.5 text-amber-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                                        Format Izin Magang Akademik (DOCX)
-                                    </a>
                                     <a href="{{ route('mahasiswa.penilaian_instansi.template') }}" class="w-full inline-flex items-center justify-center px-3 py-2 bg-white hover:bg-emerald-50 text-emerald-800 border border-emerald-300 rounded-xl text-xs font-bold shadow-xs transition-colors" title="Unduh blanko penilaian untuk pembimbing instansi (Word DOCX)">
                                         <svg class="w-4 h-4 mr-1.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                                         Blanko Nilai Mitra (DOCX)
@@ -598,11 +603,11 @@
                                     <h5 class="font-bold text-gray-900 text-base">Fase 3: Surat Balasan Instansi</h5>
                                     <p class="text-xs text-gray-600 mt-1.5 leading-relaxed">
                                         @if($pengajuan->status == 'pending')
-                                            Formulir unggah surat balasan persetujuan instansi akan dibuka pada <strong>Fase 3</strong> setelah pendaftaran diverifikasi & Surat Pengantar (Fase 2) diserahkan ke instansi.
+                                            Formulir unggah surat balasan persetujuan instansi akan dibuka pada <strong>Fase 3</strong> setelah pendaftaran diverifikasi & berkas izin magang (Fase 2) diserahkan ke instansi.
                                         @elseif($hasSuratBalasan)
                                             Surat balasan persetujuan instansi telah berhasil diunggah. Menunggu Admin Program Studi untuk <strong>menetapkan DPL (Fase 4)</strong>.
                                         @else
-                                            Setelah menyerahkan Surat Pengantar (Fase 2) dan menerima surat persetujuan dari instansi, unggah berkas surat balasan di sini agar Admin dapat <strong>menetapkan DPL</strong>.
+                                            Setelah menyerahkan berkas izin magang (Fase 2) dan menerima surat persetujuan dari instansi, unggah berkas surat balasan di sini agar Admin dapat <strong>menetapkan DPL</strong>.
                                         @endif
                                     </p>
                                 </div>
@@ -641,7 +646,89 @@
                                 @endif
                             </div>
 
-                            <!-- KARTU 3: FASE 5 LAPORAN AKHIR MAGANG -->
+                            <!-- KARTU 3: FASE 4 STATUS DOSEN PEMBIMBING LAPANGAN (DPL) -->
+                            <div class="bg-gradient-to-br from-teal-50/60 to-emerald-50/40 p-6 rounded-2xl border border-teal-200/80 flex flex-col justify-between space-y-4 hover:shadow-md transition-all">
+                                <div>
+                                    <div class="flex items-center justify-between mb-3">
+                                        <span class="p-2.5 bg-teal-100 text-teal-700 rounded-xl">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                            </svg>
+                                        </span>
+                                        @if($dpl)
+                                            <span class="px-2.5 py-0.5 text-[10px] font-bold uppercase rounded-full bg-emerald-100 text-emerald-800">Fase 4 • DPL Ditetapkan</span>
+                                        @elseif($pengajuan->status == 'pending')
+                                            <span class="px-2.5 py-0.5 text-[10px] font-bold uppercase rounded-full bg-gray-200 text-gray-700">Fase 4 • Terkunci</span>
+                                        @else
+                                            <span class="px-2.5 py-0.5 text-[10px] font-bold uppercase rounded-full bg-amber-100 text-amber-800">Fase 4 • Menunggu DPL</span>
+                                        @endif
+                                    </div>
+                                    <h5 class="font-bold text-gray-900 text-base">Fase 4: Pembimbing (DPL)</h5>
+                                    <p class="text-xs text-gray-600 mt-1.5 leading-relaxed">
+                                        @if($dpl)
+                                            DPL bertugas memantau kegiatan presensi GPS & logbook, serta memberikan nilai bimbingan akademis.
+                                        @elseif($hasSuratBalasan)
+                                            Surat balasan instansi telah diunggah. Menunggu Admin Program Studi menetapkan DPL untuk kelompok/pendaftaran Anda.
+                                        @else
+                                            Dosen Pembimbing Lapangan akan ditetapkan oleh Admin Prodi setelah berkas Fase 3 diunggah.
+                                        @endif
+                                    </p>
+                                </div>
+
+                                @if($dpl)
+                                    <div class="p-3.5 bg-white/95 rounded-xl border border-teal-200/90 shadow-2xs space-y-2.5">
+                                        <div class="flex items-center space-x-3">
+                                            @if($dpl->avatar_url)
+                                                <img src="{{ $dpl->avatar_url }}" alt="{{ $dpl->name }}" class="w-10 h-10 rounded-full object-cover ring-2 ring-teal-500/30 flex-shrink-0">
+                                            @else
+                                                <div class="w-10 h-10 rounded-full bg-teal-700 text-white font-bold flex items-center justify-center text-sm shadow-xs flex-shrink-0">
+                                                    {{ substr($dpl->name, 0, 1) }}
+                                                </div>
+                                            @endif
+                                            <div class="overflow-hidden min-w-0">
+                                                <p class="font-bold text-gray-900 text-xs truncate" title="{{ $dpl->name }}">{{ $dpl->name }}</p>
+                                                <p class="text-gray-500 text-[11px] font-mono truncate">
+                                                    {{ !empty($dpl->nip) ? 'NIP. ' . $dpl->nip : (!empty($dpl->nim) ? 'NIDN. ' . $dpl->nim : $dpl->email) }}
+                                                </p>
+                                                <p class="text-gray-400 text-[10px] truncate">{{ $dpl->email }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="pt-2 border-t border-gray-100 flex items-center justify-between text-[11px]">
+                                            <span class="text-gray-400">Status DPL:</span>
+                                            <span class="font-bold text-emerald-700 flex items-center">
+                                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5 animate-pulse"></span>
+                                                Bimbingan Aktif
+                                            </span>
+                                        </div>
+                                    </div>
+                                @elseif($pengajuan->status == 'pending')
+                                    <div class="p-3 bg-gray-100/80 rounded-xl border border-dashed border-gray-300 text-xs text-gray-500 space-y-1">
+                                        <div class="flex items-center text-gray-700 font-bold gap-1.5">
+                                            <svg class="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                                            </svg>
+                                            <span>Fase Belum Aktif</span>
+                                        </div>
+                                        <p class="text-[11px] text-gray-400 leading-relaxed">
+                                            Menunggu verifikasi berkas pendaftaran selesai.
+                                        </p>
+                                    </div>
+                                @else
+                                    <div class="p-3 bg-amber-50/80 rounded-xl border border-dashed border-amber-300 text-xs text-amber-900 space-y-1">
+                                        <div class="flex items-center text-amber-900 font-bold gap-1.5">
+                                            <svg class="w-4 h-4 text-amber-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                            </svg>
+                                            <span>Menunggu Penetapan Admin</span>
+                                        </div>
+                                        <p class="text-[11px] text-amber-700 leading-relaxed">
+                                            Admin Prodi akan segera menetapkan DPL untuk pengajuan Anda.
+                                        </p>
+                                    </div>
+                                @endif
+                            </div>
+
+                            <!-- KARTU 4: FASE 5 LAPORAN AKHIR MAGANG -->
                             @php
                                 $hasLaporan = $pengajuan->documents->where('type', 'LAPORAN_AKHIR')->first();
                                 $isFaseLaporan = in_array($pengajuan->status, ['active', 'selesai']);

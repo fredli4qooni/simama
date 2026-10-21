@@ -9,7 +9,7 @@
                 </span>
                 Profil Pengguna & Keamanan
             </h2>
-            <p class="text-sm text-gray-500 mt-1">Kelola data informasi identitas akun, unggah foto profil, data akademik, dan kata sandi Anda.</p>
+            <p class="text-sm text-gray-500 mt-1">Kelola data informasi identitas akun, unggah foto profil{{ $user->role === 'mahasiswa' ? ', data akademik,' : '' }} dan kata sandi Anda.</p>
         </div>
     </x-slot>
 

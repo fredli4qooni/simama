@@ -43,9 +43,17 @@ class ProfileController extends Controller
         $fillData = [
             'name' => $validatedData['name'],
             'email' => $validatedData['email'],
-            'total_sks' => $validatedData['total_sks'],
-            'ipk' => $validatedData['ipk'],
         ];
+
+        $isMahasiswa = $user && !in_array($user->role, ['admin', 'dpl', 'admin_fakultas']);
+        if ($isMahasiswa) {
+            if (array_key_exists('total_sks', $validatedData)) {
+                $fillData['total_sks'] = $validatedData['total_sks'];
+            }
+            if (array_key_exists('ipk', $validatedData)) {
+                $fillData['ipk'] = $validatedData['ipk'];
+            }
+        }
 
         if (array_key_exists('nim', $validatedData)) {
             $fillData['nim'] = $validatedData['nim'];

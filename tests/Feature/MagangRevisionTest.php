@@ -1277,7 +1277,7 @@ class MagangRevisionTest extends TestCase
         $approvedViewResponse = $this->actingAs($mahasiswa)->get(route('mahasiswa.pengajuan.index'));
         $approvedViewResponse->assertOk();
         $approvedViewResponse->assertSee('Format Siap Cetak');
-        $approvedViewResponse->assertSee('Unduh Surat Pengantar (PDF)');
+        $approvedViewResponse->assertSee('Unduh Surat Pengantar (DOCX)');
         $approvedViewResponse->assertDontSee('Surat Pengantar Belum Terbit');
 
         $approvedDownloadResponse = $this->actingAs($mahasiswa)->get(route('mahasiswa.pengajuan.surat_pengantar', $pengajuan->id));
@@ -1291,6 +1291,58 @@ class MagangRevisionTest extends TestCase
             'application_id' => $pengajuan->id,
             'type' => 'SURAT_PENERIMAAN',
         ]);
+    }
+
+    public function test_mahasiswa_can_view_assigned_dpl_on_pengajuan_and_dashboard(): void
+    {
+        $prodi = Prodi::firstOrCreate(['id' => 1], ['nama_prodi' => 'Sistem Informasi']);
+        $mahasiswa = User::factory()->create([
+            'role' => 'mahasiswa',
+            'prodi_id' => $prodi->id,
+            'total_sks' => 120,
+            'ipk' => 3.50,
+        ]);
+        $dpl = User::factory()->create([
+            'name' => 'Dr. Budi Santoso, M.Kom',
+            'email' => 'budi.dpl@uin.ac.id',
+            'role' => 'dpl',
+            'prodi_id' => $prodi->id,
+            'nip' => '198501012010121001',
+        ]);
+        $pengajuan = MagangApplication::create([
+            'user_id' => $mahasiswa->id,
+            'prodi_id' => $prodi->id,
+            'instansi' => 'PT Solusi Teknologi Indonesia',
+            'alamat' => 'Jl. Raden Intan No. 45',
+            'alamat_instansi' => 'Jl. Raden Intan No. 45',
+            'start_date' => now()->toDateString(),
+            'end_date' => now()->addMonths(2)->toDateString(),
+            'status' => 'active',
+            'jenis_magang' => 'prodi',
+            'is_group' => false,
+        ]);
+
+        DplAssignment::create([
+            'application_id' => $pengajuan->id,
+            'dpl_user_id' => $dpl->id,
+        ]);
+
+        // Verify DPL visible on Pengajuan Index (Fase 4 Card)
+        $pengajuanResponse = $this->actingAs($mahasiswa)->get(route('mahasiswa.pengajuan.index'));
+        $pengajuanResponse->assertOk();
+        $pengajuanResponse->assertSee('Fase 4: Pembimbing (DPL)');
+        $pengajuanResponse->assertSee('Fase 4 • DPL Ditetapkan');
+        $pengajuanResponse->assertSee('Dr. Budi Santoso, M.Kom');
+        $pengajuanResponse->assertSee('198501012010121001');
+
+        // Verify DPL visible on Mahasiswa Dashboard
+        $dashboardResponse = $this->actingAs($mahasiswa)->get(route('mahasiswa.dashboard'));
+        $dashboardResponse->assertOk();
+        $dashboardResponse->assertSee('PT Solusi Teknologi Indonesia');
+        $dashboardResponse->assertSee('Dosen Pembimbing (DPL)');
+        $dashboardResponse->assertSee('Dr. Budi Santoso, M.Kom');
+        $dashboardResponse->assertSee('198501012010121001');
+        $dashboardResponse->assertSee('budi.dpl@uin.ac.id');
     }
 }
 

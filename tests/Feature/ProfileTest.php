@@ -230,4 +230,72 @@ class ProfileTest extends TestCase
         $user->refresh();
         $this->assertEquals(110, $user->total_sks);
     }
+
+    public function test_admin_and_dpl_can_update_profile_without_sks_and_ipk(): void
+    {
+        $admin = User::factory()->create([
+            'role' => 'admin',
+            'name' => 'Admin Test',
+            'nip' => '198501012010121001',
+        ]);
+
+        $responseAdmin = $this
+            ->actingAs($admin)
+            ->patch('/profile', [
+                'name' => 'Admin Updated Name',
+                'email' => 'admin_updated@example.com',
+                'nip' => '198501012010121001',
+            ]);
+
+        $responseAdmin->assertSessionHasNoErrors();
+        $responseAdmin->assertRedirect('/profile');
+        $admin->refresh();
+        $this->assertSame('Admin Updated Name', $admin->name);
+        $this->assertSame('admin_updated@example.com', $admin->email);
+
+        $dpl = User::factory()->create([
+            'role' => 'dpl',
+            'name' => 'DPL Test',
+            'nip' => '198802022015041002',
+        ]);
+
+        $responseDpl = $this
+            ->actingAs($dpl)
+            ->patch('/profile', [
+                'name' => 'DPL Updated Name',
+                'email' => 'dpl_updated@example.com',
+                'nip' => '198802022015041002',
+            ]);
+
+        $responseDpl->assertSessionHasNoErrors();
+        $responseDpl->assertRedirect('/profile');
+        $dpl->refresh();
+        $this->assertSame('DPL Updated Name', $dpl->name);
+        $this->assertSame('dpl_updated@example.com', $dpl->email);
+    }
+
+    public function test_admin_and_dpl_do_not_see_sks_and_ipk_fields_on_profile_page(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        $response = $this->actingAs($admin)->get('/profile');
+        $response->assertOk();
+        $response->assertDontSee('Total SKS Ditempuh *');
+        $response->assertDontSee('IPK Terakhir *');
+
+        $dpl = User::factory()->create(['role' => 'dpl']);
+        $responseDpl = $this->actingAs($dpl)->get('/profile');
+        $responseDpl->assertOk();
+        $responseDpl->assertDontSee('Total SKS Ditempuh *');
+        $responseDpl->assertDontSee('IPK Terakhir *');
+
+        $mahasiswa = User::factory()->create([
+            'role' => 'mahasiswa',
+            'total_sks' => 120,
+            'ipk' => 3.50,
+        ]);
+        $responseMahasiswa = $this->actingAs($mahasiswa)->get('/profile');
+        $responseMahasiswa->assertOk();
+        $responseMahasiswa->assertSee('Total SKS Ditempuh *');
+        $responseMahasiswa->assertSee('IPK Terakhir *');
+    }
 }

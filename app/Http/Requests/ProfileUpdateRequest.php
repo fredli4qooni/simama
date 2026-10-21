@@ -17,17 +17,25 @@ class ProfileUpdateRequest extends FormRequest
     public function rules(): array
     {
         $user = $this->user();
-        $isMahasiswa = $user && $user->role === 'mahasiswa';
+        $isMahasiswa = $user && !in_array($user->role, ['admin', 'dpl', 'admin_fakultas']);
 
-        return [
+        $rules = [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique(User::class)->ignore($user?->id)],
             'nim' => ['nullable', 'string', 'max:50', Rule::unique(User::class)->ignore($user?->id)],
             'nip' => ['nullable', 'string', 'max:50', Rule::unique(User::class)->ignore($user?->id)],
             'avatar' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
-            'total_sks' => ['required', 'integer', $isMahasiswa ? 'min:110' : 'min:0'],
-            'ipk' => ['required', 'numeric', $isMahasiswa ? 'min:2.75' : 'min:0', 'max:4.00'],
         ];
+
+        if ($isMahasiswa) {
+            $rules['total_sks'] = ['required', 'integer', 'min:110'];
+            $rules['ipk'] = ['required', 'numeric', 'min:2.75', 'max:4.00'];
+        } else {
+            $rules['total_sks'] = ['nullable'];
+            $rules['ipk'] = ['nullable'];
+        }
+
+        return $rules;
     }
 
     /**

@@ -23,7 +23,11 @@
                     Informasi Data Akun & Foto Profil
                 </h3>
                 <p class="text-xs text-gray-500 mt-0.5">
-                    Unggah foto formal mahasiswa, perbarui nama, NIM/NPM, email, serta capaian akademik.
+                    @if($user->role === 'mahasiswa')
+                        Unggah foto formal mahasiswa, perbarui nama, NIM/NPM, email, serta capaian akademik.
+                    @else
+                        Perbarui nama, NIP/NIDN, email, serta foto profil akun Anda.
+                    @endif
                 </p>
             </div>
         </div>
@@ -39,7 +43,7 @@
 
         <!-- FOTO PROFIL UPLOAD & PREVIEW -->
         <div class="p-4 bg-gray-50/80 rounded-2xl border border-gray-200 space-y-3">
-            <label class="block text-xs font-bold text-gray-700">Foto Profil Mahasiswa</label>
+            <label class="block text-xs font-bold text-gray-700">Foto Profil {{ $user->role === 'mahasiswa' ? 'Mahasiswa' : 'Pengguna' }}</label>
             
             <div class="flex items-center space-x-4">
                 <!-- Preview Image -->
@@ -110,21 +114,23 @@
             @endif
         </div>
 
+        @if($user->role === 'mahasiswa')
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
             <div>
                 <label for="total_sks" class="block text-xs font-bold text-gray-700 mb-1">Total SKS Ditempuh *</label>
-                <input id="total_sks" name="total_sks" type="number" min="{{ $user->role === 'mahasiswa' ? '110' : '0' }}" class="w-full text-xs rounded-xl border-gray-300 shadow-xs focus:border-uin focus:ring-uin p-2.5" value="{{ old('total_sks', $user->total_sks) }}" required />
+                <input id="total_sks" name="total_sks" type="number" min="110" class="w-full text-xs rounded-xl border-gray-300 shadow-xs focus:border-uin focus:ring-uin p-2.5" value="{{ old('total_sks', $user->total_sks) }}" required />
                 <p class="text-[11px] text-gray-400 mt-0.5">Syarat magang min. 110 SKS (setara semester 6 ke atas)</p>
                 <x-input-error class="mt-1 text-xs" :messages="$errors->get('total_sks')" />
             </div>
 
             <div>
                 <label for="ipk" class="block text-xs font-bold text-gray-700 mb-1">IPK Terakhir *</label>
-                <input id="ipk" name="ipk" type="number" step="0.01" min="{{ $user->role === 'mahasiswa' ? '2.75' : '0' }}" max="4.00" class="w-full text-xs rounded-xl border-gray-300 shadow-xs focus:border-uin focus:ring-uin p-2.5" value="{{ old('ipk', $user->ipk) }}" required />
+                <input id="ipk" name="ipk" type="number" step="0.01" min="2.75" max="4.00" class="w-full text-xs rounded-xl border-gray-300 shadow-xs focus:border-uin focus:ring-uin p-2.5" value="{{ old('ipk', $user->ipk) }}" required />
                 <p class="text-[11px] text-gray-400 mt-0.5">Syarat magang min. IPK 2.75 (Skala 0.00 - 4.00)</p>
                 <x-input-error class="mt-1 text-xs" :messages="$errors->get('ipk')" />
             </div>
         </div>
+        @endif
 
         <div class="flex items-center justify-between pt-4 border-t border-gray-100">
             @if (session('status') === 'profile-updated')

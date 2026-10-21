@@ -123,6 +123,98 @@
                 </div>
             @endif
 
+            <!-- INFORMASI STATUS MAGANG & DOSEN PEMBIMBING (DPL) -->
+            @if(auth()->user()->role === 'mahasiswa' && $mhsPengajuan)
+                @php
+                    $mhsDpl = $mhsPengajuan->dplAssignment->dpl ?? null;
+                @endphp
+                <div class="bg-white overflow-hidden shadow-xs rounded-2xl border border-gray-100 p-6">
+                    <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+                        <!-- Informasi Instansi & Status Magang -->
+                        <div class="space-y-2.5 flex-1">
+                            <div class="flex flex-wrap items-center gap-2">
+                                <span class="px-2.5 py-0.5 text-[10px] font-bold uppercase rounded-full {{ $mhsPengajuan->jenis_magang === 'mandiri' ? 'bg-purple-100 text-purple-800' : 'bg-uin-light text-uin' }}">
+                                    {{ $mhsPengajuan->jenis_magang === 'mandiri' ? 'Magang Mandiri' : 'Magang Program Studi' }}
+                                </span>
+                                @if($mhsPengajuan->status == 'pending')
+                                    <span class="inline-flex items-center px-2.5 py-0.5 bg-amber-50 text-amber-800 rounded-full text-[10px] font-bold border border-amber-200">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-amber-500 mr-1.5 animate-pulse"></span> Menunggu Verifikasi Berkas
+                                    </span>
+                                @elseif($mhsPengajuan->status == 'approved')
+                                    <span class="inline-flex items-center px-2.5 py-0.5 bg-blue-50 text-blue-800 rounded-full text-[10px] font-bold border border-blue-200">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-blue-500 mr-1.5 animate-pulse"></span> Disetujui (Menunggu Penetapan DPL)
+                                    </span>
+                                @elseif($mhsPengajuan->status == 'active')
+                                    <span class="inline-flex items-center px-2.5 py-0.5 bg-emerald-50 text-emerald-800 rounded-full text-[10px] font-bold border border-emerald-200">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5 animate-ping"></span> Magang Berjalan Aktif
+                                    </span>
+                                @elseif($mhsPengajuan->status == 'selesai')
+                                    <span class="inline-flex items-center px-2.5 py-0.5 bg-purple-50 text-purple-800 rounded-full text-[10px] font-bold border border-purple-200">
+                                        ✓ Kegiatan Selesai & Terverifikasi
+                                    </span>
+                                @endif
+                            </div>
+                            
+                            <div>
+                                <h3 class="text-xl font-black text-gray-900 tracking-tight">{{ $mhsPengajuan->instansi }}</h3>
+                                <p class="text-xs text-gray-500 flex items-center mt-1">
+                                    <svg class="w-4 h-4 mr-1 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path></svg>
+                                    {{ $mhsPengajuan->alamat ?? $mhsPengajuan->alamat_instansi ?? 'Alamat instansi mitra' }}
+                                </p>
+                            </div>
+
+                            <p class="text-xs text-gray-500 font-mono">
+                                📅 {{ \Carbon\Carbon::parse($mhsPengajuan->start_date)->format('d M Y') }} - {{ \Carbon\Carbon::parse($mhsPengajuan->end_date)->format('d M Y') }}
+                            </p>
+                        </div>
+
+                        <!-- Profil DPL Card -->
+                        <div class="w-full lg:w-80 p-4 rounded-2xl border {{ $mhsDpl ? 'bg-gradient-to-br from-blue-50/80 to-indigo-50/50 border-blue-200/90 shadow-2xs' : 'bg-gray-50/80 border-gray-200/80' }}">
+                            <div class="flex items-center justify-between mb-2.5">
+                                <span class="text-[10px] font-black uppercase tracking-wider text-gray-500 flex items-center gap-1.5">
+                                    <svg class="w-3.5 h-3.5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                                    Dosen Pembimbing (DPL)
+                                </span>
+                                @if($mhsDpl)
+                                    <span class="px-2 py-0.5 text-[9px] font-bold uppercase rounded-full bg-emerald-100 text-emerald-800">Ditetapkan</span>
+                                @else
+                                    <span class="px-2 py-0.5 text-[9px] font-bold uppercase rounded-full bg-amber-100 text-amber-800">Menunggu</span>
+                                @endif
+                            </div>
+
+                            @if($mhsDpl)
+                                <div class="flex items-center space-x-3">
+                                    @if($mhsDpl->avatar_url)
+                                        <img src="{{ $mhsDpl->avatar_url }}" alt="{{ $mhsDpl->name }}" class="w-11 h-11 rounded-full object-cover ring-2 ring-blue-500/30 shadow-xs flex-shrink-0">
+                                    @else
+                                        <div class="w-11 h-11 rounded-full bg-uin text-white font-bold flex items-center justify-center text-sm shadow-xs flex-shrink-0">
+                                            {{ substr($mhsDpl->name, 0, 1) }}
+                                        </div>
+                                    @endif
+                                    <div class="overflow-hidden min-w-0">
+                                        <p class="font-bold text-gray-900 text-xs truncate" title="{{ $mhsDpl->name }}">{{ $mhsDpl->name }}</p>
+                                        <p class="text-gray-600 text-[11px] font-mono truncate">
+                                            {{ !empty($mhsDpl->nip) ? 'NIP. ' . $mhsDpl->nip : (!empty($mhsDpl->nim) ? 'NIDN. ' . $mhsDpl->nim : '') }}
+                                        </p>
+                                        <p class="text-gray-400 text-[10px] truncate">{{ $mhsDpl->email }}</p>
+                                    </div>
+                                </div>
+                            @else
+                                <div class="flex items-center space-x-3 py-1 text-gray-500">
+                                    <div class="w-10 h-10 rounded-full bg-gray-200/90 text-gray-400 flex items-center justify-center flex-shrink-0">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    </div>
+                                    <div>
+                                        <p class="font-bold text-gray-700 text-xs">DPL Belum Ditetapkan</p>
+                                        <p class="text-[10px] text-gray-400 mt-0.5 leading-tight">Admin Prodi akan menetapkan DPL setelah berkas lengkap.</p>
+                                    </div>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            @endif
+
             <!-- Dashboard Mahasiswa -->
             @if(auth()->user()->role === 'mahasiswa')
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
