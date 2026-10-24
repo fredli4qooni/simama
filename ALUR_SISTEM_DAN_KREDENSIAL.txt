@@ -90,8 +90,9 @@ Tahap 2: Verifikasi Berkas oleh Admin Prodi
   - Jika disetujui, status berubah menjadi: "Approved".
 
 Tahap 3: Surat Pengantar & Konfirmasi Mitra
-  - Mahasiswa yang disetujui dapat mengunduh "Surat Pengantar Magang" (PDF)
-    resmi bertandatangan Ketua Program Studi Sistem Informasi.
+  - Mahasiswa yang disetujui dapat mengunduh dokumen resmi "Surat Permohonan Izin Magang"
+    berformat .DOCX otomatis (nomor dinamis WD1/PP.00.[d/m/Y], tanggal hari ini, dan tabel peserta terisi)
+    serta opsi cetak langsung Web Print.
   - Mahasiswa meminta stempel/ttd basah di fakultas/prodi lalu membawanya
     ke pimpinan instansi tempat magang.
   - Instansi menerbitkan Surat Balasan Persetujuan / Acceptance Letter.
@@ -105,8 +106,9 @@ Tahap 4: Penetapan DPL oleh Admin
 Tahap 5: Pelaksanaan Magang (Presensi & Logbook)
   - Mahasiswa login setiap hari kerja ke menu "Presensi" untuk mencatat
     kehadiran (Hadir/Izin/Sakit), jam, titik koordinat GPS, dan foto bukti.
-  - Mahasiswa mengisi menu "Logbook" mingguan mencakup aktivitas harian,
+  - Mahasiswa mengisi menu "Logbook" berkala mencakup aktivitas harian,
     analisis permasalahan, serta dokumentasi kegiatan.
+  - Mahasiswa dapat mencetak / mengunduh rekap "Logbook Kegiatan (PDF)" kapan saja secara berkala.
   - DPL login ke menu "Pemantauan Magang" untuk memantau rekap absensi serta
     memberikan feedback / arahan tertulis pada setiap logbook mahasiswa.
 
@@ -123,10 +125,13 @@ Tahap 7: Evaluasi & Perhitungan Nilai Otomatis oleh DPL
   - DPL memasukkan 2 komponen nilai:
     1. Nilai Dosen Pembimbing (DPL) (Bobot 50%) -> berdasarkan logbook & bimbingan
     2. Nilai Pembimbing Instansi Mitra (Bobot 50%) -> dari lembar nilai mitra
+  - DPL mengunggah berkas fisik bukti penilaian:
+    * Scan Formulir Nilai Instansi Mitra
+    * Scan Lembar Nilai Resmi DPL / Prodi
   - DPL menuliskan catatan/komentar evaluasi kinerja mahasiswa.
   - Sistem secara otomatis menghitung nilai rata-rata:
       NILAI AKHIR = (Nilai Instansi + Nilai DPL) / 2
-  - Status magang otomatis diperbarui menjadi: "Selesai".
+  - Status magang otomatis diperbarui menjadi: "Selesai" dan terbit (published_at).
   - DPL dapat langsung mencetak "Lembar Penilaian Magang (PDF)" resmi.
 
 Tahap 8: Transparansi Nilai Mahasiswa & Rekapitulasi Admin

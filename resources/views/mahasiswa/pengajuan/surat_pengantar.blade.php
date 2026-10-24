@@ -95,7 +95,7 @@
         <tr>
             <td style="width: 15%;">Nomor</td>
             <td style="width: 3%;">:</td>
-            <td>B-...../Un.16/FST/SI/PP.00.9/{{ date('m/Y') }}</td>
+            <td>B-..../Un.16/WD1/PP.00.{{ date('d/m/Y') }}</td>
             <td style="text-align: right;">Bandar Lampung, {{ \Carbon\Carbon::now()->isoFormat('D MMMM Y') }}</td>
         </tr>
         <tr>

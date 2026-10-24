@@ -190,8 +190,14 @@
                     <div class="p-6 md:p-8 bg-white border-b border-gray-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                         <div class="space-y-2.5">
                             <div class="flex items-center gap-2">
-                                <span class="px-2.5 py-1 text-xs font-bold rounded-lg tracking-wider uppercase {{ $pengajuan->is_group ? 'bg-indigo-50 text-indigo-700 border border-indigo-200' : 'bg-slate-100 text-slate-700 border border-slate-200' }}">
-                                    {{ $pengajuan->is_group ? '👥 Magang Kelompok' : '👤 Magang Individu' }}
+                                <span class="px-2.5 py-1 text-xs font-bold rounded-lg tracking-wider uppercase inline-flex items-center gap-1.5 {{ $pengajuan->is_group ? 'bg-indigo-50 text-indigo-700 border border-indigo-200' : 'bg-slate-100 text-slate-700 border border-slate-200' }}">
+                                    @if($pengajuan->is_group)
+                                        <svg class="w-3.5 h-3.5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                                        <span>Magang Kelompok</span>
+                                    @else
+                                        <svg class="w-3.5 h-3.5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                                        <span>Magang Individu</span>
+                                    @endif
                                 </span>
                                 <span class="px-2.5 py-1 text-xs font-bold rounded-lg tracking-wider uppercase {{ $pengajuan->jenis_magang === 'mandiri' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-blue-50 text-uin border border-blue-200' }}">
                                     {{ $pengajuan->jenis_magang === 'mandiri' ? 'MAGANG MANDIRI' : 'MAGANG PRODI' }}
@@ -219,12 +225,14 @@
                                     <span class="w-2 h-2 rounded-full bg-emerald-500 mr-2 animate-ping"></span> Magang Sedang Berjalan
                                 </span>
                             @elseif($pengajuan->status == 'selesai')
-                                <span class="inline-flex items-center px-3 py-1 bg-purple-50 text-purple-800 rounded-full text-xs font-bold border border-purple-200 shadow-2xs">
-                                    ✓ Selesai & Terverifikasi
+                                <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-purple-50 text-purple-800 rounded-full text-xs font-bold border border-purple-200 shadow-2xs">
+                                    <svg class="w-3.5 h-3.5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                    <span>Selesai & Terverifikasi</span>
                                 </span>
                             @endif
-                            <span class="text-[11px] text-gray-500 font-mono font-medium mt-0.5">
-                                📅 {{ \Carbon\Carbon::parse($pengajuan->start_date)->format('d M Y') }} - {{ \Carbon\Carbon::parse($pengajuan->end_date)->format('d M Y') }}
+                            <span class="text-[11px] text-gray-500 font-mono font-medium mt-0.5 inline-flex items-center gap-1.5">
+                                <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                <span>{{ \Carbon\Carbon::parse($pengajuan->start_date)->format('d M Y') }} - {{ \Carbon\Carbon::parse($pengajuan->end_date)->format('d M Y') }}</span>
                             </span>
                         </div>
                     </div>
@@ -565,8 +573,13 @@
                                         </div>
                                         <div class="pt-2 border-t border-gray-100 flex items-center justify-between text-[11px]">
                                             <span class="text-gray-400">Status Penilaian:</span>
-                                            <span class="font-bold {{ $pengajuan->evaluation ? 'text-emerald-600' : 'text-amber-600' }}">
-                                                {{ $pengajuan->evaluation ? '✓ Nilai Sudah Terbit' : 'Menunggu Input Nilai' }}
+                                            <span class="font-bold flex items-center gap-1 {{ $pengajuan->evaluation ? 'text-emerald-600' : 'text-amber-600' }}">
+                                                @if($pengajuan->evaluation)
+                                                    <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                                    <span>Nilai Sudah Terbit</span>
+                                                @else
+                                                    <span>Menunggu Input Nilai</span>
+                                                @endif
                                             </span>
                                         </div>
                                     @else
@@ -951,8 +964,9 @@
                                     <span class="text-xs font-black text-rose-600">{{ number_format(auth()->user()->ipk ?? 0, 2) }}</span>
                                 </div>
                             </div>
-                            <a href="{{ route('profile.edit') }}" class="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-bold shadow-sm transition whitespace-nowrap">
-                                Lengkapi Profil ➔
+                            <a href="{{ route('profile.edit') }}" class="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-bold shadow-sm transition whitespace-nowrap inline-flex items-center gap-1.5">
+                                <span>Lengkapi Profil</span>
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
                             </a>
                         </div>
                     </div>
@@ -1118,21 +1132,30 @@
 
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 <div class="p-4 bg-white rounded-xl border border-gray-200 shadow-xs space-y-1.5">
-                                    <label class="block text-xs font-bold text-gray-700">📄 Unggah Kartu Tanda Mahasiswa (KTM) *</label>
+                                    <label class="flex items-center gap-1.5 text-xs font-bold text-gray-700">
+                                        <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"/></svg>
+                                        <span>Unggah Kartu Tanda Mahasiswa (KTM) *</span>
+                                    </label>
                                     <p class="text-[11px] text-gray-400">Format PDF/JPG/PNG (Maks. 5MB)</p>
                                     <input type="file" name="leader_ktm" required accept=".pdf,.jpg,.jpeg,.png" class="block w-full text-xs text-gray-700 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 file:mr-2 file:py-1.5 file:px-3 file:border-0 file:text-xs file:font-bold file:bg-uin-light file:text-uin">
                                     <x-input-error :messages="$errors->get('leader_ktm')" class="text-xs" />
                                 </div>
 
                                 <div class="p-4 bg-white rounded-xl border border-gray-200 shadow-xs space-y-1.5">
-                                    <label class="block text-xs font-bold text-gray-700">📑 Unggah Transkrip Nilai Akademik *</label>
+                                    <label class="flex items-center gap-1.5 text-xs font-bold text-gray-700">
+                                        <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                                        <span>Unggah Transkrip Nilai Akademik *</span>
+                                    </label>
                                     <p class="text-[11px] text-gray-400">Min. 110 SKS & IPK 2.75 (Maks. 5MB)</p>
                                     <input type="file" name="leader_transkrip" required accept=".pdf,.jpg,.jpeg,.png" class="block w-full text-xs text-gray-700 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 file:mr-2 file:py-1.5 file:px-3 file:border-0 file:text-xs file:font-bold file:bg-uin-light file:text-uin">
                                     <x-input-error :messages="$errors->get('leader_transkrip')" class="text-xs" />
                                 </div>
 
                                 <div class="p-4 bg-white rounded-xl border border-gray-200 shadow-xs space-y-1.5">
-                                    <label class="block text-xs font-bold text-gray-700">💳 Slip Pembayaran SPP / UKT *</label>
+                                    <label class="flex items-center gap-1.5 text-xs font-bold text-gray-700">
+                                        <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+                                        <span>Slip Pembayaran SPP / UKT *</span>
+                                    </label>
                                     <p class="text-[11px] text-gray-400">Bukti lunas semester aktif (Maks. 5MB)</p>
                                     <input type="file" name="leader_spp" required accept=".pdf,.jpg,.jpeg,.png" class="block w-full text-xs text-gray-700 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 file:mr-2 file:py-1.5 file:px-3 file:border-0 file:text-xs file:font-bold file:bg-uin-light file:text-uin">
                                     <x-input-error :messages="$errors->get('leader_spp')" class="text-xs" />
@@ -1142,7 +1165,10 @@
                             <!-- KHUSUS MANDIRI: OPSI UPLOAD BUKTI LANGSUNG SAAT DAFTAR -->
                             <div x-show="jenisMagang === 'mandiri'" class="p-4 bg-white rounded-xl border-2 border-dashed border-emerald-300 space-y-1.5 mt-2">
                                 <div class="flex items-center justify-between">
-                                    <label class="block text-xs font-bold text-emerald-800">📋 Berkas Bukti Magang Mandiri / Surat Penerimaan (Opsional Saat Ini)</label>
+                                    <label class="flex items-center gap-1.5 text-xs font-bold text-emerald-800">
+                                        <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+                                        <span>Berkas Bukti Magang Mandiri / Surat Penerimaan (Opsional Saat Ini)</span>
+                                    </label>
                                     <span class="text-[10px] text-emerald-600 font-semibold bg-emerald-50 px-2 py-0.5 rounded">Maks. 10MB</span>
                                 </div>
                                 <p class="text-[11px] text-gray-500">Anda dapat melampirkannya sekarang, atau mengunggahnya nanti di halaman dashboard setelah pendaftaran.</p>

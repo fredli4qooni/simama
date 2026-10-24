@@ -81,7 +81,10 @@
                 @endphp
                 @if($laporanAkhir)
                     <div class="mt-4 pt-3 border-t border-gray-100 flex items-center justify-between">
-                        <span class="text-xs font-semibold text-purple-900">📄 Mahasiswa telah mengunggah Laporan Akhir Magang.</span>
+                        <span class="text-xs font-semibold text-purple-900 inline-flex items-center gap-1.5">
+                            <svg class="w-4 h-4 text-purple-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                            <span>Mahasiswa telah mengunggah Laporan Akhir Magang.</span>
+                        </span>
                         <a href="{{ asset('storage/' . $laporanAkhir->file_path) }}" target="_blank" class="px-3 py-1 bg-purple-600 hover:bg-purple-700 text-white rounded text-xs font-bold shadow-sm transition">
                             Unduh Laporan Akhir (PDF)
                         </a>
@@ -116,8 +119,9 @@
                                         </td>
                                         <td class="px-4 py-3 text-right">
                                             @if($abs->latitude && $abs->longitude)
-                                                <a href="https://maps.google.com/?q={{ $abs->latitude }},{{ $abs->longitude }}" target="_blank" class="text-[11px] text-uin hover:underline block font-mono font-semibold">
-                                                    📍 {{ number_format((float)$abs->latitude, 3) }}, {{ number_format((float)$abs->longitude, 3) }}
+                                                <a href="https://maps.google.com/?q={{ $abs->latitude }},{{ $abs->longitude }}" target="_blank" class="text-[11px] text-uin hover:underline inline-flex items-center justify-end gap-1 font-mono font-semibold">
+                                                    <svg class="w-3.5 h-3.5 text-rose-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                                                    <span>{{ number_format((float)$abs->latitude, 3) }}, {{ number_format((float)$abs->longitude, 3) }}</span>
                                                 </a>
                                             @else
                                                 <span class="text-[11px] text-gray-400">-</span>

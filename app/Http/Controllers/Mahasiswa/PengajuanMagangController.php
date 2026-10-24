@@ -398,31 +398,28 @@ class PengajuanMagangController extends Controller
                 ->first();
         }
 
-        if ($pengajuan) {
-            return $this->generateSuratPengantarDocx($pengajuan, $filePath);
-        }
-
-        return response()->download($filePath, 'Surat_Permohonan_Izin_Magang.docx');
+        return $this->generateSuratPengantarDocx($pengajuan, $filePath);
     }
 
-    protected function generateSuratPengantarDocx(MagangApplication $pengajuan, string $templatePath)
+    protected function generateSuratPengantarDocx(?MagangApplication $pengajuan, string $templatePath)
     {
         Carbon::setLocale('id');
 
         $tanggalHariIni = Carbon::now()->isoFormat('D MMMM Y');
-        $instansi = $pengajuan->instansi ?? '-';
+        $nomorSurat = 'B-..../Un.16/WD1/PP.00.' . Carbon::now()->format('d/m/Y');
+        $instansi = $pengajuan->instansi ?? '………………………………..';
         $alamat = $pengajuan->alamat ?? $pengajuan->alamat_instansi ?? '';
-        $tujuan = (stripos($instansi, 'pimpinan') === 0 || stripos($instansi, 'kepala') === 0 || stripos($instansi, 'direktur') === 0)
+        $tujuan = $pengajuan ? ((stripos($instansi, 'pimpinan') === 0 || stripos($instansi, 'kepala') === 0 || stripos($instansi, 'direktur') === 0)
             ? $instansi
-            : 'Pimpinan ' . $instansi;
+            : 'Pimpinan ' . $instansi) : '………………………………..';
 
-        $startDate = $pengajuan->start_date ? Carbon::parse($pengajuan->start_date)->isoFormat('D MMMM Y') : '-';
-        $endDate = $pengajuan->end_date ? Carbon::parse($pengajuan->end_date)->isoFormat('D MMMM Y') : '-';
-        $dplName = $pengajuan->dplAssignment?->dpl?->name;
+        $startDate = $pengajuan?->start_date ? Carbon::parse($pengajuan->start_date)->isoFormat('D MMMM Y') : '…';
+        $endDate = $pengajuan?->end_date ? Carbon::parse($pengajuan->end_date)->isoFormat('D MMMM Y') : '…';
+        $dplName = $pengajuan?->dplAssignment?->dpl?->name;
 
         // Siapkan list data mahasiswa
         $students = [];
-        if ($pengajuan->is_group && $pengajuan->members && $pengajuan->members->count() > 0) {
+        if ($pengajuan && $pengajuan->is_group && $pengajuan->members && $pengajuan->members->count() > 0) {
             $sortedMembers = $pengajuan->members->sortByDesc('is_leader');
             foreach ($sortedMembers as $member) {
                 $u = $member->user;
@@ -436,7 +433,7 @@ class PengajuanMagangController extends Controller
             }
         }
 
-        if (empty($students) && $pengajuan->user) {
+        if (empty($students) && $pengajuan && $pengajuan->user) {
             $students[] = [
                 'name' => $pengajuan->user->name,
                 'nim' => $pengajuan->user->nim ?? '-',
@@ -449,12 +446,18 @@ class PengajuanMagangController extends Controller
         if (!file_exists($tempDir)) {
             mkdir($tempDir, 0755, true);
         }
+        $nimSuffix = $pengajuan?->user?->nim ?? 'Template';
         $tempFile = $tempDir . '/Surat_Permohonan_Izin_Magang_' . uniqid() . '.docx';
         copy($templatePath, $tempFile);
 
         $zip = new ZipArchive();
         if ($zip->open($tempFile) === true) {
             $xml = $zip->getFromName('word/document.xml');
+
+            // 0. Nomor Surat: B-..../Un.16/WD1/PP.00.(tanggal/bulan/tahun)
+            $nomorPattern = '/<w:p\b[^>]*>(?:(?!<\/w:p>).)*?B-.*?(?:\/DST\/PP|\/WD1\/PP).*?<\/w:p>/s';
+            $nomorReplacement = '<w:p w14:paraId="5DC078D0" w14:textId="06B888C4" w:rsidR="005A2E36" w:rsidRDefault="00000000"><w:r><w:rPr><w:rFonts w:ascii="Times New Roman" w:hAnsi="Times New Roman"/><w:sz w:val="24"/><w:szCs w:val="24"/></w:rPr><w:t>' . htmlspecialchars($nomorSurat) . '</w:t></w:r></w:p>';
+            $xml = preg_replace($nomorPattern, $nomorReplacement, $xml);
 
             // 1. Bandar Lampung, … … ….. (diisi otomatis tanggal hari ini)
             $xml = preg_replace(
@@ -464,11 +467,13 @@ class PengajuanMagangController extends Controller
             );
 
             // 2. Kepada Yth: ……………………………….. (diisi otomatis tempat perusahaan/instansi dituju)
-            $xml = preg_replace(
-                '/(<w:t>Kepada Yth:<\/w:t>.*?<w:t>)[…\.\s]+(<\/w:t>)/s',
-                '${1}' . htmlspecialchars($tujuan) . '${2}',
-                $xml
-            );
+            if ($pengajuan) {
+                $xml = preg_replace(
+                    '/(<w:t>Kepada Yth:<\/w:t>.*?<w:t>)[…\.\s]+(<\/w:t>)/s',
+                    '${1}' . htmlspecialchars($tujuan) . '${2}',
+                    $xml
+                );
+            }
 
             // 3. Tabel Peserta: No | Nama | NPM | Jurusan/Semester (otomatis terisi)
             preg_match_all('/<w:tbl\b[^>]*>(?:(?!<w:tbl\b).)*?<\/w:tbl>/s', $xml, $allTables);
@@ -536,7 +541,9 @@ class PengajuanMagangController extends Controller
             $zip->addFromString('word/document.xml', $xml);
             $zip->close();
 
-            $downloadName = 'Surat_Permohonan_Izin_Magang_' . ($pengajuan->user->nim ?? 'Kelompok') . '.docx';
+            $downloadName = $pengajuan
+                ? 'Surat_Permohonan_Izin_Magang_' . ($pengajuan->user?->nim ?? 'Kelompok') . '.docx'
+                : 'Surat_Permohonan_Izin_Magang.docx';
             return response()->download($tempFile, $downloadName)->deleteFileAfterSend(true);
         }
 

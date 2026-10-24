@@ -211,7 +211,10 @@
                                                             Berkas Nilai Instansi Mitra
                                                         </label>
                                                         @if($item->evaluation && $item->evaluation->berkas_nilai_instansi)
-                                                            <span class="px-2 py-0.5 bg-emerald-100 text-emerald-800 text-[10px] font-bold rounded">✓ Terunggah</span>
+                                                            <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-emerald-100 text-emerald-800 text-[10px] font-bold rounded">
+                                                                <svg class="w-3 h-3 text-emerald-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+                                                                <span>Terunggah</span>
+                                                            </span>
                                                         @endif
                                                     </div>
                                                     <p class="text-[11px] text-gray-500">Scan / foto formulir nilai yang telah diisi & ditandatangani pembimbing instansi.</p>
@@ -235,7 +238,10 @@
                                                             Berkas Nilai DPL / Prodi
                                                         </label>
                                                         @if($item->evaluation && $item->evaluation->berkas_nilai_dpl)
-                                                            <span class="px-2 py-0.5 bg-blue-100 text-blue-800 text-[10px] font-bold rounded">✓ Terunggah</span>
+                                                            <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-blue-100 text-blue-800 text-[10px] font-bold rounded">
+                                                                <svg class="w-3 h-3 text-blue-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+                                                                <span>Terunggah</span>
+                                                            </span>
                                                         @endif
                                                     </div>
                                                     <p class="text-[11px] text-gray-500">Scan / lembar penilaian resmi DPL bertanda tangan sesuai format fakultas.</p>

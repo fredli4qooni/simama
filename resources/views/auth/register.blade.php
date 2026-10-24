@@ -115,8 +115,9 @@
 
         <!-- Tombol Submit -->
         <div class="pt-2">
-            <button type="submit" class="w-full inline-flex justify-center items-center px-4 py-3 bg-uin border border-transparent rounded-xl font-bold text-xs text-white uppercase tracking-wider hover:bg-uin-hover focus:bg-uin-hover active:bg-uin-hover focus:outline-none focus:ring-2 focus:ring-uin focus:ring-offset-2 transition ease-in-out duration-150 shadow-md">
-                Daftar Akun Mahasiswa ➔
+            <button type="submit" class="w-full inline-flex justify-center items-center gap-2 px-4 py-3 bg-uin border border-transparent rounded-xl font-bold text-xs text-white uppercase tracking-wider hover:bg-uin-hover focus:bg-uin-hover active:bg-uin-hover focus:outline-none focus:ring-2 focus:ring-uin focus:ring-offset-2 transition ease-in-out duration-150 shadow-md">
+                <span>Daftar Akun Mahasiswa</span>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
             </button>
         </div>
 

@@ -1463,6 +1463,41 @@ class MagangRevisionTest extends TestCase
         $dashboardResponse->assertSee('198501012010121001');
         $dashboardResponse->assertSee('budi.dpl@uin.ac.id');
     }
+
+    public function test_surat_pengantar_nomor_surat_is_dynamic_with_wd1_and_date(): void
+    {
+        $mahasiswa = User::factory()->create([
+            'role' => 'mahasiswa',
+            'prodi_id' => $this->prodi->id,
+            'nim' => '2111050017',
+        ]);
+
+        $pengajuan = MagangApplication::create([
+            'user_id' => $mahasiswa->id,
+            'prodi_id' => $this->prodi->id,
+            'is_group' => false,
+            'jenis_magang' => 'prodi',
+            'instansi' => 'PT. Inovasi Lampung',
+            'alamat' => 'Bandar Lampung',
+            'start_date' => now()->format('Y-m-d'),
+            'end_date' => now()->addMonths(2)->format('Y-m-d'),
+            'status' => 'approved',
+        ]);
+
+        $expectedNomor = 'B-..../Un.16/WD1/PP.00.' . date('d/m/Y');
+
+        // Check DOCX download contains dynamic nomor surat
+        $docxResponse = $this->actingAs($mahasiswa)->get(route('mahasiswa.izin_magang.template', ['pengajuan_id' => $pengajuan->id]));
+        $docxResponse->assertOk();
+        $tempPath = tempnam(sys_get_temp_dir(), 'docx_test');
+        file_put_contents($tempPath, $docxResponse->streamedContent());
+        $zip = new \ZipArchive();
+        $this->assertTrue($zip->open($tempPath));
+        $xml = $zip->getFromName('word/document.xml');
+        $this->assertStringContainsString($expectedNomor, $xml);
+        $zip->close();
+        @unlink($tempPath);
+    }
 }
 
 

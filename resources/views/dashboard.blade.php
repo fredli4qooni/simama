@@ -149,8 +149,9 @@
                                         <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5 animate-ping"></span> Magang Berjalan Aktif
                                     </span>
                                 @elseif($mhsPengajuan->status == 'selesai')
-                                    <span class="inline-flex items-center px-2.5 py-0.5 bg-purple-50 text-purple-800 rounded-full text-[10px] font-bold border border-purple-200">
-                                        ✓ Kegiatan Selesai & Terverifikasi
+                                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 bg-purple-50 text-purple-800 rounded-full text-[10px] font-bold border border-purple-200">
+                                        <svg class="w-3 h-3 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                                        <span>Kegiatan Selesai & Terverifikasi</span>
                                     </span>
                                 @endif
                             </div>
@@ -163,8 +164,9 @@
                                 </p>
                             </div>
 
-                            <p class="text-xs text-gray-500 font-mono">
-                                📅 {{ \Carbon\Carbon::parse($mhsPengajuan->start_date)->format('d M Y') }} - {{ \Carbon\Carbon::parse($mhsPengajuan->end_date)->format('d M Y') }}
+                            <p class="text-xs text-gray-500 font-mono flex items-center gap-1.5">
+                                <svg class="w-3.5 h-3.5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                <span>{{ \Carbon\Carbon::parse($mhsPengajuan->start_date)->format('d M Y') }} - {{ \Carbon\Carbon::parse($mhsPengajuan->end_date)->format('d M Y') }}</span>
                             </p>
                         </div>
 
