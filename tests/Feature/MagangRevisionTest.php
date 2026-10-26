@@ -9,6 +9,7 @@ use App\Models\DplAssignment;
 use App\Models\Evaluation;
 use App\Models\ApplicationDocument;
 use App\Models\Logbook;
+use App\Models\Attendance;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -1497,6 +1498,122 @@ class MagangRevisionTest extends TestCase
         $this->assertStringContainsString($expectedNomor, $xml);
         $zip->close();
         @unlink($tempPath);
+    }
+
+    public function test_user_model_has_npm_accessor_matching_nim(): void
+    {
+        $mahasiswa = User::factory()->create([
+            'role' => 'mahasiswa',
+            'prodi_id' => $this->prodi->id,
+            'nim' => '2211050099',
+        ]);
+
+        $this->assertEquals('2211050099', $mahasiswa->npm);
+        $this->assertEquals($mahasiswa->nim, $mahasiswa->npm);
+    }
+
+    public function test_mahasiswa_can_download_presensi_pdf(): void
+    {
+        $mahasiswa = User::factory()->create([
+            'role' => 'mahasiswa',
+            'prodi_id' => $this->prodi->id,
+            'nim' => '2111050055',
+            'name' => 'Ahmad Mahasiswa',
+        ]);
+
+        $pengajuan = MagangApplication::create([
+            'user_id' => $mahasiswa->id,
+            'prodi_id' => $this->prodi->id,
+            'is_group' => false,
+            'jenis_magang' => 'mandiri',
+            'instansi' => 'PT. Global Solusi Informatika',
+            'alamat' => 'Bandar Lampung',
+            'start_date' => now()->subDays(10)->format('Y-m-d'),
+            'end_date' => now()->addMonths(2)->format('Y-m-d'),
+            'status' => 'approved',
+        ]);
+
+        Attendance::create([
+            'user_id' => $mahasiswa->id,
+            'application_id' => $pengajuan->id,
+            'date' => now()->subDay()->format('Y-m-d'),
+            'type' => 'masuk',
+            'status' => 'hadir',
+            'latitude' => -5.38200,
+            'longitude' => 105.25800,
+            'keterangan' => 'Hadir tepat waktu di kantor',
+        ]);
+
+        Attendance::create([
+            'user_id' => $mahasiswa->id,
+            'application_id' => $pengajuan->id,
+            'date' => now()->subDay()->format('Y-m-d'),
+            'type' => 'pulang',
+            'status' => 'hadir',
+            'latitude' => -5.38210,
+            'longitude' => 105.25810,
+            'keterangan' => 'Selesai tugas harian',
+        ]);
+
+        $response1 = $this->actingAs($mahasiswa)->get(route('mahasiswa.presensi.cetak'));
+        $response1->assertOk();
+        $this->assertEquals('application/pdf', $response1->headers->get('content-type'));
+
+        $response2 = $this->actingAs($mahasiswa)->get(route('mahasiswa.pengajuan.presensi.cetak', $pengajuan->id));
+        $response2->assertOk();
+        $this->assertEquals('application/pdf', $response2->headers->get('content-type'));
+    }
+
+    public function test_dpl_can_download_mahasiswa_presensi_pdf(): void
+    {
+        $dpl = User::factory()->create([
+            'role' => 'dpl',
+            'prodi_id' => $this->prodi->id,
+            'name' => 'Dosen Pembimbing, M.Kom.',
+        ]);
+
+        $mahasiswa = User::factory()->create([
+            'role' => 'mahasiswa',
+            'prodi_id' => $this->prodi->id,
+            'nim' => '2111050077',
+            'name' => 'Bambang Mahasiswa',
+        ]);
+
+        $pengajuan = MagangApplication::create([
+            'user_id' => $mahasiswa->id,
+            'prodi_id' => $this->prodi->id,
+            'is_group' => false,
+            'jenis_magang' => 'prodi',
+            'instansi' => 'Dinas Kominfo Provinsi Lampung',
+            'alamat' => 'Bandar Lampung',
+            'start_date' => now()->subDays(5)->format('Y-m-d'),
+            'end_date' => now()->addMonths(2)->format('Y-m-d'),
+            'status' => 'approved',
+        ]);
+
+        DplAssignment::create([
+            'application_id' => $pengajuan->id,
+            'dpl_user_id' => $dpl->id,
+        ]);
+
+        Attendance::create([
+            'user_id' => $mahasiswa->id,
+            'application_id' => $pengajuan->id,
+            'date' => now()->subDay()->format('Y-m-d'),
+            'type' => 'masuk',
+            'status' => 'hadir',
+            'latitude' => -5.39000,
+            'longitude' => 105.26000,
+            'keterangan' => 'Tepat waktu',
+        ]);
+
+        $response = $this->actingAs($dpl)->get(route('dpl.pemantauan.presensi.cetak', [
+            'id' => $pengajuan->id,
+            'user_id' => $mahasiswa->id,
+        ]));
+
+        $response->assertOk();
+        $this->assertEquals('application/pdf', $response->headers->get('content-type'));
     }
 }
 

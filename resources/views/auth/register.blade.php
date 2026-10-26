@@ -24,17 +24,6 @@
             <x-input-error :messages="$errors->get('name')" class="mt-1" />
         </div>
 
-        <!-- NPM / NIM -->
-        <div>
-            <label for="nim" class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1">
-                NPM / NIM <span class="text-gray-400 font-normal normal-case">(Nomor Pokok Mahasiswa)</span>
-            </label>
-            <input id="nim" type="text" name="nim" value="{{ old('nim') }}" autocomplete="off"
-                placeholder="Contoh: 2271xxxx"
-                class="w-full text-xs rounded-xl border-gray-300 shadow-xs focus:border-uin focus:ring-uin transition py-2.5 px-3.5 text-gray-900 placeholder:text-gray-400 font-mono">
-            <x-input-error :messages="$errors->get('nim')" class="mt-1" />
-        </div>
-
         <!-- Alamat Email -->
         <div>
             <label for="email" class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1">

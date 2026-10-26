@@ -54,7 +54,7 @@
                                         @endif
                                         <div>
                                             <div class="font-bold text-gray-900">{{ $item->user->name }}{{ $item->is_group ? ' (Ketua)' : '' }}</div>
-                                            <div class="text-xs text-gray-500 mt-0.5">NIM: {{ $item->user->nim ?? '-' }}</div>
+                                            <div class="text-xs text-gray-500 mt-0.5">NPM: {{ $item->user->nim ?? '-' }}</div>
                                         </div>
                                     </div>
                                     @if($item->is_group && $item->members && $item->members->count() > 1)

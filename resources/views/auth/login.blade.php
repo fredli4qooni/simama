@@ -11,7 +11,7 @@
         @csrf
 
         <div>
-            <x-input-label for="email" value="Email atau NIM" />
+            <x-input-label for="email" value="Email" />
             <x-text-input id="email" class="block mt-1 w-full focus:border-uin focus:ring-uin" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" placeholder="Masukkan alamat email" />
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>

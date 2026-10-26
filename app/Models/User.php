@@ -32,6 +32,14 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
 
     /**
+     * Accessor untuk NPM Mahasiswa (alias dari atribut nim)
+     */
+    public function getNpmAttribute(): ?string
+    {
+        return $this->nim;
+    }
+
+    /**
      * Accessor untuk URL Avatar Pengguna
      */
     public function getAvatarUrlAttribute(): ?string

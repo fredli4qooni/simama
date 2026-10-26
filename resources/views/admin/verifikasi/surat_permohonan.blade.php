@@ -67,7 +67,7 @@
                 <td><b>{{ $pengajuan->user->name }}</b></td>
             </tr>
             <tr>
-                <td>NPM / NIM</td>
+                <td>NPM</td>
                 <td>:</td>
                 <td>{{ $pengajuan->user->nim ?? '-' }}</td>
             </tr>

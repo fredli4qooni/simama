@@ -36,7 +36,7 @@
             <tr>
                 <th width="5%">No</th>
                 <th width="22%">Nama Mahasiswa</th>
-                <th width="14%">NIM</th>
+                <th width="14%">NPM</th>
                 <th width="24%">Instansi Magang</th>
                 <th width="21%">Dosen Pembimbing</th>
                 <th width="7%">Nilai</th>

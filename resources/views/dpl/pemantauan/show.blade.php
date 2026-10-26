@@ -8,10 +8,6 @@
                 <p class="text-sm text-gray-500 mt-1">Pemantauan kelompok/mahasiswa: <span class="font-semibold text-uin">{{ $pengajuan->user->name }}</span> ({{ $pengajuan->instansi }}).</p>
             </div>
             <div class="flex items-center gap-2">
-                <a href="{{ route('mahasiswa.logbook.template_docx') }}" class="inline-flex items-center px-3.5 py-2 bg-white border border-sky-300 text-sky-800 rounded-md text-sm font-semibold hover:bg-sky-50 transition shadow-xs" title="Unduh format resmi Log Book Kegiatan Magang (DOCX)">
-                    <svg class="w-4 h-4 mr-1.5 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                    Format Logbook (DOCX)
-                </a>
                 <a href="{{ route('dpl.pemantauan.index') }}" class="inline-flex items-center px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-md text-sm font-semibold hover:bg-gray-50 transition shadow-sm">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
                     Kembali ke Daftar
@@ -97,11 +93,15 @@
                 
                 <!-- KOLOM 1: PRESENSI & GPS -->
                 <div class="bg-white shadow-sm sm:rounded-xl border border-gray-100 flex flex-col h-[650px]">
-                    <div class="p-4 border-b border-gray-100 bg-gray-50/80 rounded-t-xl">
+                    <div class="p-4 border-b border-gray-100 bg-gray-50/80 rounded-t-xl flex items-center justify-between">
                         <h3 class="text-sm font-bold text-gray-900 flex items-center">
                             <svg class="w-4 h-4 mr-2 text-uin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path></svg>
                             Monitoring Presensi & GPS Harian
                         </h3>
+                        <a href="{{ route('dpl.pemantauan.presensi.cetak', ['id' => $pengajuan->id, 'user_id' => $pengajuan->user_id]) }}" target="_blank" class="inline-flex items-center px-2.5 py-1 text-[11px] font-bold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 rounded-lg transition" title="Cetak Rekap Presensi Mahasiswa Resmi (PDF)">
+                            <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                            Cetak Presensi (PDF)
+                        </a>
                     </div>
                     <div class="overflow-y-auto flex-1 p-0 custom-scrollbar">
                         <table class="w-full text-xs text-left text-gray-600">

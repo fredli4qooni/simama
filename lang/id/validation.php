@@ -198,7 +198,7 @@ return [
         'email' => 'alamat email',
         'password' => 'kata sandi',
         'password_confirmation' => 'konfirmasi kata sandi',
-        'nim' => 'NIM / NPM',
+        'nim' => 'NPM',
         'role' => 'peran',
         'phone' => 'nomor telepon',
         'no_hp' => 'nomor telepon',

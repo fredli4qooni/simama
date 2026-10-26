@@ -42,7 +42,7 @@
                 </div>
             </div>
 
-            <!-- INFOBOX JIKA MAHASISWA BELUM MENGISI NIM / SKS & IPK -->
+            <!-- INFOBOX JIKA MAHASISWA BELUM MENGISI NPM / SKS & IPK -->
             @if(auth()->user()->role === 'mahasiswa' && (empty(auth()->user()->nim) || empty(auth()->user()->total_sks) || empty(auth()->user()->ipk) || auth()->user()->total_sks < 110 || auth()->user()->ipk < 2.75))
                 <div class="bg-gradient-to-r from-amber-500/10 via-orange-500/10 to-amber-500/10 border-2 border-amber-400/80 rounded-2xl p-6 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-5">
                     <div class="flex items-start space-x-4">
@@ -53,12 +53,12 @@
                         </div>
                         <div class="space-y-1">
                             <div class="flex items-center gap-2">
-                                <h4 class="text-base font-bold text-gray-900">Perhatian: Lengkapi NIM & Data Akademik</h4>
+                                <h4 class="text-base font-bold text-gray-900">Perhatian: Lengkapi NPM & Data Akademik</h4>
                                 <span class="px-2 py-0.5 bg-amber-200 text-amber-900 font-bold text-[10px] rounded-full uppercase tracking-wider">Wajib Diisi</span>
                             </div>
                             <p class="text-xs text-gray-600 leading-relaxed max-w-2xl">
                                 @if(empty(auth()->user()->nim) || empty(auth()->user()->total_sks) || empty(auth()->user()->ipk))
-                                    Anda belum melengkapi data <strong>NIM/NPM</strong>, <strong>Total SKS</strong>, atau <strong>IPK Kumulatif</strong> di profil akun Anda. Data ini diperlukan untuk memvalidasi kelayakan pendaftaran magang (Syarat: Min. 110 SKS (setara semester 6 ke atas) & IPK 2.75).
+                                    Anda belum melengkapi data <strong>NPM</strong>, <strong>Total SKS</strong>, atau <strong>IPK Kumulatif</strong> di profil akun Anda. Data ini diperlukan untuk memvalidasi kelayakan pendaftaran magang (Syarat: Min. 110 SKS (setara semester 6 ke atas) & IPK 2.75).
                                 @else
                                     Data akademik Anda saat ini (<strong>{{ auth()->user()->total_sks }} SKS</strong>, <strong>IPK {{ number_format(auth()->user()->ipk, 2) }}</strong>) belum memenuhi batas minimum persyaratan magang (Min. 110 SKS & IPK 2.75).
                                 @endif

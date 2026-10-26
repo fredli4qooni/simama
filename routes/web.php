@@ -70,6 +70,7 @@ Route::middleware(['auth', 'role:dpl'])->prefix('dpl')->name('dpl.')->group(func
     Route::get('/pemantauan/{id}', [PemantauanMagangController::class, 'show'])->name('pemantauan.show');
     Route::patch('/pemantauan/logbook/{id}', [PemantauanMagangController::class, 'updateFeedback'])->name('pemantauan.feedback');
     Route::get('/pemantauan/{id}/logbook/{user_id}/cetak', [PemantauanMagangController::class, 'cetakLogbookPdf'])->name('pemantauan.logbook.cetak');
+    Route::get('/pemantauan/{id}/presensi/{user_id}/cetak', [PemantauanMagangController::class, 'cetakPresensiPdf'])->name('pemantauan.presensi.cetak');
 
     Route::get('/evaluasi', [EvaluasiMagangController::class, 'index'])->name('evaluasi.index');
     Route::post('/evaluasi/{id}', [EvaluasiMagangController::class, 'store'])->name('evaluasi.store');
@@ -94,6 +95,8 @@ Route::middleware(['auth', 'role:mahasiswa'])->prefix('mahasiswa')->name('mahasi
 
     Route::get('/presensi', [KegiatanMagangController::class, 'presensiIndex'])->name('presensi.index');
     Route::post('/presensi', [KegiatanMagangController::class, 'presensiStore'])->name('presensi.store');
+    Route::get('/presensi/cetak', [KegiatanMagangController::class, 'cetakPresensiPdf'])->name('presensi.cetak');
+    Route::get('/pengajuan/{id}/presensi/cetak', [KegiatanMagangController::class, 'cetakPresensiPdf'])->name('pengajuan.presensi.cetak');
     
     Route::get('/logbook', [KegiatanMagangController::class, 'logbookIndex'])->name('logbook.index');
     Route::post('/logbook', [KegiatanMagangController::class, 'logbookStore'])->name('logbook.store');

@@ -35,7 +35,7 @@
                                     @endif
                                     <div>
                                         <h4 class="font-bold text-gray-900 leading-tight">{{ $item->user->name }}</h4>
-                                        <p class="text-xs text-gray-500 mt-0.5">NIM: {{ $item->user->nim }}</p>
+                                        <p class="text-xs text-gray-500 mt-0.5">NPM: {{ $item->user->nim }}</p>
                                     </div>
                                 </div>
                                 

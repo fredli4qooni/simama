@@ -49,9 +49,9 @@
                                 <x-input-error :messages="$errors->get('role')" class="mt-1 text-xs" />
                             </div>
 
-                            <!-- NIM (JIKA MAHASISWA) -->
+                            <!-- NPM (JIKA MAHASISWA) -->
                             <div x-show="selectedRole === 'mahasiswa'">
-                                <label for="nim" class="block text-xs font-bold text-gray-700 mb-1">NPM / NIM Mahasiswa <span class="text-rose-500">*</span></label>
+                                <label for="nim" class="block text-xs font-bold text-gray-700 mb-1">NPM Mahasiswa <span class="text-rose-500">*</span></label>
                                 <input type="text" name="nim" id="nim" class="w-full text-xs rounded-xl border-gray-300 shadow-xs focus:border-uin focus:ring-uin p-2.5 font-mono" placeholder="Contoh: 2271xxxx" />
                                 <x-input-error :messages="$errors->get('nim')" class="mt-1 text-xs" />
                             </div>
@@ -128,7 +128,7 @@
                                         <div>
                                             <div class="font-bold text-gray-900 text-sm">{{ $u->name }}</div>
                                             <div class="text-[11px] text-gray-500 font-mono mt-0.5">
-                                                @if($u->nim) NIM: {{ $u->nim }}
+                                                @if($u->nim) NPM: {{ $u->nim }}
                                                 @elseif($u->nip) NIP: {{ $u->nip }}
                                                 @else -
                                                 @endif

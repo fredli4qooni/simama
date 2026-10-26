@@ -404,15 +404,6 @@
                                     <p class="text-[11px] text-gray-500 mt-0.5">Format dokumen Program Studi Sistem Informasi</p>
                                 </div>
                                 <div class="py-1">
-                                    <a href="{{ route('mahasiswa.logbook.template_docx') }}" class="flex items-center px-4 py-2 text-xs text-gray-700 hover:bg-sky-50 hover:text-sky-800 transition">
-                                        <span class="p-2 rounded-lg bg-sky-100 text-sky-700 mr-3 flex-shrink-0">
-                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                                        </span>
-                                        <div class="flex-1 min-w-0">
-                                            <p class="font-bold text-gray-900 truncate">Format Logbook Kegiatan</p>
-                                            <p class="text-[10px] text-gray-400">Microsoft Word (.DOCX)</p>
-                                        </div>
-                                    </a>
                                     <a href="{{ route('mahasiswa.penilaian_instansi.template') }}" class="flex items-center px-4 py-2 text-xs text-gray-700 hover:bg-emerald-50 hover:text-emerald-800 transition">
                                         <span class="p-2 rounded-lg bg-emerald-100 text-emerald-700 mr-3 flex-shrink-0">
                                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
@@ -941,12 +932,12 @@
                             </div>
                             <div>
                                 <div class="flex items-center gap-2">
-                                    <h4 class="text-sm font-bold text-gray-900">Perhatian: Lengkapi NIM/NPM & Syarat Akademik</h4>
+                                    <h4 class="text-sm font-bold text-gray-900">Perhatian: Lengkapi NPM & Syarat Akademik</h4>
                                     <span class="px-2 py-0.5 bg-amber-200 text-amber-900 font-bold text-[10px] rounded-full uppercase tracking-wider">Perlu Diisi</span>
                                 </div>
                                 <p class="text-xs text-gray-600 mt-1">
                                     @if(empty(auth()->user()->nim) || empty(auth()->user()->total_sks) || empty(auth()->user()->ipk))
-                                        Anda belum melengkapi data <strong>NIM/NPM</strong>, <strong>Total SKS</strong>, atau <strong>IPK</strong> di profil Anda (Syarat: Min. 110 SKS (setara semester 6 ke atas) & IPK 2.75).
+                                        Anda belum melengkapi data <strong>NPM</strong>, <strong>Total SKS</strong>, atau <strong>IPK</strong> di profil Anda (Syarat: Min. 110 SKS (setara semester 6 ke atas) & IPK 2.75).
                                     @else
                                         SKS/IPK Anda saat ini belum memenuhi batas minimum magang (Min. 110 SKS & IPK 2.75).
                                     @endif
@@ -980,17 +971,13 @@
                         </div>
                         <div>
                             <h5 class="text-xs font-bold text-gray-900">Format Dokumen Resmi dari Fakultas & Akademik</h5>
-                            <p class="text-[11px] text-gray-500">Unduh format surat izin atau format logbook resmi kegiatan magang.</p>
+                            <p class="text-[11px] text-gray-500">Unduh format surat izin permohonan magang resmi.</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2 flex-wrap w-full sm:w-auto">
                         <a href="{{ route('mahasiswa.izin_magang.template') }}" class="px-3 py-1.5 text-xs font-bold text-amber-800 bg-amber-50 hover:bg-amber-100 border border-amber-300 rounded-xl transition shadow-xs flex items-center">
                             <svg class="w-3.5 h-3.5 mr-1 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                             Format Izin Magang (DOCX)
-                        </a>
-                        <a href="{{ route('mahasiswa.logbook.template_docx') }}" class="px-3 py-1.5 text-xs font-bold text-sky-800 bg-sky-50 hover:bg-sky-100 border border-sky-300 rounded-xl transition shadow-xs flex items-center">
-                            <svg class="w-3.5 h-3.5 mr-1 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                            Format Logbook (DOCX)
                         </a>
                     </div>
                 </div>
@@ -1125,7 +1112,7 @@
                                             <h4 class="text-sm font-bold text-gray-900">{{ auth()->user()->name }}</h4>
                                             <span class="px-2 py-0.5 bg-uin text-white rounded text-[10px] font-bold" x-text="jenisMagang === 'mandiri' ? 'Pemohon Mandiri' : (isGroup === '1' ? 'Ketua Kelompok' : 'Pemohon Tunggal')"></span>
                                         </div>
-                                        <p class="text-xs text-gray-500 font-mono">NIM: {{ auth()->user()->nim }} | Prodi: {{ auth()->user()->prodi->nama_prodi ?? 'Sistem Informasi' }}</p>
+                                        <p class="text-xs text-gray-500 font-mono">NPM: {{ auth()->user()->nim }} | Prodi: {{ auth()->user()->prodi->nama_prodi ?? 'Sistem Informasi' }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -1198,7 +1185,7 @@
                                         <select :name="'member_user_ids[' + (i - 1) + ']'" :disabled="jenisMagang !== 'prodi' || isGroup !== '1'" class="w-full text-xs rounded-xl border-gray-300 shadow-xs focus:border-uin focus:ring-uin p-2.5 bg-white">
                                             <option value="">-- Pilih Mahasiswa (Sistem Informasi) --</option>
                                             @foreach($mahasiswaProdi as $mhs)
-                                                <option value="{{ $mhs->id }}">{{ $mhs->name }} (NIM: {{ $mhs->nim }})</option>
+                                                <option value="{{ $mhs->id }}">{{ $mhs->name }} (NPM: {{ $mhs->nim }})</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -1236,7 +1223,7 @@
                         @else
                             <a href="{{ route('profile.edit') }}" class="w-full sm:w-auto inline-flex items-center justify-center px-8 py-3 bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold rounded-xl shadow-md transition-all">
                                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
-                                Lengkapi Profil (NIM, SKS, IPK) Terlebih Dahulu
+                                Lengkapi Profil (NPM, SKS, IPK) Terlebih Dahulu
                             </a>
                         @endif
                     </div>

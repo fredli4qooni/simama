@@ -128,7 +128,7 @@
             <tr>
                 <th style="width: 8%;">No</th>
                 <th style="width: 37%;">Nama Mahasiswa</th>
-                <th style="width: 25%;">NPM / NIM</th>
+                <th style="width: 25%;">NPM</th>
                 <th style="width: 30%;">Jurusan / Semester</th>
             </tr>
         </thead>

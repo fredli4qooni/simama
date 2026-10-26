@@ -39,7 +39,7 @@ class RegisteredUserController extends Controller
             'name.required' => 'Nama lengkap wajib diisi.',
             'email.required' => 'Alamat email wajib diisi.',
             'email.unique' => 'Email ini sudah terdaftar di sistem.',
-            'nim.unique' => 'NIM / NPM ini sudah terdaftar.',
+            'nim.unique' => 'NPM ini sudah terdaftar.',
             'password.required' => 'Kata sandi wajib diisi.',
             'password.confirmed' => 'Konfirmasi kata sandi tidak cocok.',
             'password.min' => 'Kata sandi minimal harus 8 karakter.',

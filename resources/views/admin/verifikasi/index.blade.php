@@ -51,7 +51,7 @@
                                                     </span>
                                                     <span class="text-[11px] font-bold text-gray-900">{{ $item->user->name }}{{ $item->is_group ? ' (Ketua)' : '' }}</span>
                                                 </div>
-                                                <div class="text-[11px] text-gray-500">NIM: {{ $item->user->nim ?? '-' }}</div>
+                                                <div class="text-[11px] text-gray-500">NPM: {{ $item->user->nim ?? '-' }}</div>
                                             </div>
                                         </div>
 

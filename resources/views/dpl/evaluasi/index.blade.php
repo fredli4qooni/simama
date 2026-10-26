@@ -68,14 +68,6 @@
                             </svg>
                             Panduan Laporan (DOCX)
                         </a>
-
-                        <!-- Format Logbook (DOCX) -->
-                        <a href="{{ route('mahasiswa.logbook.template_docx') }}" class="inline-flex items-center px-3.5 py-1.5 text-xs font-bold text-sky-800 bg-white hover:bg-sky-50 border border-sky-300 rounded-xl transition shadow-2xs" title="Unduh format resmi Log Book Kegiatan Magang (DOCX)">
-                            <svg class="w-3.5 h-3.5 mr-1.5 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                            </svg>
-                            Format Logbook (DOCX)
-                        </a>
                     </div>
                 </div>
             </div>
@@ -117,7 +109,7 @@
                                             </span>
                                         </div>
                                         <div class="text-sm text-gray-500 mt-0.5 flex flex-wrap items-center gap-2">
-                                            <span class="font-medium">NIM: {{ $item->user->nim }}</span>
+                                            <span class="font-medium">NPM: {{ $item->user->nim }}</span>
                                             <span class="text-gray-300">|</span>
                                             <span class="flex items-center text-uin font-medium">
                                                 <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2-2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>

@@ -81,4 +81,41 @@ class PemantauanMagangController extends Controller
         $safeNim = str_replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|'], '-', $targetUser->nim ?? 'Mahasiswa');
         return $pdf->stream('Logbook_Magang_' . $safeNim . '.pdf');
     }
+
+    public function cetakPresensiPdf(string $id, string $userId)
+    {
+        $pengajuan = MagangApplication::with(['user.prodi', 'members.user.prodi', 'dplAssignment.dpl'])->findOrFail($id);
+        Gate::authorize('view', $pengajuan);
+
+        $targetUser = User::with('prodi')->findOrFail($userId);
+        $isMember = $pengajuan->user_id == $targetUser->id || $pengajuan->members()->where('user_id', $targetUser->id)->exists();
+        if (!$isMember) {
+            abort(404, 'Mahasiswa tidak terdaftar pada kelompok magang ini.');
+        }
+
+        $presensi = Attendance::where('application_id', $id)
+            ->where('user_id', $userId)
+            ->orderBy('date', 'asc')
+            ->orderBy('created_at', 'asc')
+            ->get();
+
+        $rekap = [
+            'total_masuk' => $presensi->where('type', 'masuk')->count(),
+            'total_pulang' => $presensi->where('type', 'pulang')->count(),
+            'hadir' => $presensi->where('status', 'hadir')->count(),
+            'izin' => $presensi->where('status', 'izin')->count(),
+            'sakit' => $presensi->where('status', 'sakit')->count(),
+        ];
+
+        $pdf = Pdf::loadView('mahasiswa.kegiatan.presensi_pdf', [
+            'pengajuan' => $pengajuan,
+            'presensi' => $presensi,
+            'user' => $targetUser,
+            'rekap' => $rekap,
+        ]);
+        $pdf->setPaper('A4', 'portrait');
+
+        $safeNim = str_replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|'], '-', $targetUser->nim ?? 'Mahasiswa');
+        return $pdf->stream('Rekap_Presensi_Magang_' . $safeNim . '.pdf');
+    }
 }

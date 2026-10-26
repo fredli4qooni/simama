@@ -49,7 +49,7 @@ URL Halaman Login: http://127.0.0.1:8000/login
    - Email          : mahasiswa@radenintan.ac.id
    - Password       : password
    - Nama Akun      : FREDLI FOURQONI
-   - NIM            : 2271020103
+   - NPM            : 2271020103
    - Total SKS / IPK: 142 SKS / 3.75
    - Hak Akses Utama:
      * Registrasi Pengajuan Magang (Magang Prodi / Magang Mandiri)

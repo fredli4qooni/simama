@@ -16,7 +16,7 @@
     <div class="py-8">
         <div class="max-w-7xl mx-auto space-y-6">
 
-            <!-- INFOBOX JIKA NIM, SKS & IPK BELUM DIISI ATAU BELUM MEMENUHI SYARAT -->
+            <!-- INFOBOX JIKA NPM, SKS & IPK BELUM DIISI ATAU BELUM MEMENUHI SYARAT -->
             @if($user->role === 'mahasiswa' && (empty($user->nim) || empty($user->total_sks) || empty($user->ipk) || $user->total_sks < 110 || $user->ipk < 2.75))
                 <div class="bg-gradient-to-r from-amber-500/10 via-orange-500/10 to-amber-500/10 border-2 border-amber-400/80 rounded-2xl p-5 shadow-sm flex items-start space-x-4">
                     <div class="p-2.5 bg-amber-500 text-white rounded-xl shadow-sm flex-shrink-0">
@@ -25,10 +25,10 @@
                         </svg>
                     </div>
                     <div>
-                        <h4 class="text-sm font-bold text-gray-900">Perhatian: Lengkapi NIM & Data Akademik Anda</h4>
+                        <h4 class="text-sm font-bold text-gray-900">Perhatian: Lengkapi NPM & Data Akademik Anda</h4>
                         <p class="text-xs text-gray-600 mt-1 leading-relaxed">
                             @if(empty($user->nim) || empty($user->total_sks) || empty($user->ipk))
-                                Anda belum melengkapi data <strong>NIM/NPM</strong>, <strong>Total SKS Ditempuh</strong>, atau <strong>IPK Terakhir</strong>. Silakan lengkapi formulir di bawah ini agar memenuhi syarat validasi pendaftaran magang (Minimal: 110 SKS (setara semester 6 ke atas) & IPK 2.75).
+                                Anda belum melengkapi data <strong>NPM</strong>, <strong>Total SKS Ditempuh</strong>, atau <strong>IPK Terakhir</strong>. Silakan lengkapi formulir di bawah ini agar memenuhi syarat validasi pendaftaran magang (Minimal: 110 SKS (setara semester 6 ke atas) & IPK 2.75).
                             @else
                                 Data SKS Anda saat ini (<strong>{{ $user->total_sks }} SKS</strong>) atau IPK (<strong>{{ number_format($user->ipk, 2) }}</strong>) belum memenuhi syarat minimum pendaftaran magang (Min. 110 SKS & IPK 2.75).
                             @endif
@@ -63,7 +63,7 @@
                                 <span>•</span>
                                 <span class="inline-flex items-center gap-1.5">
                                     <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"/></svg>
-                                    <span>NIM: {{ $user->nim }}</span>
+                                    <span>NPM: {{ $user->nim }}</span>
                                 </span>
                             @endif
                             @if($user->nip)

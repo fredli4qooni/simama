@@ -1,10 +1,16 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex flex-col">
-            <h2 class="font-bold text-2xl text-gray-900 leading-tight">
-                Presensi Harian & GPS Geolocation
-            </h2>
-            <p class="text-sm text-gray-500 mt-1">Presensi dilakukan 2 kali sehari (Masuk & Pulang) dengan pendeteksian titik lokasi GPS instansi secara visual di peta.</p>
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+            <div>
+                <h2 class="font-bold text-2xl text-gray-900 leading-tight">
+                    Presensi Harian & GPS Geolocation
+                </h2>
+                <p class="text-sm text-gray-500 mt-1">Presensi dilakukan 2 kali sehari (Masuk & Pulang) dengan pendeteksian titik lokasi GPS instansi secara visual di peta.</p>
+            </div>
+            <a href="{{ route('mahasiswa.presensi.cetak') }}" target="_blank" class="inline-flex items-center px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-xs hover:shadow transition whitespace-nowrap self-start sm:self-auto" title="Cetak / Unduh Berkas Rekap Presensi Resmi Format PDF">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                Cetak Presensi Resmi (PDF)
+            </a>
         </div>
     </x-slot>
 
@@ -467,9 +473,20 @@
 
             <!-- Riwayat Presensi -->
             <div class="bg-white shadow-sm sm:rounded-xl border border-gray-100 overflow-hidden">
-                <div class="p-6 border-b border-gray-100 bg-gray-50/50">
-                    <h3 class="text-base font-bold text-gray-900">Riwayat Presensi & Koordinat GPS Anda</h3>
-                    <p class="text-xs text-gray-500">Daftar kehadiran Masuk & Pulang Anda selama masa magang dengan titik koordinat peta.</p>
+                <div class="p-6 border-b border-gray-100 bg-gray-50/50 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <div>
+                        <h3 class="text-base font-bold text-gray-900">Riwayat Presensi & Koordinat GPS Anda</h3>
+                        <p class="text-xs text-gray-500 mt-0.5">Daftar kehadiran Masuk & Pulang Anda selama masa magang dengan titik koordinat peta.</p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <a href="{{ route('mahasiswa.presensi.cetak') }}" target="_blank" class="inline-flex items-center px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-xs hover:shadow transition" title="Cetak / Unduh Berkas Rekap Presensi Resmi Format PDF">
+                            <svg class="w-3.5 h-3.5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                            Cetak Presensi (PDF)
+                        </a>
+                        <span class="text-xs font-bold px-3 py-2 bg-gray-200/80 text-gray-700 rounded-xl whitespace-nowrap">
+                            Total: {{ $presensi->count() }} Presensi
+                        </span>
+                    </div>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-xs text-left text-gray-600">

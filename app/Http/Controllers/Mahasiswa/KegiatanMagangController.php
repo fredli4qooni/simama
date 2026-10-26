@@ -182,6 +182,55 @@ class KegiatanMagangController extends Controller
         return $pdf->stream('Logbook_Magang_' . $safeNim . '.pdf');
     }
 
+    public function cetakPresensiPdf($id = null)
+    {
+        $user = auth()->user();
+
+        if ($id) {
+            $pengajuan = MagangApplication::with(['user.prodi', 'members.user.prodi', 'dplAssignment.dpl'])->findOrFail($id);
+            $isAuthorized = $pengajuan->user_id == $user->id || $pengajuan->members()->where('user_id', $user->id)->exists();
+            if (!$isAuthorized) {
+                abort(403, 'Akses ditolak. Anda tidak terdaftar pada pengajuan magang ini.');
+            }
+        } else {
+            $pengajuan = $user->activeMagangApplication()
+                ?? $user->magangApplications()->whereIn('status', ['active', 'selesai', 'approved'])->latest()->first()
+                ?? MagangApplication::whereHas('members', function ($q) use ($user) {
+                    $q->where('user_id', $user->id);
+                })->whereIn('status', ['active', 'selesai', 'approved'])->latest()->first();
+
+            if (!$pengajuan) {
+                return redirect()->route('mahasiswa.dashboard')->with('error', 'Tidak ditemukan data kegiatan magang yang aktif atau selesai.');
+            }
+        }
+
+        if (!in_array($pengajuan->status, ['active', 'selesai', 'approved'])) {
+            return redirect()->back()->with('error', 'Cetak presensi belum dapat dilakukan untuk status pengajuan ini.');
+        }
+
+        $pengajuan->loadMissing(['user.prodi', 'members.user.prodi', 'dplAssignment.dpl']);
+
+        $presensi = Attendance::where('application_id', $pengajuan->id)
+            ->where('user_id', $user->id)
+            ->orderBy('date', 'asc')
+            ->orderBy('created_at', 'asc')
+            ->get();
+
+        $rekap = [
+            'total_masuk' => $presensi->where('type', 'masuk')->count(),
+            'total_pulang' => $presensi->where('type', 'pulang')->count(),
+            'hadir' => $presensi->where('status', 'hadir')->count(),
+            'izin' => $presensi->where('status', 'izin')->count(),
+            'sakit' => $presensi->where('status', 'sakit')->count(),
+        ];
+
+        $pdf = Pdf::loadView('mahasiswa.kegiatan.presensi_pdf', compact('pengajuan', 'presensi', 'user', 'rekap'));
+        $pdf->setPaper('A4', 'portrait');
+
+        $safeNim = str_replace(['/', '\\', ':', '*', '?', '"', '<', '>', '|'], '-', $user->nim ?? 'Mahasiswa');
+        return $pdf->stream('Rekap_Presensi_Magang_' . $safeNim . '.pdf');
+    }
+
     public function downloadTemplateLogbookDocx()
     {
         $filePath = public_path('doc/Log_Book_Kegiatan_Magang.docx');

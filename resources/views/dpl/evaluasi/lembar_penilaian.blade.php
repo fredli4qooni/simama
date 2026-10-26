@@ -124,7 +124,7 @@
             <td><strong>{{ $application->user->name ?? '-' }}</strong></td>
         </tr>
         <tr>
-            <td>NPM / NIM</td>
+            <td>NPM</td>
             <td>:</td>
             <td>{{ $application->user->nim ?? '-' }}</td>
         </tr>

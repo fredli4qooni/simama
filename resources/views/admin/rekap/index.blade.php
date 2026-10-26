@@ -66,7 +66,7 @@
                                 <tr class="bg-white hover:bg-gray-50 transition-colors duration-150">
                                     <td class="px-6 py-4 align-middle">
                                         <div class="font-bold text-gray-900">{{ $item->user->name }}</div>
-                                        <div class="text-xs text-gray-500 mb-1.5">NIM: {{ $item->user->nim ?? '-' }}</div>
+                                        <div class="text-xs text-gray-500 mb-1.5">NPM: {{ $item->user->nim ?? '-' }}</div>
                                         <div class="text-[11px] font-medium bg-gray-100 text-gray-600 px-2.5 py-1 rounded-md inline-flex items-center border border-gray-200">
                                             <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2-2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
                                             {{ $item->instansi }}

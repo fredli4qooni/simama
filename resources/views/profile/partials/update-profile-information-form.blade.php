@@ -24,7 +24,7 @@
                 </h3>
                 <p class="text-xs text-gray-500 mt-0.5">
                     @if($user->role === 'mahasiswa')
-                        Unggah foto formal mahasiswa, perbarui nama, NIM/NPM, email, serta capaian akademik.
+                        Unggah foto formal mahasiswa, perbarui nama, NPM, email, serta capaian akademik.
                     @else
                         Perbarui nama, NIP/NIDN, email, serta foto profil akun Anda.
                     @endif
@@ -78,9 +78,9 @@
 
         @if($user->role === 'mahasiswa')
         <div>
-            <label for="nim" class="block text-xs font-bold text-gray-700 mb-1">Nomor Pokok Mahasiswa (NPM / NIM) *</label>
+            <label for="nim" class="block text-xs font-bold text-gray-700 mb-1">Nomor Pokok Mahasiswa (NPM) *</label>
             <input id="nim" name="nim" type="text" class="w-full text-xs rounded-xl border-gray-300 shadow-xs focus:border-uin focus:ring-uin p-2.5 font-mono" value="{{ old('nim', $user->nim) }}" placeholder="Contoh: 2271xxxx" required />
-            <p class="text-[11px] text-gray-400 mt-0.5">NPM/NIM wajib diisi sebagai identitas resmi pendaftaran magang.</p>
+            <p class="text-[11px] text-gray-400 mt-0.5">NPM wajib diisi sebagai identitas resmi pendaftaran magang.</p>
             <x-input-error class="mt-1 text-xs" :messages="$errors->get('nim')" />
         </div>
         @elseif($user->role === 'dpl' || $user->role === 'admin')
