@@ -1,35 +1,50 @@
 <x-guest-layout>
-    
-    <div class="mb-8">
-        <h2 class="text-2xl font-bold text-gray-900">Selamat Datang</h2>
-        <p class="text-sm text-gray-500 mt-2">Silakan masuk untuk mengakses dasbor Anda.</p>
+
+    <div class="mb-6 sm:mb-8 text-center sm:text-left">
+        <h2 class="text-2xl sm:text-3xl font-black text-gray-900 tracking-tight">Selamat Datang</h2>
+        <p class="text-xs sm:text-sm text-gray-500 mt-1.5 leading-relaxed">Silakan masuk untuk mengakses sistem dan dasbor magang Anda.</p>
     </div>
 
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
-    <form method="POST" action="{{ route('login') }}">
+    <form method="POST" action="{{ route('login') }}" class="space-y-4 sm:space-y-5">
         @csrf
 
+        <!-- Email -->
         <div>
-            <x-input-label for="email" value="Email" />
-            <x-text-input id="email" class="block mt-1 w-full focus:border-uin focus:ring-uin" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" placeholder="Masukkan alamat email" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+            <label for="email" class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1">
+                Alamat Email <span class="text-rose-500">*</span>
+            </label>
+            <input id="email"
+                   type="email"
+                   name="email"
+                   value="{{ old('email') }}"
+                   required
+                   autofocus
+                   autocomplete="username"
+                   placeholder="nama@radenintan.ac.id atau email Anda"
+                   class="w-full text-base sm:text-sm rounded-xl border-gray-300 shadow-xs focus:border-uin focus:ring-uin transition py-2.5 px-3.5 text-gray-900 placeholder:text-gray-400">
+            <x-input-error :messages="$errors->get('email')" class="mt-1.5" />
         </div>
 
-        <div class="mt-5" x-data="{ showPassword: false }">
-            <x-input-label for="password" value="Password" />
-            <div class="relative mt-1">
+        <!-- Password -->
+        <div x-data="{ showPassword: false }">
+            <label for="password" class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1">
+                Password <span class="text-rose-500">*</span>
+            </label>
+            <div class="relative">
                 <input id="password"
                        :type="showPassword ? 'text' : 'password'"
                        type="password"
                        name="password"
-                       required autocomplete="current-password"
+                       required
+                       autocomplete="current-password"
                        placeholder="••••••••"
-                       class="block w-full border-gray-300 focus:border-uin focus:ring-uin rounded-md shadow-sm pr-10 text-sm text-gray-900 placeholder:text-gray-400 py-2 px-3">
-                <button type="button" 
+                       class="w-full text-base sm:text-sm rounded-xl border-gray-300 shadow-xs focus:border-uin focus:ring-uin transition py-2.5 pl-3.5 pr-11 text-gray-900 placeholder:text-gray-400">
+                <button type="button"
                         @click="showPassword = !showPassword"
                         tabindex="-1"
-                        class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 focus:outline-none transition cursor-pointer"
+                        class="absolute inset-y-0 right-0 w-11 flex items-center justify-center text-gray-400 hover:text-gray-600 focus:outline-none transition cursor-pointer"
                         :aria-label="showPassword ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi'">
                     <!-- Eye (show) -->
                     <svg x-show="!showPassword" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -42,34 +57,37 @@
                     </svg>
                 </button>
             </div>
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+            <x-input-error :messages="$errors->get('password')" class="mt-1.5" />
         </div>
 
-        <div class="flex items-center justify-between mt-5">
-            <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox" class="rounded border-gray-300 text-uin shadow-sm focus:ring-uin" name="remember">
-                <span class="ms-2 text-sm text-gray-600">Ingat Saya</span>
+        <!-- Ingat Saya & Lupa Password -->
+        <div class="flex items-center justify-between pt-1">
+            <label for="remember_me" class="inline-flex items-center cursor-pointer">
+                <input id="remember_me" type="checkbox" class="w-4 h-4 rounded border-gray-300 text-uin shadow-xs focus:ring-uin transition" name="remember">
+                <span class="ms-2 text-xs sm:text-sm text-gray-600 select-none">Ingat Saya</span>
             </label>
 
             @if (Route::has('password.request'))
-                <a class="text-sm font-medium text-uin hover:text-uin-hover underline-offset-4 hover:underline focus:outline-none" href="{{ route('password.request') }}">
+                <a class="text-xs sm:text-sm font-semibold text-uin hover:text-uin-hover underline-offset-4 hover:underline focus:outline-none transition-colors" href="{{ route('password.request') }}">
                     Lupa password?
                 </a>
             @endif
         </div>
 
-        <div class="mt-8">
-            <button type="submit" class="w-full inline-flex justify-center items-center gap-2 px-4 py-3 bg-uin border border-transparent rounded-xl font-bold text-xs text-white uppercase tracking-wider hover:bg-uin-hover focus:bg-uin-hover active:bg-uin-hover focus:outline-none focus:ring-2 focus:ring-uin focus:ring-offset-2 transition ease-in-out duration-150 shadow-md">
+        <!-- Tombol Masuk -->
+        <div class="pt-2">
+            <button type="submit" class="w-full inline-flex justify-center items-center gap-2 px-4 py-3 sm:py-3.5 bg-uin border border-transparent rounded-xl font-bold text-xs sm:text-sm text-white uppercase tracking-wider hover:bg-uin-hover focus:bg-uin-hover active:bg-uin-hover focus:outline-none focus:ring-2 focus:ring-uin focus:ring-offset-2 transition-all duration-150 shadow-md active:scale-98">
                 <span>Masuk ke Dasbor</span>
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
             </button>
         </div>
 
+        <!-- Link Registrasi -->
         @if (Route::has('register'))
-            <div class="text-center pt-5 mt-4 border-t border-gray-100">
-                <p class="text-xs text-gray-500">
+            <div class="text-center pt-4 sm:pt-5 border-t border-gray-100">
+                <p class="text-xs sm:text-sm text-gray-500">
                     Belum memiliki akun mahasiswa?
-                    <a href="{{ route('register') }}" class="font-bold text-uin hover:text-uin-hover underline underline-offset-4">
+                    <a href="{{ route('register') }}" class="font-bold text-uin hover:text-uin-hover underline underline-offset-4 ml-1">
                         Daftar Sekarang
                     </a>
                 </p>

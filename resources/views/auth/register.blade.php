@@ -1,13 +1,13 @@
 <x-guest-layout>
-    <div class="mb-6">
-        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-uin-light text-uin text-xs font-bold mb-2.5">
+    <div class="mb-5 sm:mb-6 text-center sm:text-left">
+        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-uin-light text-uin text-xs font-bold mb-2">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
             </svg>
-            Registrasi Mahasiswa
+            <span>Registrasi Mahasiswa</span>
         </div>
-        <h2 class="text-2xl font-black text-gray-900 tracking-tight">Buat Akun Mahasiswa</h2>
-        <p class="text-xs text-gray-500 mt-1">Daftarkan akun Anda untuk mengakses sistem pengajuan magang Fakultas Sains & Teknologi.</p>
+        <h2 class="text-2xl sm:text-3xl font-black text-gray-900 tracking-tight">Buat Akun Baru</h2>
+        <p class="text-xs sm:text-sm text-gray-500 mt-1 leading-relaxed">Daftarkan akun Anda untuk mengakses sistem pengajuan magang Fakultas Sains & Teknologi.</p>
     </div>
 
     <form method="POST" action="{{ route('register') }}" class="space-y-4">
@@ -20,8 +20,8 @@
             </label>
             <input id="name" type="text" name="name" value="{{ old('name') }}" required autofocus autocomplete="name"
                 placeholder="Contoh: Ahmad Dahlan"
-                class="w-full text-xs rounded-xl border-gray-300 shadow-xs focus:border-uin focus:ring-uin transition py-2.5 px-3.5 text-gray-900 placeholder:text-gray-400">
-            <x-input-error :messages="$errors->get('name')" class="mt-1" />
+                class="w-full text-base sm:text-sm rounded-xl border-gray-300 shadow-xs focus:border-uin focus:ring-uin transition py-2.5 px-3.5 text-gray-900 placeholder:text-gray-400">
+            <x-input-error :messages="$errors->get('name')" class="mt-1.5" />
         </div>
 
         <!-- Alamat Email -->
@@ -31,10 +31,9 @@
             </label>
             <input id="email" type="email" name="email" value="{{ old('email') }}" required autocomplete="username"
                 placeholder="nama@radenintan.ac.id atau email aktif"
-                class="w-full text-xs rounded-xl border-gray-300 shadow-xs focus:border-uin focus:ring-uin transition py-2.5 px-3.5 text-gray-900 placeholder:text-gray-400">
-            <x-input-error :messages="$errors->get('email')" class="mt-1" />
+                class="w-full text-base sm:text-sm rounded-xl border-gray-300 shadow-xs focus:border-uin focus:ring-uin transition py-2.5 px-3.5 text-gray-900 placeholder:text-gray-400">
+            <x-input-error :messages="$errors->get('email')" class="mt-1.5" />
         </div>
-
 
         <!-- Kata Sandi -->
         <div x-data="{ showPass: false }">
@@ -49,11 +48,11 @@
                     required 
                     autocomplete="new-password"
                     placeholder="Minimal 8 karakter"
-                    class="w-full text-xs rounded-xl border-gray-300 shadow-xs focus:border-uin focus:ring-uin transition py-2.5 pl-3.5 pr-10 text-gray-900 placeholder:text-gray-400">
+                    class="w-full text-base sm:text-sm rounded-xl border-gray-300 shadow-xs focus:border-uin focus:ring-uin transition py-2.5 pl-3.5 pr-11 text-gray-900 placeholder:text-gray-400">
                 <button type="button" 
                     @click="showPass = !showPass"
                     tabindex="-1"
-                    class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 focus:outline-none transition cursor-pointer"
+                    class="absolute inset-y-0 right-0 w-11 flex items-center justify-center text-gray-400 hover:text-gray-600 focus:outline-none transition cursor-pointer"
                     :aria-label="showPass ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi'">
                     <!-- Eye (show) -->
                     <svg x-show="!showPass" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -66,7 +65,7 @@
                     </svg>
                 </button>
             </div>
-            <x-input-error :messages="$errors->get('password')" class="mt-1" />
+            <x-input-error :messages="$errors->get('password')" class="mt-1.5" />
         </div>
 
         <!-- Konfirmasi Kata Sandi -->
@@ -82,11 +81,11 @@
                     required 
                     autocomplete="new-password"
                     placeholder="Ulangi kata sandi Anda"
-                    class="w-full text-xs rounded-xl border-gray-300 shadow-xs focus:border-uin focus:ring-uin transition py-2.5 pl-3.5 pr-10 text-gray-900 placeholder:text-gray-400">
+                    class="w-full text-base sm:text-sm rounded-xl border-gray-300 shadow-xs focus:border-uin focus:ring-uin transition py-2.5 pl-3.5 pr-11 text-gray-900 placeholder:text-gray-400">
                 <button type="button" 
                     @click="showConfirm = !showConfirm"
                     tabindex="-1"
-                    class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 focus:outline-none transition cursor-pointer"
+                    class="absolute inset-y-0 right-0 w-11 flex items-center justify-center text-gray-400 hover:text-gray-600 focus:outline-none transition cursor-pointer"
                     :aria-label="showConfirm ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi'">
                     <!-- Eye (show) -->
                     <svg x-show="!showConfirm" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -99,22 +98,22 @@
                     </svg>
                 </button>
             </div>
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-1" />
+            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-1.5" />
         </div>
 
         <!-- Tombol Submit -->
         <div class="pt-2">
-            <button type="submit" class="w-full inline-flex justify-center items-center gap-2 px-4 py-3 bg-uin border border-transparent rounded-xl font-bold text-xs text-white uppercase tracking-wider hover:bg-uin-hover focus:bg-uin-hover active:bg-uin-hover focus:outline-none focus:ring-2 focus:ring-uin focus:ring-offset-2 transition ease-in-out duration-150 shadow-md">
+            <button type="submit" class="w-full inline-flex justify-center items-center gap-2 px-4 py-3 sm:py-3.5 bg-uin border border-transparent rounded-xl font-bold text-xs sm:text-sm text-white uppercase tracking-wider hover:bg-uin-hover focus:bg-uin-hover active:bg-uin-hover focus:outline-none focus:ring-2 focus:ring-uin focus:ring-offset-2 transition-all duration-150 shadow-md active:scale-98">
                 <span>Daftar Akun Mahasiswa</span>
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
             </button>
         </div>
 
         <!-- Link ke Halaman Login -->
-        <div class="text-center pt-2">
-            <p class="text-xs text-gray-500">
+        <div class="text-center pt-3 sm:pt-4 border-t border-gray-100">
+            <p class="text-xs sm:text-sm text-gray-500">
                 Sudah memiliki akun?
-                <a href="{{ route('login') }}" class="font-bold text-uin hover:text-uin-hover underline underline-offset-4">
+                <a href="{{ route('login') }}" class="font-bold text-uin hover:text-uin-hover underline underline-offset-4 ml-1">
                     Masuk ke Dasbor
                 </a>
             </p>

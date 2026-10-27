@@ -11,15 +11,15 @@
         }
     }
 }">
-    <header class="border-b border-gray-100 pb-4 mb-6">
-        <div class="flex items-center space-x-3">
-            <span class="p-2 bg-uin-light text-uin rounded-xl">
+    <header class="border-b border-gray-100 pb-3 sm:pb-4 mb-4 sm:mb-6">
+        <div class="flex items-center space-x-2.5 sm:space-x-3">
+            <span class="p-1.5 sm:p-2 bg-uin-light text-uin rounded-xl shrink-0">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                 </svg>
             </span>
             <div>
-                <h3 class="text-base font-bold text-gray-900">
+                <h3 class="text-sm sm:text-base font-bold text-gray-900 leading-tight">
                     Informasi Data Akun & Foto Profil
                 </h3>
                 <p class="text-xs text-gray-500 mt-0.5">
@@ -37,17 +37,17 @@
         @csrf
     </form>
 
-    <form method="post" action="{{ route('profile.update') }}" enctype="multipart/form-data" class="space-y-5">
+    <form method="post" action="{{ route('profile.update') }}" enctype="multipart/form-data" class="space-y-4 sm:space-y-5">
         @csrf
         @method('patch')
 
         <!-- FOTO PROFIL UPLOAD & PREVIEW -->
-        <div class="p-4 bg-gray-50/80 rounded-2xl border border-gray-200 space-y-3">
+        <div class="p-3.5 sm:p-4 bg-gray-50/80 rounded-xl sm:rounded-2xl border border-gray-200 space-y-3">
             <label class="block text-xs font-bold text-gray-700">Foto Profil {{ $user->role === 'mahasiswa' ? 'Mahasiswa' : 'Pengguna' }}</label>
             
-            <div class="flex items-center space-x-4">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
                 <!-- Preview Image -->
-                <div class="relative w-16 h-16 rounded-xl overflow-hidden shadow-sm border-2 border-white ring-2 ring-gray-200 flex-shrink-0 bg-white">
+                <div class="relative w-16 h-16 rounded-xl overflow-hidden shadow-xs border-2 border-white ring-2 ring-gray-200 shrink-0 bg-white">
                     <template x-if="photoPreview">
                         <img :src="photoPreview" class="w-full h-full object-cover">
                     </template>
@@ -62,8 +62,8 @@
                     </template>
                 </div>
 
-                <div class="flex-1">
-                    <input type="file" name="avatar" id="avatar" accept="image/png,image/jpeg,image/jpg,image/webp" @change="previewPhoto" class="block w-full text-xs text-gray-700 border border-gray-300 rounded-xl cursor-pointer bg-white file:mr-3 file:py-1.5 file:px-3 file:border-0 file:text-xs file:font-bold file:bg-uin-light file:text-uin hover:file:bg-uin/20">
+                <div class="flex-1 w-full min-w-0">
+                    <input type="file" name="avatar" id="avatar" accept="image/png,image/jpeg,image/jpg,image/webp" @change="previewPhoto" class="block w-full text-xs text-gray-700 border border-gray-300 rounded-xl cursor-pointer bg-white file:mr-2.5 sm:file:mr-3 file:py-1.5 file:px-3 file:border-0 file:text-xs file:font-bold file:bg-uin-light file:text-uin hover:file:bg-uin/20">
                     <p class="text-[11px] text-gray-400 mt-1">Format: JPG, PNG, atau WebP (Maks. 2MB). Disarankan foto formal/rapi.</p>
                     <x-input-error class="mt-1 text-xs" :messages="$errors->get('avatar')" />
                 </div>
@@ -72,28 +72,28 @@
 
         <div>
             <label for="name" class="block text-xs font-bold text-gray-700 mb-1">Nama Lengkap *</label>
-            <input id="name" name="name" type="text" class="w-full text-xs rounded-xl border-gray-300 shadow-xs focus:border-uin focus:ring-uin p-2.5" value="{{ old('name', $user->name) }}" required autocomplete="name" />
+            <input id="name" name="name" type="text" class="w-full text-xs rounded-xl border-gray-300 shadow-xs focus:border-uin focus:ring-uin p-2.5 sm:p-3" value="{{ old('name', $user->name) }}" required autocomplete="name" />
             <x-input-error class="mt-1 text-xs" :messages="$errors->get('name')" />
         </div>
 
         @if($user->role === 'mahasiswa')
         <div>
             <label for="nim" class="block text-xs font-bold text-gray-700 mb-1">Nomor Pokok Mahasiswa (NPM) *</label>
-            <input id="nim" name="nim" type="text" class="w-full text-xs rounded-xl border-gray-300 shadow-xs focus:border-uin focus:ring-uin p-2.5 font-mono" value="{{ old('nim', $user->nim) }}" placeholder="Contoh: 2271xxxx" required />
+            <input id="nim" name="nim" type="text" class="w-full text-xs rounded-xl border-gray-300 shadow-xs focus:border-uin focus:ring-uin p-2.5 sm:p-3 font-mono" value="{{ old('nim', $user->nim) }}" placeholder="Contoh: 2271xxxx" required />
             <p class="text-[11px] text-gray-400 mt-0.5">NPM wajib diisi sebagai identitas resmi pendaftaran magang.</p>
             <x-input-error class="mt-1 text-xs" :messages="$errors->get('nim')" />
         </div>
         @elseif($user->role === 'dpl' || $user->role === 'admin')
         <div>
             <label for="nip" class="block text-xs font-bold text-gray-700 mb-1">Nomor Induk Pegawai (NIP / NIDN)</label>
-            <input id="nip" name="nip" type="text" class="w-full text-xs rounded-xl border-gray-300 shadow-xs focus:border-uin focus:ring-uin p-2.5 font-mono" value="{{ old('nip', $user->nip) }}" placeholder="Contoh: 198501012010121001" />
+            <input id="nip" name="nip" type="text" class="w-full text-xs rounded-xl border-gray-300 shadow-xs focus:border-uin focus:ring-uin p-2.5 sm:p-3 font-mono" value="{{ old('nip', $user->nip) }}" placeholder="Contoh: 198501012010121001" />
             <x-input-error class="mt-1 text-xs" :messages="$errors->get('nip')" />
         </div>
         @endif
 
         <div>
             <label for="email" class="block text-xs font-bold text-gray-700 mb-1">Alamat Email *</label>
-            <input id="email" name="email" type="email" class="w-full text-xs rounded-xl border-gray-300 shadow-xs focus:border-uin focus:ring-uin p-2.5" value="{{ old('email', $user->email) }}" required autocomplete="username" />
+            <input id="email" name="email" type="email" class="w-full text-xs rounded-xl border-gray-300 shadow-xs focus:border-uin focus:ring-uin p-2.5 sm:p-3" value="{{ old('email', $user->email) }}" required autocomplete="username" />
             <x-input-error class="mt-1 text-xs" :messages="$errors->get('email')" />
 
             @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! $user->hasVerifiedEmail())
@@ -115,10 +115,10 @@
         </div>
 
         @if($user->role === 'mahasiswa')
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 pt-1 sm:pt-2">
             <div>
                 <label for="semester" class="block text-xs font-bold text-gray-700 mb-1">Semester Saat Ini *</label>
-                <select id="semester" name="semester" class="w-full text-xs rounded-xl border-gray-300 shadow-xs focus:border-uin focus:ring-uin p-2.5" required>
+                <select id="semester" name="semester" class="w-full text-xs rounded-xl border-gray-300 shadow-xs focus:border-uin focus:ring-uin p-2.5 sm:p-3" required>
                     @php
                         $romanList = [1=>'I', 2=>'II', 3=>'III', 4=>'IV', 5=>'V', 6=>'VI', 7=>'VII', 8=>'VIII', 9=>'IX', 10=>'X', 11=>'XI', 12=>'XII', 13=>'XIII', 14=>'XIV'];
                     @endphp
@@ -128,27 +128,27 @@
                         </option>
                     @endfor
                 </select>
-                <p class="text-[11px] text-gray-400 mt-0.5">Semester akademik aktif Anda</p>
+                <p class="text-[11px] text-gray-400 mt-0.5">Semester akademik aktif</p>
                 <x-input-error class="mt-1 text-xs" :messages="$errors->get('semester')" />
             </div>
 
             <div>
                 <label for="total_sks" class="block text-xs font-bold text-gray-700 mb-1">Total SKS Ditempuh *</label>
-                <input id="total_sks" name="total_sks" type="number" min="110" class="w-full text-xs rounded-xl border-gray-300 shadow-xs focus:border-uin focus:ring-uin p-2.5" value="{{ old('total_sks', $user->total_sks) }}" required />
-                <p class="text-[11px] text-gray-400 mt-0.5">Syarat magang min. 110 SKS (setara semester 6 ke atas)</p>
+                <input id="total_sks" name="total_sks" type="number" min="110" class="w-full text-xs rounded-xl border-gray-300 shadow-xs focus:border-uin focus:ring-uin p-2.5 sm:p-3" value="{{ old('total_sks', $user->total_sks) }}" required />
+                <p class="text-[11px] text-gray-400 mt-0.5">Min. 110 SKS (semester 6+)</p>
                 <x-input-error class="mt-1 text-xs" :messages="$errors->get('total_sks')" />
             </div>
 
-            <div>
+            <div class="sm:col-span-2 md:col-span-1">
                 <label for="ipk" class="block text-xs font-bold text-gray-700 mb-1">IPK Terakhir *</label>
-                <input id="ipk" name="ipk" type="number" step="0.01" min="2.75" max="4.00" class="w-full text-xs rounded-xl border-gray-300 shadow-xs focus:border-uin focus:ring-uin p-2.5" value="{{ old('ipk', $user->ipk) }}" required />
-                <p class="text-[11px] text-gray-400 mt-0.5">Syarat magang min. IPK 2.75 (Skala 0.00 - 4.00)</p>
+                <input id="ipk" name="ipk" type="number" step="0.01" min="2.75" max="4.00" class="w-full text-xs rounded-xl border-gray-300 shadow-xs focus:border-uin focus:ring-uin p-2.5 sm:p-3" value="{{ old('ipk', $user->ipk) }}" required />
+                <p class="text-[11px] text-gray-400 mt-0.5">Min. IPK 2.75 (0.00 - 4.00)</p>
                 <x-input-error class="mt-1 text-xs" :messages="$errors->get('ipk')" />
             </div>
         </div>
         @endif
 
-        <div class="flex items-center justify-between pt-4 border-t border-gray-100">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-4 border-t border-gray-100">
             @if (session('status') === 'profile-updated')
             <span
                 x-data="{ show: true }"
@@ -156,16 +156,16 @@
                 x-transition
                 x-init="setTimeout(() => show = false, 3000)"
                 class="text-xs font-bold text-blue-600 flex items-center">
-                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                <svg class="w-4 h-4 mr-1 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                 Perubahan profil berhasil disimpan!
             </span>
             @else
             <span></span>
             @endif
 
-            <button type="submit" class="inline-flex items-center px-6 py-2.5 bg-uin hover:bg-uin-hover text-white text-xs font-bold rounded-xl shadow-sm transition-all">
-                <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                Simpan Profil & Foto
+            <button type="submit" class="inline-flex items-center justify-center px-6 py-3 sm:py-2.5 bg-uin hover:bg-uin-hover active:scale-95 text-white text-xs font-bold rounded-xl shadow-sm transition-all w-full sm:w-auto">
+                <svg class="w-4 h-4 mr-1.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                <span>Simpan Profil & Foto</span>
             </button>
         </div>
     </form>

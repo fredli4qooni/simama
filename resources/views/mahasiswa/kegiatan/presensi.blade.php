@@ -1,15 +1,15 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-4">
             <div>
-                <h2 class="font-bold text-2xl text-gray-900 leading-tight">
+                <h2 class="font-bold text-xl sm:text-2xl text-gray-900 leading-tight">
                     Presensi Harian & GPS Geolocation
                 </h2>
-                <p class="text-sm text-gray-500 mt-1">Presensi dilakukan 2 kali sehari (Masuk & Pulang) dengan pendeteksian titik lokasi GPS instansi secara visual di peta.</p>
+                <p class="text-xs sm:text-sm text-gray-500 mt-1">Presensi dilakukan 2 kali sehari (Masuk & Pulang) dengan pendeteksian titik lokasi GPS instansi secara visual di peta.</p>
             </div>
-            <a href="{{ route('mahasiswa.presensi.cetak') }}" target="_blank" class="inline-flex items-center px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-xs hover:shadow transition whitespace-nowrap self-start sm:self-auto" title="Cetak / Unduh Berkas Rekap Presensi Resmi Format PDF">
-                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                Cetak Presensi Resmi (PDF)
+            <a href="{{ route('mahasiswa.presensi.cetak') }}" target="_blank" class="inline-flex items-center justify-center px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white rounded-xl text-xs font-bold shadow-xs hover:shadow transition whitespace-nowrap w-full sm:w-auto text-center" title="Cetak / Unduh Berkas Rekap Presensi Resmi Format PDF">
+                <svg class="w-4 h-4 mr-2 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                <span>Cetak Presensi Resmi (PDF)</span>
             </a>
         </div>
     </x-slot>
@@ -18,20 +18,32 @@
     <link rel="stylesheet" href="{{ asset('vendor/leaflet/leaflet.css') }}" />
     <style>
         #map-presensi {
-            height: 340px !important;
-            min-height: 340px !important;
+            height: 280px !important;
+            min-height: 280px !important;
             width: 100% !important;
             display: block !important;
             position: relative !important;
             z-index: 10 !important;
         }
+        @media (min-width: 640px) {
+            #map-presensi {
+                height: 350px !important;
+                min-height: 350px !important;
+            }
+        }
         #modal-map {
-            height: 300px !important;
-            min-height: 300px !important;
+            height: 260px !important;
+            min-height: 260px !important;
             width: 100% !important;
             display: block !important;
             position: relative !important;
             z-index: 10 !important;
+        }
+        @media (min-width: 640px) {
+            #modal-map {
+                height: 320px !important;
+                min-height: 320px !important;
+            }
         }
         .custom-gps-pin {
             display: flex;
@@ -76,7 +88,7 @@
     <link rel="stylesheet" href="{{ asset('vendor/leaflet/leaflet.css') }}" />
     <script src="{{ asset('vendor/leaflet/leaflet.js') }}"></script>
 
-    <div class="py-8" x-data="{
+    <div class="py-4 sm:py-6 lg:py-8" x-data="{
         type: '{{ $hariIniMasuk && !$hariIniPulang ? 'pulang' : 'masuk' }}',
         status: 'hadir',
         latitude: '',
@@ -312,72 +324,82 @@
             this.modalOpen = false;
         }
     }">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
+        <div class="max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8 space-y-4 sm:space-y-6">
             
             @if (session('success'))
-                <div class="px-4 py-3 text-sm text-green-800 bg-green-50 border border-green-200 rounded-lg shadow-sm font-medium flex items-center">
-                    <svg class="w-5 h-5 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    {{ session('success') }}
+                <div class="p-3.5 sm:p-4 text-xs sm:text-sm text-green-800 bg-green-50 border border-green-200 rounded-xl shadow-xs font-medium flex items-center">
+                    <svg class="w-5 h-5 mr-2.5 text-green-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <span>{{ session('success') }}</span>
                 </div>
             @endif
 
             @if (session('error'))
-                <div class="px-4 py-3 text-sm text-red-700 bg-red-50 border border-red-200 rounded-lg shadow-sm font-medium flex items-center">
-                    <svg class="w-5 h-5 mr-2 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    {{ session('error') }}
+                <div class="p-3.5 sm:p-4 text-xs sm:text-sm text-red-700 bg-red-50 border border-red-200 rounded-xl shadow-xs font-medium flex items-center">
+                    <svg class="w-5 h-5 mr-2.5 text-red-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <span>{{ session('error') }}</span>
                 </div>
             @endif
 
-            <div class="bg-white shadow-sm sm:rounded-xl border border-gray-100 overflow-hidden">
-                <div class="p-5 border-b border-gray-100 bg-uin text-white flex justify-between items-center">
+            <div class="bg-white shadow-xs rounded-xl sm:rounded-2xl border border-gray-100 overflow-hidden">
+                <div class="p-4 sm:p-5 border-b border-gray-100 bg-uin text-white flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-4">
                     <div class="flex items-center">
-                        <div class="bg-white/20 p-2 rounded-lg mr-3">
+                        <div class="bg-white/20 p-2 sm:p-2.5 rounded-xl mr-3 shrink-0">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                         </div>
-                        <div>
-                            <h3 class="text-lg font-bold">Presensi Hari Ini</h3>
-                            <p class="text-xs text-white/80">Instansi: {{ $pengajuan->instansi }}</p>
+                        <div class="min-w-0">
+                            <h3 class="text-base sm:text-lg font-bold leading-tight">Presensi Hari Ini</h3>
+                            <p class="text-xs text-white/80 truncate">Instansi: {{ $pengajuan->instansi }}</p>
                         </div>
                     </div>
-                    <div class="text-xs md:text-sm font-bold bg-white/15 px-3.5 py-1.5 rounded-full flex items-center space-x-2 border border-white/20 shadow-xs">
+                    <div class="text-[11px] sm:text-xs font-bold bg-white/15 px-3.5 py-1.5 rounded-full flex items-center space-x-2 border border-white/20 shadow-xs self-start sm:self-auto flex-wrap">
                         <span>{{ \Carbon\Carbon::now()->translatedFormat('l, d F Y') }}</span>
                         <span class="text-white/40">•</span>
                         <span x-data="{ time: '' }" x-init="time = new Date().toLocaleTimeString('id-ID', { timeZone: 'Asia/Jakarta', hour12: false }); setInterval(() => time = new Date().toLocaleTimeString('id-ID', { timeZone: 'Asia/Jakarta', hour12: false }), 1000)" class="font-mono text-emerald-300 font-black" x-text="time + ' WIB'"></span>
                     </div>
                 </div>
                 
-                <div class="p-6">
+                <div class="p-4 sm:p-6">
                     <!-- Status Ringkasan Hari Ini -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                        <div class="p-4 rounded-lg border {{ $hariIniMasuk ? 'bg-green-50 border-green-200' : 'bg-gray-50 border-gray-200' }}">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-4 sm:mb-6">
+                        <div class="p-3.5 sm:p-4 rounded-xl border {{ $hariIniMasuk ? 'bg-green-50/80 border-green-200' : 'bg-gray-50 border-gray-200' }}">
                             <div class="flex items-center justify-between">
-                                <span class="text-xs font-bold uppercase tracking-wider text-gray-500">1. Presensi Masuk (Check-In)</span>
+                                <div>
+                                    <span class="text-[10px] font-bold uppercase tracking-wider text-gray-500 block">1. Presensi Masuk (Check-In)</span>
+                                    <span class="text-xs font-semibold text-gray-800 mt-0.5 block">
+                                        {{ $hariIniMasuk ? 'Tercatat ' . $hariIniMasuk->created_at->format('H:i') . ' WIB' : 'Belum Melakukan Presensi' }}
+                                    </span>
+                                </div>
                                 @if($hariIniMasuk)
-                                    <span class="px-2 py-0.5 bg-green-600 text-white text-[11px] font-bold rounded">TERCATAT</span>
+                                    <span class="px-2.5 py-1 bg-green-600 text-white text-[10px] font-bold rounded-lg shadow-xs shrink-0">TERCATAT</span>
                                 @else
-                                    <span class="px-2 py-0.5 bg-gray-200 text-gray-700 text-[11px] font-bold rounded">BELUM</span>
+                                    <span class="px-2.5 py-1 bg-gray-200 text-gray-600 text-[10px] font-bold rounded-lg shrink-0">BELUM</span>
                                 @endif
                             </div>
                         </div>
-                        <div class="p-4 rounded-lg border {{ $hariIniPulang ? 'bg-green-50 border-green-200' : 'bg-gray-50 border-gray-200' }}">
+                        <div class="p-3.5 sm:p-4 rounded-xl border {{ $hariIniPulang ? 'bg-green-50/80 border-green-200' : 'bg-gray-50 border-gray-200' }}">
                             <div class="flex items-center justify-between">
-                                <span class="text-xs font-bold uppercase tracking-wider text-gray-500">2. Presensi Pulang (Check-Out)</span>
+                                <div>
+                                    <span class="text-[10px] font-bold uppercase tracking-wider text-gray-500 block">2. Presensi Pulang (Check-Out)</span>
+                                    <span class="text-xs font-semibold text-gray-800 mt-0.5 block">
+                                        {{ $hariIniPulang ? 'Tercatat ' . $hariIniPulang->created_at->format('H:i') . ' WIB' : 'Belum Melakukan Presensi' }}
+                                    </span>
+                                </div>
                                 @if($hariIniPulang)
-                                    <span class="px-2 py-0.5 bg-green-600 text-white text-[11px] font-bold rounded">TERCATAT</span>
+                                    <span class="px-2.5 py-1 bg-green-600 text-white text-[10px] font-bold rounded-lg shadow-xs shrink-0">TERCATAT</span>
                                 @else
-                                    <span class="px-2 py-0.5 bg-gray-200 text-gray-700 text-[11px] font-bold rounded">BELUM</span>
+                                    <span class="px-2.5 py-1 bg-gray-200 text-gray-600 text-[10px] font-bold rounded-lg shrink-0">BELUM</span>
                                 @endif
                             </div>
                         </div>
                     </div>
 
                     @if($hariIniMasuk && $hariIniPulang)
-                        <div class="p-6 bg-green-50 border border-green-200 rounded-xl flex flex-col items-center justify-center text-center">
-                            <div class="w-14 h-14 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-3">
+                        <div class="p-6 sm:p-8 bg-green-50 border border-green-200 rounded-xl sm:rounded-2xl flex flex-col items-center justify-center text-center">
+                            <div class="w-14 h-14 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-3 shadow-xs">
                                 <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                             </div>
-                            <h4 class="text-base font-bold text-gray-900 mb-1">Presensi Hari Ini Lengkap!</h4>
-                            <p class="text-xs text-gray-600">Anda sudah menyelesaikan presensi Masuk dan Pulang untuk hari ini.</p>
+                            <h4 class="text-base sm:text-lg font-bold text-gray-900 mb-1">Presensi Hari Ini Lengkap!</h4>
+                            <p class="text-xs sm:text-sm text-gray-600 max-w-md">Anda telah menyelesaikan presensi Masuk dan Pulang hari ini dengan koordinat GPS instansi tercatat di sistem.</p>
                         </div>
                     @else
                         <form action="{{ route('mahasiswa.presensi.store') }}" method="POST" class="space-y-4">
@@ -386,9 +408,9 @@
                             <input type="hidden" name="longitude" :value="longitude">
 
                             <!-- Status Lokasi GPS Indicator Bar -->
-                            <div class="p-3.5 rounded-lg border flex items-center justify-between transition-colors duration-200" :class="gpsReady ? 'bg-green-50 border-green-200 text-green-800' : (gpsLoading ? 'bg-blue-50 border-blue-200 text-blue-800' : 'bg-amber-50 border-amber-200 text-amber-800')">
-                                <div class="flex items-center text-xs">
-                                    <svg class="w-4 h-4 mr-2 flex-shrink-0" :class="gpsLoading ? 'text-blue-600 animate-spin' : (gpsReady ? 'text-green-600' : 'text-amber-600')" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div class="p-3 sm:p-3.5 rounded-xl border flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2.5 transition-colors duration-200" :class="gpsReady ? 'bg-green-50 border-green-200 text-green-800' : (gpsLoading ? 'bg-blue-50 border-blue-200 text-blue-800' : 'bg-amber-50 border-amber-200 text-amber-800')">
+                                <div class="flex items-center text-xs min-w-0">
+                                    <svg class="w-4 h-4 mr-2 shrink-0" :class="gpsLoading ? 'text-blue-600 animate-spin' : (gpsReady ? 'text-green-600' : 'text-amber-600')" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <template x-if="gpsLoading">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
                                         </template>
@@ -399,9 +421,9 @@
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
                                         </template>
                                     </svg>
-                                    <span x-text="gpsStatus" class="font-medium"></span>
+                                    <span x-text="gpsStatus" class="font-medium break-words"></span>
                                 </div>
-                                <button type="button" @click="initGps()" class="text-xs font-bold text-uin hover:underline ml-3 flex-shrink-0 flex items-center">
+                                <button type="button" @click="initGps()" class="text-xs font-bold text-uin hover:underline shrink-0 flex items-center self-end sm:self-auto py-1 px-2 rounded-lg bg-white/60 sm:bg-transparent">
                                     <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
                                     Refresh GPS
                                 </button>
@@ -409,9 +431,9 @@
 
                             <!-- PETA LOKASI INTERAKTIF (LEAFLET.JS MAP) -->
                             <div class="rounded-xl border border-gray-200 overflow-hidden bg-gray-50/50 shadow-xs">
-                                <div class="px-4 py-2.5 bg-gray-100/80 border-b border-gray-200 flex items-center justify-between">
+                                <div class="px-3.5 sm:px-4 py-2 sm:py-2.5 bg-gray-100/80 border-b border-gray-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1.5 sm:gap-2">
                                     <div class="flex items-center space-x-2">
-                                        <svg class="w-4 h-4 text-uin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <svg class="w-4 h-4 text-uin shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path>
                                         </svg>
                                         <span class="text-xs font-bold text-gray-800">Peta Lokasi Presensi (Live Map)</span>
@@ -422,24 +444,24 @@
                                     </div>
                                 </div>
 
-                                <!-- Kontainer Peta dengan explicit inline style -->
-                                <div id="map-presensi" style="height: 340px; width: 100%; min-height: 340px; position: relative; z-index: 10;" class="w-full bg-slate-100"></div>
+                                <!-- Kontainer Peta -->
+                                <div id="map-presensi" class="w-full bg-slate-100"></div>
 
-                                <div class="px-4 py-2.5 bg-white border-t border-gray-100 flex flex-wrap items-center justify-between text-[11px] text-gray-500 gap-2">
+                                <div class="px-3.5 sm:px-4 py-2 sm:py-2.5 bg-white border-t border-gray-100 flex flex-wrap items-center justify-between text-[11px] text-gray-500 gap-2">
                                     <div class="flex items-center">
-                                        <span class="inline-block w-2.5 h-2.5 rounded-full bg-blue-600 mr-1.5 animate-pulse"></span>
+                                        <span class="inline-block w-2.5 h-2.5 rounded-full bg-blue-600 mr-1.5 shrink-0 animate-pulse"></span>
                                         <span>Titik pin biru menunjukkan posisi Anda. Anda dapat <b>menggeser pin</b> atau <b>mengeklik peta</b> jika posisi GPS bergeser.</span>
                                     </div>
-                                    <button type="button" @click="if (latitude && longitude && map) map.flyTo([parseFloat(latitude), parseFloat(longitude)], 17)" class="text-xs font-semibold text-blue-600 hover:text-blue-800 underline">
+                                    <button type="button" @click="if (latitude && longitude && map) map.flyTo([parseFloat(latitude), parseFloat(longitude)], 17)" class="text-xs font-semibold text-blue-600 hover:text-blue-800 underline active:scale-95 shrink-0">
                                         Pusatkan ke Pin
                                     </button>
                                 </div>
                             </div>
 
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
                                 <div>
                                     <label class="block text-xs font-bold text-gray-700 mb-1">Tipe Presensi *</label>
-                                    <select name="type" x-model="type" class="block w-full rounded-md border-gray-300 text-xs shadow-sm focus:border-uin focus:ring-uin" required>
+                                    <select name="type" x-model="type" class="block w-full rounded-xl border-gray-300 text-xs shadow-xs focus:border-uin focus:ring-uin py-2.5" required>
                                         <option value="masuk" {{ $hariIniMasuk ? 'disabled' : '' }}>Masuk (Pagi / Datang)</option>
                                         <option value="pulang" {{ $hariIniPulang ? 'disabled' : '' }}>Pulang (Sore / Selesai)</option>
                                     </select>
@@ -447,22 +469,22 @@
 
                                 <div>
                                     <label class="block text-xs font-bold text-gray-700 mb-1">Status Kehadiran *</label>
-                                    <select name="status" x-model="status" class="block w-full rounded-md border-gray-300 text-xs shadow-sm focus:border-uin focus:ring-uin" required>
+                                    <select name="status" x-model="status" class="block w-full rounded-xl border-gray-300 text-xs shadow-xs focus:border-uin focus:ring-uin py-2.5" required>
                                         <option value="hadir">Hadir di Lokasi Instansi</option>
                                         <option value="izin">Izin</option>
                                         <option value="sakit">Sakit</option>
                                     </select>
                                 </div>
 
-                                <div>
+                                <div class="sm:col-span-2 md:col-span-1">
                                     <label class="block text-xs font-bold text-gray-700 mb-1">Keterangan (Opsional)</label>
-                                    <input type="text" name="keterangan" placeholder="Contoh: Bekerja di Divisi IT" class="block w-full rounded-md border-gray-300 text-xs shadow-sm focus:border-uin focus:ring-uin">
+                                    <input type="text" name="keterangan" placeholder="Contoh: Bekerja di Divisi IT" class="block w-full rounded-xl border-gray-300 text-xs shadow-xs focus:border-uin focus:ring-uin py-2.5">
                                 </div>
                             </div>
 
-                            <div class="flex justify-end pt-3 border-t border-gray-100">
-                                <button type="submit" :disabled="!gpsReady" class="inline-flex items-center px-5 py-2.5 border border-transparent text-xs font-bold rounded-lg text-white bg-uin hover:bg-uin-hover disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-md">
-                                    <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            <div class="flex flex-col sm:flex-row sm:justify-end pt-3 border-t border-gray-100 gap-2">
+                                <button type="submit" :disabled="!gpsReady" class="inline-flex items-center justify-center px-6 py-3 sm:py-2.5 border border-transparent text-xs font-bold rounded-xl text-white bg-uin hover:bg-uin-hover disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-md active:scale-95 w-full sm:w-auto">
+                                    <svg class="w-4 h-4 mr-1.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                                     <span x-text="type === 'pulang' ? 'Kirim Presensi Pulang (Check-Out)' : 'Kirim Presensi Masuk (Check-In)'"></span>
                                 </button>
                             </div>
@@ -472,23 +494,86 @@
             </div>
 
             <!-- Riwayat Presensi -->
-            <div class="bg-white shadow-sm sm:rounded-xl border border-gray-100 overflow-hidden">
-                <div class="p-6 border-b border-gray-100 bg-gray-50/50 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div class="bg-white shadow-xs rounded-xl sm:rounded-2xl border border-gray-100 overflow-hidden">
+                <div class="p-4 sm:p-6 border-b border-gray-100 bg-gray-50/50 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
                     <div>
                         <h3 class="text-base font-bold text-gray-900">Riwayat Presensi & Koordinat GPS Anda</h3>
                         <p class="text-xs text-gray-500 mt-0.5">Daftar kehadiran Masuk & Pulang Anda selama masa magang dengan titik koordinat peta.</p>
                     </div>
-                    <div class="flex items-center gap-3">
-                        <a href="{{ route('mahasiswa.presensi.cetak') }}" target="_blank" class="inline-flex items-center px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-xs hover:shadow transition" title="Cetak / Unduh Berkas Rekap Presensi Resmi Format PDF">
-                            <svg class="w-3.5 h-3.5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                            Cetak Presensi (PDF)
+                    <div class="flex items-center justify-between sm:justify-end gap-2.5 w-full sm:w-auto">
+                        <a href="{{ route('mahasiswa.presensi.cetak') }}" target="_blank" class="inline-flex items-center justify-center px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white rounded-xl text-xs font-bold shadow-xs hover:shadow transition flex-1 sm:flex-initial" title="Cetak / Unduh Berkas Rekap Presensi Resmi Format PDF">
+                            <svg class="w-3.5 h-3.5 mr-1.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                            <span>Cetak (PDF)</span>
                         </a>
-                        <span class="text-xs font-bold px-3 py-2 bg-gray-200/80 text-gray-700 rounded-xl whitespace-nowrap">
+                        <span class="text-xs font-bold px-3 py-2 bg-gray-200/80 text-gray-700 rounded-xl whitespace-nowrap shrink-0">
                             Total: {{ $presensi->count() }} Presensi
                         </span>
                     </div>
                 </div>
-                <div class="overflow-x-auto">
+
+                <!-- Tampilan Mobile (Card List) -->
+                <div class="block md:hidden divide-y divide-gray-100">
+                    @forelse($presensi as $item)
+                        <div class="p-4 space-y-2.5 bg-white hover:bg-gray-50/80 transition-colors">
+                            <div class="flex items-start justify-between gap-2">
+                                <div>
+                                    <div class="font-bold text-gray-900 text-xs sm:text-sm">
+                                        {{ \Carbon\Carbon::parse($item->date)->translatedFormat('l, d M Y') }}
+                                    </div>
+                                    <div class="text-[11px] text-gray-400 font-medium">
+                                        Pukul {{ $item->created_at->format('H:i:s') }} WIB
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-1.5 shrink-0">
+                                    <span class="px-2 py-0.5 rounded font-bold uppercase text-[10px] {{ $item->type == 'masuk' ? 'bg-blue-100 text-blue-800' : 'bg-orange-100 text-orange-800' }}">
+                                        {{ $item->type ?? 'Masuk' }}
+                                    </span>
+                                    @if($item->status == 'hadir')
+                                        <span class="px-2 py-0.5 text-[10px] font-bold text-green-700 bg-green-50 border border-green-200 rounded-full">HADIR</span>
+                                    @elseif($item->status == 'izin')
+                                        <span class="px-2 py-0.5 text-[10px] font-bold text-yellow-700 bg-yellow-50 border border-yellow-200 rounded-full">IZIN</span>
+                                    @else
+                                        <span class="px-2 py-0.5 text-[10px] font-bold text-red-700 bg-red-50 border border-red-200 rounded-full">SAKIT</span>
+                                    @endif
+                                </div>
+                            </div>
+
+                            @if($item->keterangan)
+                                <div class="text-xs text-gray-600 bg-gray-50 p-2.5 rounded-lg border border-gray-100">
+                                    <span class="font-semibold text-gray-500 text-[10px] uppercase block mb-0.5">Keterangan:</span>
+                                    {{ $item->keterangan }}
+                                </div>
+                            @endif
+
+                            <div class="flex items-center justify-between pt-1 text-xs">
+                                @if($item->latitude && $item->longitude)
+                                    <div class="flex items-center gap-1.5">
+                                        <button type="button" @click="openHistoryMap({{ $item->latitude }}, {{ $item->longitude }}, '{{ \Carbon\Carbon::parse($item->date)->translatedFormat('d M Y') }} - {{ strtoupper($item->type ?? 'Masuk') }}')" class="inline-flex items-center px-2.5 py-1.5 text-[11px] font-semibold text-uin bg-uin-light rounded-lg hover:bg-uin/20 transition-colors border border-uin/20 active:scale-95">
+                                            <svg class="w-3.5 h-3.5 mr-1 text-uin shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                                            Lihat Peta
+                                        </button>
+                                        <a href="https://maps.google.com/?q={{ $item->latitude }},{{ $item->longitude }}" target="_blank" title="Buka di Google Maps" class="inline-flex items-center text-gray-500 hover:text-blue-600 transition-colors px-2 py-1.5 rounded-lg border border-gray-200 hover:bg-gray-50 text-[11px]">
+                                            <svg class="w-3.5 h-3.5 mr-1 text-red-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                                            G-Maps
+                                        </a>
+                                    </div>
+                                    <span class="text-[10px] text-gray-400 font-mono text-right">
+                                        {{ number_format((float)$item->latitude, 4) }}, {{ number_format((float)$item->longitude, 4) }}
+                                    </span>
+                                @else
+                                    <span class="text-xs text-gray-400 italic">Tanpa koordinat GPS</span>
+                                @endif
+                            </div>
+                        </div>
+                    @empty
+                        <div class="p-8 text-center text-gray-400 text-xs">
+                            Belum ada riwayat presensi yang dicatat.
+                        </div>
+                    @endforelse
+                </div>
+
+                <!-- Tampilan Desktop (Tabel) -->
+                <div class="hidden md:block overflow-x-auto">
                     <table class="w-full text-xs text-left text-gray-600">
                         <thead class="text-[11px] text-gray-700 uppercase bg-gray-50 border-b border-gray-200 tracking-wider">
                             <tr>
@@ -523,7 +608,7 @@
                                     <td class="px-5 py-3">
                                         @if($item->latitude && $item->longitude)
                                             <div class="flex items-center space-x-2">
-                                                <button type="button" @click="openHistoryMap({{ $item->latitude }}, {{ $item->longitude }}, '{{ \Carbon\Carbon::parse($item->date)->translatedFormat('d M Y') }} - {{ strtoupper($item->type ?? 'Masuk') }}')" class="inline-flex items-center px-2 py-1 text-[11px] font-semibold text-uin bg-uin-light rounded-md hover:bg-uin/20 transition-colors border border-uin/20">
+                                                <button type="button" @click="openHistoryMap({{ $item->latitude }}, {{ $item->longitude }}, '{{ \Carbon\Carbon::parse($item->date)->translatedFormat('d M Y') }} - {{ strtoupper($item->type ?? 'Masuk') }}')" class="inline-flex items-center px-2 py-1 text-[11px] font-semibold text-uin bg-uin-light rounded-md hover:bg-uin/20 transition-colors border border-uin/20 active:scale-95">
                                                     <svg class="w-3.5 h-3.5 mr-1 text-uin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                                                     Lihat di Peta
                                                 </button>
@@ -559,30 +644,30 @@
         <!-- MODAL DETAIL PETA RIWAYAT PRESENSI -->
         <div x-show="modalOpen" x-cloak class="fixed inset-0 z-50 overflow-y-auto" style="display: none;">
             <div class="fixed inset-0 bg-black/50 backdrop-blur-xs transition-opacity" @click="closeHistoryMap()"></div>
-            <div class="flex min-h-full items-center justify-center p-4">
-                <div class="relative bg-white rounded-2xl max-w-xl w-full p-6 shadow-2xl border border-gray-100 z-10" @click.stop>
+            <div class="flex min-h-full items-center justify-center p-3 sm:p-4">
+                <div class="relative bg-white rounded-2xl max-w-xl w-full p-4 sm:p-6 shadow-2xl border border-gray-100 z-10" @click.stop>
                     <div class="flex items-center justify-between pb-3 border-b border-gray-100">
-                        <div class="flex items-center space-x-2">
-                            <div class="p-2 bg-uin-light text-uin rounded-lg">
+                        <div class="flex items-center space-x-2 min-w-0">
+                            <div class="p-2 bg-uin-light text-uin rounded-xl shrink-0">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                             </div>
-                            <div>
-                                <h4 class="text-base font-bold text-gray-900">Titik Koordinat Presensi</h4>
-                                <p class="text-xs text-gray-500" x-text="modalTitle"></p>
+                            <div class="min-w-0">
+                                <h4 class="text-sm sm:text-base font-bold text-gray-900 leading-tight">Titik Koordinat Presensi</h4>
+                                <p class="text-xs text-gray-500 truncate" x-text="modalTitle"></p>
                             </div>
                         </div>
-                        <button type="button" @click="closeHistoryMap()" class="p-1 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100">
+                        <button type="button" @click="closeHistoryMap()" class="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 shrink-0">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                         </button>
                     </div>
 
                     <div class="mt-4">
-                        <div id="modal-map" style="height: 300px; width: 100%; min-height: 300px; position: relative; z-index: 10;" class="w-full bg-slate-100 rounded-xl overflow-hidden border border-gray-200"></div>
+                        <div id="modal-map" class="w-full bg-slate-100 rounded-xl overflow-hidden border border-gray-200"></div>
                     </div>
 
-                    <div class="mt-4 flex items-center justify-between pt-2 border-t border-gray-100">
-                        <span class="text-xs font-mono text-gray-600 font-semibold" x-text="modalCoords"></span>
-                        <button type="button" @click="closeHistoryMap()" class="px-4 py-2 bg-gray-100 text-gray-700 text-xs font-bold rounded-lg hover:bg-gray-200 transition-colors">
+                    <div class="mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-3 border-t border-gray-100">
+                        <span class="text-xs font-mono text-gray-600 font-semibold break-all" x-text="modalCoords"></span>
+                        <button type="button" @click="closeHistoryMap()" class="w-full sm:w-auto px-4 py-2 bg-gray-100 text-gray-700 text-xs font-bold rounded-xl hover:bg-gray-200 transition-colors active:scale-95">
                             Tutup
                         </button>
                     </div>
