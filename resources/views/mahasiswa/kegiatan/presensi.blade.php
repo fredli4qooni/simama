@@ -366,7 +366,7 @@
                                 <div>
                                     <span class="text-[10px] font-bold uppercase tracking-wider text-gray-500 block">1. Presensi Masuk (Check-In)</span>
                                     <span class="text-xs font-semibold text-gray-800 mt-0.5 block">
-                                        {{ $hariIniMasuk ? 'Tercatat ' . $hariIniMasuk->created_at->format('H:i') . ' WIB' : 'Belum Melakukan Presensi' }}
+                                        {{ ($hariIniMasuk && is_object($hariIniMasuk)) ? 'Tercatat ' . $hariIniMasuk->created_at->format('H:i') . ' WIB' : ($hariIniMasuk ? 'Tercatat' : 'Belum Melakukan Presensi') }}
                                     </span>
                                 </div>
                                 @if($hariIniMasuk)
@@ -381,7 +381,7 @@
                                 <div>
                                     <span class="text-[10px] font-bold uppercase tracking-wider text-gray-500 block">2. Presensi Pulang (Check-Out)</span>
                                     <span class="text-xs font-semibold text-gray-800 mt-0.5 block">
-                                        {{ $hariIniPulang ? 'Tercatat ' . $hariIniPulang->created_at->format('H:i') . ' WIB' : 'Belum Melakukan Presensi' }}
+                                        {{ ($hariIniPulang && is_object($hariIniPulang)) ? 'Tercatat ' . $hariIniPulang->created_at->format('H:i') . ' WIB' : ($hariIniPulang ? 'Tercatat' : 'Belum Melakukan Presensi') }}
                                     </span>
                                 </div>
                                 @if($hariIniPulang)

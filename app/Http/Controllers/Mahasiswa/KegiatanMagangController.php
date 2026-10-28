@@ -30,13 +30,13 @@ class KegiatanMagangController extends Controller
             ->where('user_id', $user->id)
             ->where('date', Carbon::today())
             ->where('type', 'masuk')
-            ->exists();
+            ->first();
 
         $hariIniPulang = Attendance::where('application_id', $pengajuan->id)
             ->where('user_id', $user->id)
             ->where('date', Carbon::today())
             ->where('type', 'pulang')
-            ->exists();
+            ->first();
 
         return view('mahasiswa.kegiatan.presensi', compact('pengajuan', 'presensi', 'hariIniMasuk', 'hariIniPulang'));
     }
